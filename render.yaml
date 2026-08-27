@@ -1,5 +1,7 @@
 # Render Blueprint: FastAPI demo API (simulation, production BMS writes off).
+# Source: https://github.com/subhanggodugu6-bot/hvac
 # Dashboard: https://dashboard.render.com → New → Blueprint
+# Pair with Netlify UI (netlify.toml). Do not use Vercel.
 previewsEnabled: false
 
 services:

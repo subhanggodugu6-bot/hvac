@@ -9,6 +9,97 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 from database.session import init_db, SessionLocal
 from database.models import Building, Equipment, Point, SupervisoryActionRecord, HistoricalThermalResponse
 
+
+def _equip_type(equipment_id: str) -> str:
+    eid = (equipment_id or "").upper()
+    if eid.startswith("CH-") or "CHILLER" in eid:
+        return "CHILLER"
+    if eid.startswith("AHU"):
+        return "AHU"
+    if eid.startswith("VAV") or eid.startswith("ZONE"):
+        return "VAV"
+    if eid.startswith("P-") or "PUMP" in eid:
+        return "PUMP"
+    return "EQUIPMENT"
+
+
+def _load_catalog_points():
+    catalog_path = os.path.join(
+        os.path.dirname(__file__), "../../dataset/scheduling_supervisory/point_catalog.json"
+    )
+    if not os.path.exists(catalog_path):
+        return []
+    with open(catalog_path, "r", encoding="utf-8") as f:
+        catalog = json.load(f)
+    rows = catalog.get("bms_points") or catalog.get("points") or []
+    if isinstance(catalog, list):
+        rows = catalog
+    out = []
+    for pt in rows:
+        pid = pt.get("point_id") or pt.get("id")
+        if not pid:
+            continue
+        writable = bool(pt.get("writable"))
+        datatype = str(pt.get("datatype") or pt.get("type") or "float").lower()
+        if writable:
+            point_type = "BO" if datatype in ("boolean", "bool", "enum") else "AO"
+        else:
+            point_type = "BI" if datatype in ("boolean", "bool", "enum") else "AI"
+        out.append(
+            {
+                "id": pid,
+                "equipment_id": pt.get("equipment_id") or pt.get("equipment"),
+                "name": pt.get("name") or pid,
+                "category": pt.get("category") or "telemetry",
+                "point_type": pt.get("type") if pt.get("type") in ("AI", "AO", "BI", "BO") else point_type,
+                "unit": pt.get("unit"),
+            }
+        )
+    return out
+
+
+def _ensure_catalog_points(db, building_id: str) -> int:
+    points = _load_catalog_points()
+    if not points:
+        return 0
+    existing_eq = {e.id for e in db.query(Equipment).all()}
+    for pt in points:
+        eid = pt.get("equipment_id")
+        if eid and eid not in existing_eq:
+            db.add(
+                Equipment(
+                    id=eid,
+                    building_id=building_id,
+                    name=eid,
+                    type=_equip_type(eid),
+                    specs=None,
+                )
+            )
+            existing_eq.add(eid)
+    db.flush()
+
+    added = 0
+    for pt in points:
+        if db.query(Point).filter_by(id=pt["id"]).first():
+            continue
+        eid = pt.get("equipment_id")
+        db.add(
+            Point(
+                id=pt["id"],
+                equipment_id=eid if eid in existing_eq else None,
+                name=pt["name"],
+                category=pt["category"],
+                point_type=pt["point_type"],
+                unit=pt.get("unit"),
+                current_value=0.0,
+            )
+        )
+        added += 1
+    if added:
+        db.commit()
+    return added
+
+
 def seed_database():
     init_db()
     db = SessionLocal()
@@ -19,7 +110,8 @@ def seed_database():
         if existing.name != "Senatria Corporation":
             existing.name = "Senatria Corporation"
             db.commit()
-        print("Database already seeded.")
+        added = _ensure_catalog_points(db, existing.id)
+        print(f"Database already seeded. Catalog points added={added}.")
         db.close()
         from backend.services.opportunity_persist_service import ensure_catalog
         ensure_catalog()
@@ -46,23 +138,10 @@ def seed_database():
     ]
     for eq in equipments:
         db.add(eq)
+    db.flush()
 
-    # Load points from catalog
-    catalog_path = os.path.join(os.path.dirname(__file__), "../../dataset/scheduling_supervisory/point_catalog.json")
-    if os.path.exists(catalog_path):
-        with open(catalog_path, "r") as f:
-            catalog = json.load(f)
-            for pt in catalog.get("points", []):
-                p = Point(
-                    id=pt["id"],
-                    equipment_id=pt.get("equipment"),
-                    name=pt["name"],
-                    category=pt["category"],
-                    point_type=pt["type"],
-                    unit=pt.get("unit"),
-                    current_value=0.0
-                )
-                db.add(p)
+    added = _ensure_catalog_points(db, bldg.id)
+    print(f"Loaded {added} points from scheduling point catalog.")
 
     # Seed Historical Thermal Response records for O1 self-adaptive learning
     historical_samples = [

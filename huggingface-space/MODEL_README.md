@@ -7,11 +7,24 @@ tags:
 pipeline_tag: other
 ---
 
-# HVAC agents API
+# HVAC agents API (legacy Space packaging)
 
 FastAPI backend and **O1–O20** supervisory agents (simulation BMS, writes disabled). **No frontend.**
 
-The Next.js Control Center is deployed on **Netlify**. The FastAPI demo is on **Render**.
+## Canonical demo host (use this)
+
+| Piece | Host |
+| --- | --- |
+| Source | GitHub [`subhanggodugu6-bot/hvac`](https://github.com/subhanggodugu6-bot/hvac) |
+| API | Render Blueprint `hvac-api` (`render.yaml`) |
+| UI | Netlify (`netlify.toml`) |
+
+Do **not** point Netlify at a Hugging Face Space URL. Use the Render service URL:
+
+```
+HVAC_API_ORIGIN=https://hvac-api.onrender.com
+NEXT_PUBLIC_API_URL=https://hvac-api.onrender.com/api
+```
 
 ## Run locally
 
@@ -21,15 +34,4 @@ set PYTHONPATH=.
 uvicorn backend.main:app --host 0.0.0.0 --port 8000
 ```
 
-## Hugging Face Docker Space (PRO required)
-
-This repo includes a `Dockerfile` that serves uvicorn on port **7860**. Free Hugging Face accounts cannot host Docker Spaces (HTTP 402). After [PRO](https://huggingface.co/pro):
-
-```bash
-python scripts/sync_hf_space.py --space
-```
-
-Then set Netlify env:
-
-- `HVAC_API_ORIGIN=https://<you>-hvac-api.hf.space`
-- `NEXT_PUBLIC_API_URL=https://<you>-hvac-api.hf.space/api`
+The Docker files under `huggingface-space/` are retained only for optional offline packaging. They are **not** part of the hosted demo.

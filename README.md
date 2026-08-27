@@ -15,7 +15,20 @@ Simulation and live BMS writes are strictly separated. Missing telemetry is show
 
 There is **no application login**. Opening `/` redirects to `/overview`. Production access is network and infrastructure, not JWT or sessions.
 
-**Demo:** API on **Render**, UI on **Netlify**. Hugging Face holds an API snapshot ([subhan07/hvac-agents](https://huggingface.co/subhan07/hvac-agents)); a Docker Space needs Hugging Face PRO.
+## Canonical hosting (only)
+
+| Piece | Host | Notes |
+| --- | --- | --- |
+| Source | GitHub [`subhanggodugu6-bot/hvac`](https://github.com/subhanggodugu6-bot/hvac) | Sole remote / CI source |
+| API | [Render](https://dashboard.render.com) Blueprint `hvac-api` (`render.yaml`) | Docker, auto-deploy on `main` |
+| UI | [Netlify](https://app.netlify.com) (`netlify.toml`, `base = frontend`) | Next.js via `@netlify/plugin-nextjs` |
+
+**Do not use** Vercel, Hugging Face Spaces, or any other GitHub account/repo for this demo. Old Vercel projects and the previous GitHub remote are retired.
+
+```bash
+gh repo clone subhanggodugu6-bot/hvac
+cd hvac
+```
 
 ---
 
@@ -127,10 +140,24 @@ A live write additionally requires: **LIVE + GOOD + FRESH** telemetry, BMS conne
 
 ## Quick start (local, SQLite)
 
-Requires **Python 3.12**, **Node 20**, and a clone of this repo.
+Requires **Python 3.12**, **Node 20**, and a clone of **this** repo:
 
 ```bash
+gh repo clone subhanggodugu6-bot/hvac
+cd hvac
 cp .env.example .env
+```
+
+### Datasets (local)
+
+Committed under `dataset/scheduling_supervisory/` and `data/o1/`. To regenerate and load the BMS point catalog into SQLite:
+
+```powershell
+$env:PYTHONPATH = "."
+$env:HVAC_ALLOW_CREATE_ALL = "1"
+python scripts/generate_hvac_datasets.py
+python scripts/o1/generate_dataset.py --seed 42
+python -m database.seed.seed_data
 ```
 
 API (from the **repository root** so `backend.main` and imports resolve):
@@ -177,37 +204,79 @@ Set `HVAC_START_CONTROL_WORKER=0` on the API process if you run the control loop
 
 ---
 
-## Demo deploy (Phase 2)
+## Hosted demo — Netlify UI + Render API
 
-Live demo is **Render (API) + Netlify (UI)**. Simulation BMS, production writes off (`HVAC_BMS_WRITE_ENABLED=0`). Hugging Face Docker Spaces still need PRO; `python scripts/sync_hf_space.py` publishes an API snapshot.
+Canonical stack only: **GitHub `subhanggodugu6-bot/hvac` → Render API → Netlify UI**. Simulation BMS; production writes off (`HVAC_BMS_WRITE_ENABLED=0`).
 
-### Render — FastAPI
+### 1. GitHub
 
-From the [Render dashboard](https://dashboard.render.com) create a Blueprint from this repo (`render.yaml`). Service name: `hvac-api`. Health check: `/healthz`. Render sets `PORT`; the Docker image reads it.
+- Repo: https://github.com/subhanggodugu6-bot/hvac  
+- Default branch: `main`  
+- CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (Python 3.12 + Node 20)  
+- Clone: `gh repo clone subhanggodugu6-bot/hvac`
 
-Or:
+Connect **Netlify** and **Render** to this repository only. Do not point those services at older forks or Vercel projects.
+
+### 2. Render — FastAPI (`hvac-api`)
+
+1. Open [Render Dashboard](https://dashboard.render.com) → **New** → **Blueprint**.
+2. Select GitHub repo `subhanggodugu6-bot/hvac`.
+3. Apply [`render.yaml`](render.yaml):
+   - Service name: `hvac-api`
+   - Runtime: Docker (`Dockerfile` at repo root)
+   - Plan: free
+   - Health check: `/healthz`
+   - `autoDeploy: true` on `main`
+4. After first deploy, copy the public URL, e.g. `https://hvac-api.onrender.com`.
+5. Confirm: `GET https://<service>.onrender.com/healthz` returns OK.
+
+Blueprint defaults (demo-safe): `HVAC_BMS_MODE=simulation`, `HVAC_BMS_WRITE_ENABLED=0`, `HVAC_DEPLOYMENT_MODE=demo`, CORS regex allows `*.netlify.app` and `*.onrender.com`.
+
+Optional CLI:
 
 ```bash
 # after `render login`
 render blueprint launch
 ```
 
-### Netlify — Next.js
+### 3. Netlify — Next.js Control Center
 
-Import the GitHub repo in [Netlify](https://app.netlify.com). `netlify.toml` sets `base = frontend` and `@netlify/plugin-nextjs`. After the API URL is known, set:
+1. Open [Netlify](https://app.netlify.com) → **Add new site** → Import from Git → `subhanggodugu6-bot/hvac`.
+2. Build settings come from [`netlify.toml`](netlify.toml):
+   - Base directory: `frontend`
+   - Build: `npm run build`
+   - Plugin: `@netlify/plugin-nextjs`
+   - Node: `20`
+3. Site env vars (Site settings → Environment variables), using the Render URL from step 2:
 
 ```
-HVAC_API_ORIGIN=https://<hvac-api>.onrender.com
-NEXT_PUBLIC_API_URL=https://<hvac-api>.onrender.com/api
+HVAC_API_ORIGIN=https://hvac-api.onrender.com
+NEXT_PUBLIC_API_URL=https://hvac-api.onrender.com/api
 ```
 
-Then trigger a new UI deploy so `NEXT_PUBLIC_*` is baked in. Copy `frontend/.env.netlify.example`. Smoke:
+(Replace host if Render assigned a different subdomain.)
+
+4. Trigger a **new deploy** so `NEXT_PUBLIC_*` is baked into the client bundle. Template: [`frontend/.env.netlify.example`](frontend/.env.netlify.example).
+
+5. Open the Netlify site URL → `/overview`. Header plant mode **DATASET** should show **SIMULATED** (never green LIVE from the dataset feeder).
+
+### 4. Smoke check
 
 ```bash
-python scripts/smoke_demo.py https://<hvac-api>.onrender.com
+python scripts/smoke_demo.py https://hvac-api.onrender.com
 ```
 
+### 5. What not to use
+
+| Retired | Reason |
+| --- | --- |
+| Vercel (UI or API) | Replaced by Netlify + Render; remove old Vercel projects from the dashboard |
+| Hugging Face Spaces | Not the demo API host; prefer Render Blueprint |
+| Other GitHub accounts / forks | Sole source of truth is `subhanggodugu6-bot/hvac` |
+
 ---
+
+## Docker Compose (local full stack)
 
 ```bash
 docker compose up

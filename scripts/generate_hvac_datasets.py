@@ -12,7 +12,7 @@ import random
 import math
 from datetime import datetime, timedelta
 
-DATASET_ROOT = r"c:\hvac\dataset\scheduling_supervisory"
+DATASET_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "dataset", "scheduling_supervisory"))
 TELEMETRY_DIR = os.path.join(DATASET_ROOT, "telemetry")
 SCENARIOS_DIR = os.path.join(DATASET_ROOT, "scenarios")
 EXPECTED_DIR = os.path.join(DATASET_ROOT, "expected_results")
