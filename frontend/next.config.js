@@ -41,6 +41,8 @@ const nextConfig = {
         destination: '/agents/operations-maintenance',
         permanent: false,
       },
+      { source: '/agents/energy-intelligence', destination: '/agents/operations-maintenance', permanent: false },
+      { source: '/agents/ventilation-airflow/outdoor-air', destination: '/agents/ventilation-airflow/economy-cycle', permanent: false },
       { source: '/agents/ventilation-airflow/airflow-optimization', destination: '/agents/ventilation-airflow', permanent: false },
       { source: '/agents/ventilation-airflow/airflow-balancing', destination: '/agents/ventilation-airflow', permanent: false },
       { source: '/agents/ventilation-airflow/fan-optimization', destination: '/agents/ventilation-airflow', permanent: false },

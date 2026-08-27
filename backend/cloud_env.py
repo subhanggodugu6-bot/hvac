@@ -7,16 +7,13 @@ DEMO_CORS_ORIGIN_REGEX = r"https://.*\.(netlify\.app|onrender\.com)"
 
 
 def is_hosted_demo() -> bool:
-    return any(os.getenv(k) for k in ("RENDER", "NETLIFY", "VERCEL"))
+    return any(os.getenv(k) for k in ("RENDER", "NETLIFY"))
 
 
 def apply_cloud_demo_env() -> None:
     if not is_hosted_demo():
         return
-    serverless = bool(os.getenv("VERCEL"))
-    if serverless and not os.getenv("DATABASE_URL"):
-        os.environ["DATABASE_URL"] = "sqlite:////tmp/hvac_supervisory.db"
-    os.environ.setdefault("HVAC_START_CONTROL_WORKER", "0" if serverless else "1")
+    os.environ.setdefault("HVAC_START_CONTROL_WORKER", "1")
     os.environ.setdefault("HVAC_BMS_MODE", "simulation")
     os.environ.setdefault("HVAC_USE_SIMULATION", "1")
     os.environ.setdefault("HVAC_BMS_WRITE_ENABLED", "0")

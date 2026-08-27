@@ -14,7 +14,7 @@ SOURCE_DOCUMENT = "150317hvacguide.pdf"
 SOURCE_PUBLISHER = "NSW Office of Environment and Heritage / AIRAH"
 SOURCE_TITLE = "Optimising your heating, ventilation and air conditioning systems"
 
-# Printed page numbers from the guide contents (scratch/o14_guide_extract.txt TOC).
+# Printed page numbers from the guide table of contents.
 GUIDE_PAGES: Dict[str, int] = {
     "O1": 13,
     "O2": 18,

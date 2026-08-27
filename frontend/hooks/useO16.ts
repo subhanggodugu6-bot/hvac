@@ -2,13 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  fetchO16Commands,
   fetchO16Dashboard,
-  fetchO16Equipment,
-  fetchO16Health,
   fetchO16History,
-  fetchO16Recommendation,
-  fetchO16Safety,
   fetchO16Telemetry,
   postO16Apply,
   postO16Approve,
@@ -17,7 +12,6 @@ import {
   postO16SafeMode,
   postO16Verify,
 } from '@/lib/hvac/o16Api';
-import type { O16Dashboard } from '@/lib/hvac/o16Types';
 import { o16HistoryPoints } from '@/lib/hvac/o16Format';
 import { LIVE_POLL_MS } from '@/lib/hvac/poll';
 
@@ -35,22 +29,6 @@ export function useO16Telemetry(enabled = true) {
   return useQuery({ queryKey: ['o16', 'telemetry'], queryFn: fetchO16Telemetry, refetchInterval: false, enabled });
 }
 
-export function useO16Health() {
-  return useQuery({ queryKey: DASH, queryFn: fetchO16Dashboard, select: (d: O16Dashboard) => d.header });
-}
-
-export function useO16Equipment(enabled = true) {
-  return useQuery({ queryKey: ['o16', 'equipment'], queryFn: fetchO16Equipment, refetchInterval: false, enabled });
-}
-
-export function useO16Recommendation() {
-  return useQuery({ queryKey: DASH, queryFn: fetchO16Dashboard, refetchInterval: LIVE_POLL_MS });
-}
-
-export function useO16Safety() {
-  return useQuery({ queryKey: DASH, queryFn: fetchO16Dashboard, select: (d: O16Dashboard) => d.safety });
-}
-
 export function useO16History(hours: number, enabled = true) {
   return useQuery({
     queryKey: ['o16', 'history', hours],
@@ -60,10 +38,6 @@ export function useO16History(hours: number, enabled = true) {
     enabled,
     select: (d) => o16HistoryPoints(d),
   });
-}
-
-export function useO16Commands() {
-  return useQuery({ queryKey: DASH, queryFn: fetchO16Dashboard, select: (d: O16Dashboard) => d.commands });
 }
 
 export function useO16Mutations() {
@@ -81,5 +55,3 @@ export function useO16Mutations() {
     safeMode: useMutation({ mutationFn: postO16SafeMode, onSettled: invalidate }),
   };
 }
-
-export { fetchO16Telemetry, fetchO16Recommendation, fetchO16Safety, fetchO16Commands, fetchO16Health };

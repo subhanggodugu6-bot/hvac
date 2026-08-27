@@ -22,7 +22,6 @@ _DEMO_KEYS = (
 def test_not_hosted_by_default(monkeypatch):
     monkeypatch.delenv("RENDER", raising=False)
     monkeypatch.delenv("NETLIFY", raising=False)
-    monkeypatch.delenv("VERCEL", raising=False)
     assert is_hosted_demo() is False
 
 

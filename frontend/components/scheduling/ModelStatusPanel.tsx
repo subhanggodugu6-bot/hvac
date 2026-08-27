@@ -100,7 +100,7 @@ export const ModelStatusPanel: React.FC<{ opportunities?: any[] }> = ({ opportun
           <div className="text-slate-300">
             Evaluation Result: <strong className="text-emerald-400">{evalResult.passed} / {evalResult.total_scenarios} Scenarios Passed ({evalResult.success_rate_pct}%)</strong>
           </div>
-          <span className="text-[11px] text-slate-500">Report saved to reports/evaluation_report_125_scenarios.json</span>
+          <span className="text-[11px] text-slate-500">Evaluation report written on the API host</span>
         </div>
       )}
     </div>

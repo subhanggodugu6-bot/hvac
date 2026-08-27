@@ -44,7 +44,7 @@ test.describe('Official HVAC opportunity catalog', () => {
   test('O17–O20 operations and maintenance', async ({ page }) => {
     await page.goto('/agents/operations-maintenance');
     await expect(page.locator('body')).toContainText(/Operations|Maintenance|Energy/i);
-    await page.goto('/agents/operations-maintenance/energy-planning');
+    await page.goto('/agents/operations-maintenance/energy-management-planning');
     await expect(page.locator('body')).toContainText(/Energy Management Planning|O17/i);
     await page.goto('/agents/operations-maintenance/training-awareness');
     await expect(page.locator('body')).toContainText(/Training|O18/i);

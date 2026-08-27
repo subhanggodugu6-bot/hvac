@@ -2,13 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  fetchO14Commands,
   fetchO14Dashboard,
   fetchO14History,
-  fetchO14Pumps,
-  fetchO14Recommendation,
-  fetchO14Safety,
-  fetchO14Telemetry,
   postO14Apply,
   postO14Optimize,
   postO14Rollback,
@@ -24,22 +19,6 @@ export function useO14Dashboard() {
   return useQuery({ queryKey: DASH, queryFn: fetchO14Dashboard, refetchInterval: LIVE_POLL_MS });
 }
 
-export function useO14Telemetry() {
-  return useQuery({ queryKey: DASH, queryFn: fetchO14Dashboard, select: (d: any) => d });
-}
-
-export function useO14Pumps() {
-  return useQuery({ queryKey: ['o14', 'pumps'], queryFn: fetchO14Pumps, refetchInterval: false });
-}
-
-export function useO14Recommendation() {
-  return useQuery({ queryKey: DASH, queryFn: fetchO14Dashboard, refetchInterval: LIVE_POLL_MS });
-}
-
-export function useO14Safety() {
-  return useQuery({ queryKey: DASH, queryFn: fetchO14Dashboard, select: (d: any) => d?.safety });
-}
-
 export function useO14History(hours: number) {
   return useQuery({
     queryKey: ['o14', 'history', hours],
@@ -47,10 +26,6 @@ export function useO14History(hours: number) {
     refetchInterval: false,
     staleTime: 30_000,
   });
-}
-
-export function useO14Commands() {
-  return useQuery({ queryKey: DASH, queryFn: fetchO14Dashboard, select: (d: any) => d?.commands });
 }
 
 export function useO14Mutations() {
@@ -64,5 +39,3 @@ export function useO14Mutations() {
     safeMode: useMutation({ mutationFn: postO14SafeMode, onSettled: invalidate }),
   };
 }
-
-export { fetchO14Telemetry, fetchO14Recommendation, fetchO14Safety, fetchO14Commands };

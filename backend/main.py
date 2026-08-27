@@ -166,12 +166,6 @@ app.include_router(o16_router)
 app.include_router(hvac_ventilation_router)
 app.include_router(hvac_om_router)
 
-if os.getenv("VERCEL"):
-    try:
-        init_db()
-    except Exception:
-        pass
-
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):

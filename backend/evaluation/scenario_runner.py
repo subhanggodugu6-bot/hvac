@@ -10,7 +10,7 @@ from backend.agents.scheduling_supervisory.agent import SchedulingSupervisoryAge
 from backend.agents.scheduling_supervisory.state import AgentMode
 
 REPORT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "reports"))
-if any(os.getenv(k) for k in ("RENDER", "VERCEL", "NETLIFY")):
+if any(os.getenv(k) for k in ("RENDER", "NETLIFY")):
     REPORT_DIR = os.path.join("/tmp", "hvac-reports")
 try:
     os.makedirs(REPORT_DIR, exist_ok=True)

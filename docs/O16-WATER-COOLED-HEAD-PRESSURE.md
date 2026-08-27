@@ -4,8 +4,8 @@
 
 Minimize condenser-water pumping energy at part load while holding required condensing/head pressure and the compressor operating envelope.
 
-Canonical UI: `/agents/variable-speed/variable-head-pressure-water-cooled`  
-Legacy `/agents/variable-speed/water-cooled-head-pressure` redirects here.
+Canonical UI: `/agents/variable-speed/water-cooled-head-pressure`  
+Legacy `/agents/variable-speed/variable-head-pressure-water-cooled` redirects here.
 
 Canonical API: `/api/agents/variable-speed/o16`
 
@@ -97,7 +97,7 @@ Errors: `{ code, message, request_id }`.
 
 ## 13. Frontend
 
-`frontend/components/o16/O16Dashboard.tsx` via React Query (`useO16Dashboard`) and `frontend/lib/api/client.ts`. QueryProvider 3s poll on `['o16','dashboard']`. History does not add a second poller.
+`frontend/components/hvac/variable-speed/o16/WaterCooledHeadPressureDashboard.tsx` via React Query (`useO16Dashboard`) and `frontend/lib/api/client.ts`.
 
 ## 14. M&V
 

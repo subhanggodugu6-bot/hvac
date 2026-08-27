@@ -6,28 +6,8 @@ export async function fetchO14Dashboard() {
   return apiJson(`${BASE}/dashboard`);
 }
 
-export async function fetchO14Telemetry() {
-  return apiJson(`${BASE}/telemetry`);
-}
-
-export async function fetchO14Pumps() {
-  return apiJson(`${BASE}/pumps`);
-}
-
-export async function fetchO14Recommendation() {
-  return apiJson(`${BASE}/recommendation`);
-}
-
-export async function fetchO14Safety() {
-  return apiJson(`${BASE}/safety`);
-}
-
 export async function fetchO14History(hours: number) {
   return apiJson(`${BASE}/history?hours=${hours}`);
-}
-
-export async function fetchO14Commands() {
-  return apiJson(`${BASE}/commands`);
 }
 
 export async function postO14Optimize() {

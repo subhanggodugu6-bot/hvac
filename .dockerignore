@@ -1,11 +1,9 @@
 .git
 .github
-.hf-upload
 .cursor
 .vercel
 .netlify
 frontend
-huggingface-space/static
 **/__pycache__
 **/*.pyc
 **/*.db
