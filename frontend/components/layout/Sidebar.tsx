@@ -3,21 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import {
-  ChevronDown,
-  ChevronRight,
-  LayoutDashboard,
-  CalendarClock,
-  Gauge,
-  Wind,
-  Zap,
-  Wrench,
-  Brain,
-  Radio,
-  Activity,
-  Users,
-  Building2,
-} from 'lucide-react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { opportunitiesForSection } from '@/lib/hvac/opportunityConfig';
 import { StatusBadge } from '@/components/hvac/StatusBadge';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
@@ -77,22 +63,17 @@ export const Sidebar: React.FC = () => {
 
   const Group: React.FC<{
     title: string;
-    icon: React.ReactNode;
     expanded: boolean;
     onToggle: () => void;
-    color: string;
     children: React.ReactNode;
-  }> = ({ title, icon, expanded, onToggle, color, children }) => (
+  }> = ({ title, expanded, onToggle, children }) => (
     <div className="pt-1">
       <button
         type="button"
         onClick={onToggle}
         className="w-full flex items-center justify-between px-3 py-2 text-left text-[12px] font-semibold text-slate-300 hover:text-white rounded-full hover:bg-white/[0.04]"
       >
-        <span className="flex items-center gap-2 min-w-0">
-          <span style={{ color }}>{icon}</span>
-          <span className="truncate">{title}</span>
-        </span>
+        <span className="truncate">{title}</span>
         {expanded ? (
           <ChevronDown className="w-3.5 h-3.5 text-slate-500 shrink-0" />
         ) : (
@@ -123,44 +104,32 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside className="hvac-sidebar w-[17rem] flex flex-col select-none overflow-hidden bg-[#1a1a1d] text-slate-200 min-h-0">
-      <div className="px-4 py-4 shrink-0 flex items-center gap-2.5">
-        <div className="w-9 h-9 rounded-xl bg-violet-500/20 border border-violet-400/30 flex items-center justify-center text-violet-300">
-          <Building2 className="w-4 h-4" />
-        </div>
-        <div className="min-w-0">
-          <div className="text-[13px] font-semibold text-white tracking-tight leading-none">HVAC Control</div>
-          <div className="text-[10px] text-slate-500 mt-1">OEH · O1–O20</div>
-        </div>
+      <div className="px-4 py-4 shrink-0">
+        <div className="text-[13px] font-semibold text-white tracking-tight leading-none">HVAC Control</div>
+        <div className="text-[10px] text-slate-500 mt-1">OEH · O1–O20</div>
       </div>
       <nav className="px-2.5 pb-3 space-y-0.5 flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <div className="px-3 pt-2 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-600 uppercase">Platform</div>
         <Link href="/overview" className={navItem(isActive('/overview') || isActive('/'))}>
-          <LayoutDashboard className="w-4 h-4 shrink-0" />
           Dashboard
         </Link>
         <Link href="/agents" className={navItem(isActive('/agents'))}>
-          <Users className="w-4 h-4 shrink-0" />
           Systems
         </Link>
         <Link href="/platform/bms" className={navItem(pathname.startsWith('/platform/bms'))}>
-          <Radio className="w-4 h-4 shrink-0" />
           Gateway
         </Link>
         <Link href="/platform/telemetry" className={navItem(pathname.startsWith('/platform/telemetry'))}>
-          <Activity className="w-4 h-4 shrink-0" />
           Telemetry
         </Link>
         <Link href="/ml" className={navItem(isActive('/ml') || pathname.startsWith('/ml'))}>
-          <Brain className="w-4 h-4 shrink-0" />
           ML Registry
         </Link>
         <div className="px-3 pt-4 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-600 uppercase">Opportunities</div>
         <Group
           title="Scheduling"
-          icon={<CalendarClock className="w-3.5 h-3.5" />}
           expanded={open.scheduling}
           onToggle={() => setOpen((s) => ({ ...s, scheduling: !s.scheduling }))}
-          color="var(--cat-scheduling)"
         >
           <Link href="/agents/scheduling" className={subItem(isActive('/agents/scheduling'))}>
             Dashboard
@@ -178,10 +147,8 @@ export const Sidebar: React.FC = () => {
 
         <Group
           title="Plant Control"
-          icon={<Gauge className="w-3.5 h-3.5" />}
           expanded={open.plant}
           onToggle={() => setOpen((s) => ({ ...s, plant: !s.plant }))}
-          color="var(--cat-plant)"
         >
           <Link href="/agents/plant-control" className={subItem(isActive('/agents/plant-control'))}>
             Dashboard
@@ -222,10 +189,8 @@ export const Sidebar: React.FC = () => {
 
         <Group
           title="Ventilation"
-          icon={<Wind className="w-3.5 h-3.5" />}
           expanded={open.vent}
           onToggle={() => setOpen((s) => ({ ...s, vent: !s.vent }))}
-          color="var(--cat-ventilation)"
         >
           <Link href="/agents/ventilation-airflow" className={subItem(pathname === '/agents/ventilation-airflow')}>
             Dashboard
@@ -243,10 +208,8 @@ export const Sidebar: React.FC = () => {
 
         <Group
           title="Variable Speed"
-          icon={<Zap className="w-3.5 h-3.5" />}
           expanded={open.vs}
           onToggle={() => setOpen((s) => ({ ...s, vs: !s.vs }))}
-          color="var(--cat-variablespeed)"
         >
           <Link href="/agents/variable-speed" className={subItem(pathname === '/agents/variable-speed')}>
             Dashboard
@@ -258,10 +221,8 @@ export const Sidebar: React.FC = () => {
 
         <Group
           title="Operations"
-          icon={<Wrench className="w-3.5 h-3.5" />}
           expanded={open.om}
           onToggle={() => setOpen((s) => ({ ...s, om: !s.om }))}
-          color="var(--cat-om)"
         >
           <Link href="/agents/operations-maintenance" className={subItem(pathname === '/agents/operations-maintenance')}>
             Dashboard

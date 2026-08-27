@@ -1,6 +1,6 @@
 ---
 title: HVAC API
-emoji: 🌡️
+emoji: hvac
 colorFrom: blue
 colorTo: indigo
 sdk: static

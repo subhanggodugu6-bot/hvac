@@ -10,18 +10,6 @@ import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 import type { TelemetryFrame } from '@/lib/hvac/telemetrySocket';
 import { OPPORTUNITIES } from '@/lib/hvac/opportunityConfig';
-import {
-  Bell,
-  Building2,
-  Clock,
-  MapPin,
-  Search,
-  Settings,
-  Sun,
-  Sunrise,
-  Sunset,
-  Moon,
-} from 'lucide-react';
 
 function num(value: unknown): number | null {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
@@ -172,16 +160,7 @@ export const Header: React.FC = () => {
     return () => clearInterval(interval);
   }, [timezone]);
 
-  const dayIcon =
-    facilityTime.dayState === 'MORNING' ? (
-      <Sunrise className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-    ) : facilityTime.dayState === 'EVENING' ? (
-      <Sunset className="w-3.5 h-3.5 text-orange-300 shrink-0" />
-    ) : facilityTime.dayState === 'NIGHT' ? (
-      <Moon className="w-3.5 h-3.5 text-slate-300 shrink-0" />
-    ) : (
-      <Sun className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-    );
+  const dayLabel = facilityTime.dayState;
 
   const toggleSafe = async () => {
     await hvacFetch('/api/platform/safe-mode', {
@@ -208,24 +187,20 @@ export const Header: React.FC = () => {
     <header className="sticky top-0 z-40 min-h-[4.25rem] py-2 bg-[color:var(--bg-header)] backdrop-blur-xl px-4 lg:px-6 flex items-center select-none">
       <div className="flex flex-wrap items-center justify-between w-full gap-2">
         <div className="flex items-center gap-3 shrink-0 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-violet-100 border border-violet-200 flex items-center justify-center text-violet-600">
-            <Building2 className="w-4 h-4" />
-          </div>
           <div className="min-w-0 hidden sm:block">
             <div className="text-[13px] font-semibold text-slate-900 tracking-tight leading-none">HVAC AI Control</div>
             <div className="text-[11px] text-slate-500 truncate flex items-center gap-1 mt-1 max-w-[14rem] lg:max-w-[18rem]">
               <span className="text-slate-700 truncate">{buildingName}</span>
               <span className="text-slate-300">·</span>
-              <MapPin className="w-3 h-3 shrink-0 text-slate-400" />
               <span className="truncate">{buildingLocation || 'Location unavailable'}</span>
             </div>
           </div>
+          <div className="sm:hidden text-[13px] font-semibold text-slate-900">HVAC</div>
         </div>
 
         <div className="hidden md:flex items-center gap-2 flex-1 min-w-0 max-w-2xl xl:max-w-3xl mx-1">
           <div className="bh-pill bh-pill-dark gap-2 shrink-0 max-w-[40%] xl:max-w-none">
-            {dayIcon}
-            <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <span className="text-[10px] font-semibold tracking-wide text-slate-500 shrink-0">{dayLabel}</span>
             <span className="truncate text-[11px]">
               {facilityTime.weekday}, {facilityTime.dateStr}
             </span>
@@ -237,7 +212,6 @@ export const Header: React.FC = () => {
           </div>
           <div className="relative flex-1 min-w-0">
             <div className="bh-pill bh-pill-search w-full gap-2 min-w-0">
-              <Search className="w-3.5 h-3.5 shrink-0" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -298,26 +272,26 @@ export const Header: React.FC = () => {
           </div>
           <button
             type="button"
-            className="relative w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:border-violet-300"
+            className="relative h-9 px-3 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-600 hover:border-violet-300"
             onClick={() => router.push('/overview')}
             title="Alerts"
             aria-label="Alerts"
           >
-            <Bell className="w-4 h-4" />
+            Alerts
             {alertCount > 0 ? (
-              <span className="absolute -top-0.5 -right-0.5 min-w-[1rem] h-4 px-1 rounded-full bg-pink-500 text-[9px] font-bold text-white flex items-center justify-center">
+              <span className="ml-1.5 inline-flex min-w-[1rem] h-4 px-1 rounded-full bg-pink-500 text-[9px] font-bold text-white items-center justify-center">
                 {alertCount > 99 ? '99+' : alertCount}
               </span>
             ) : null}
           </button>
           <button
             type="button"
-            className="w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:border-violet-300"
+            className="h-9 px-3 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-600 hover:border-violet-300"
             onClick={() => router.push('/platform/bms')}
             title="Gateway settings"
             aria-label="Gateway settings"
           >
-            <Settings className="w-4 h-4" />
+            Gateway
           </button>
           <select
             value={agentMode}

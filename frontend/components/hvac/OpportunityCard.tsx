@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 import { StatusBadge, toneForStatus } from './StatusBadge';
 import { emptyLabel } from './EmptyState';
 
@@ -92,7 +91,6 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         )}
         <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-violet-600 group-hover:text-violet-800">
           Open studio
-          <ArrowRight className="w-3.5 h-3.5" />
         </span>
       </div>
     </Link>

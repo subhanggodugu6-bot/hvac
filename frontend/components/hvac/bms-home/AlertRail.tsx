@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { AlertTriangle } from 'lucide-react';
 import { mappingHref, type DashboardAlert } from '@/lib/hvac/dashboardHome';
 
 function ageLabel(age?: number | null) {
@@ -23,11 +22,8 @@ export function AlertRail({ alerts }: { alerts?: DashboardAlert[] }) {
   const rows = alerts || [];
   return (
     <section className="card-static p-4 space-y-3 h-full">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-[13px] font-semibold text-slate-800">
-          <AlertTriangle className="w-4 h-4 text-pink-500" />
-          Alert Feed
-        </div>
+        <div className="flex items-center justify-between">
+        <div className="text-[13px] font-semibold text-slate-800">Alert Feed</div>
         <span className="text-[11px] font-semibold text-slate-400">{rows.length}</span>
       </div>
       {rows.length === 0 ? (

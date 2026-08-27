@@ -92,7 +92,7 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
             <ul className="mt-2 space-y-1 text-xs font-mono">
               {checks.map((c) => (
                 <li key={c.check_name} className={c.result === 'PASS' ? 'text-emerald-400' : 'text-amber-300'}>
-                  {c.result === 'PASS' ? '✓' : '✕'} {c.check_name}
+                  {c.result === 'PASS' ? 'PASS' : 'FAIL'} {c.check_name}
                   {c.result !== 'PASS' && c.reason ? ` — ${c.reason}` : ''}
                 </li>
               ))}

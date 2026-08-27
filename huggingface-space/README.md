@@ -1,6 +1,6 @@
 ---
 title: HVAC Agents API
-emoji: "🌡️"
+emoji: "hvac"
 colorFrom: blue
 colorTo: indigo
 sdk: docker

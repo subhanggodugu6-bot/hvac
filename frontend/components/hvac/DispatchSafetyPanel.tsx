@@ -115,27 +115,27 @@ export function DispatchSafetyPanel({
         {CHECKS.map((c) => {
           const ok = Boolean(checks[c.key]);
           return (
-            <li key={c.key} className={ok ? 'text-emerald-400' : 'text-slate-500'}>
-              {ok ? '✓' : '✕'} {ok ? c.okLabel : c.failLabel}
+            <li key={c.key} className={ok ? 'text-emerald-700' : 'text-slate-500'}>
+              {ok ? 'PASS' : 'FAIL'} {ok ? c.okLabel : c.failLabel}
             </li>
           );
         })}
-        <li className={live.safeMode ? 'text-rose-300' : 'text-emerald-400'}>
-          {live.safeMode ? '✕ SAFE MODE ON' : '✓ SAFE MODE OFF'}
+        <li className={live.safeMode ? 'text-rose-700' : 'text-emerald-700'}>
+          {live.safeMode ? 'FAIL SAFE MODE ON' : 'PASS SAFE MODE OFF'}
         </li>
-        <li className="text-slate-400">SAFETY {String(data.safety || (live.safeMode ? 'HOLD' : 'PASS'))}</li>
-        <li className="text-emerald-400">✓ DECISION {decision}</li>
-        <li className={confidence != null && confidence >= 0.65 ? 'text-emerald-400' : 'text-slate-500'}>
-          {confidence != null && confidence >= 0.65 ? '✓' : '✕'} CONFIDENCE {confidence == null ? '—' : confidence.toFixed(2)}
+        <li className="text-slate-500">SAFETY {String(data.safety || (live.safeMode ? 'HOLD' : 'PASS'))}</li>
+        <li className="text-emerald-700">PASS DECISION {decision}</li>
+        <li className={confidence != null && confidence >= 0.65 ? 'text-emerald-700' : 'text-slate-500'}>
+          {confidence != null && confidence >= 0.65 ? 'PASS' : 'FAIL'} CONFIDENCE {confidence == null ? '—' : confidence.toFixed(2)}
         </li>
-        <li className={currentValue != null ? 'text-emerald-400' : 'text-slate-500'}>
-          {currentValue != null ? '✓' : '✕'} CURRENT {currentValue == null ? '—' : currentValue}
+        <li className={currentValue != null ? 'text-emerald-700' : 'text-slate-500'}>
+          {currentValue != null ? 'PASS' : 'FAIL'} CURRENT {currentValue == null ? '—' : currentValue}
         </li>
-        <li className={targetValue != null ? 'text-emerald-400' : 'text-slate-500'}>
-          {targetValue != null ? '✓' : '✕'} TARGET {targetValue == null ? '—' : targetValue}
+        <li className={targetValue != null ? 'text-emerald-700' : 'text-slate-500'}>
+          {targetValue != null ? 'PASS' : 'FAIL'} TARGET {targetValue == null ? '—' : targetValue}
         </li>
-        <li className={writesOn && !dataset ? 'text-emerald-400' : 'text-rose-300'}>
-          {writesOn && !dataset ? '✓ WRITE ENABLED' : '✕ WRITE DISABLED'}
+        <li className={writesOn && !dataset ? 'text-emerald-700' : 'text-rose-700'}>
+          {writesOn && !dataset ? 'PASS WRITE ENABLED' : 'FAIL WRITE DISABLED'}
         </li>
       </ul>
       <div

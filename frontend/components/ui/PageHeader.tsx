@@ -9,7 +9,8 @@ interface PageHeaderProps {
   backHref?: string;
   backLabel?: string;
   crumb?: string;
-  icon: LucideIcon;
+  /** @deprecated Decorative icons removed — kept optional for call-site compatibility. */
+  icon?: LucideIcon;
   title: string;
   subtitle?: string;
   badge?: string;
@@ -20,7 +21,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   backHref,
   backLabel,
   crumb,
-  icon: Icon,
   title,
   subtitle,
   badge,
@@ -46,21 +46,16 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
               )}
             </div>
           )}
-          <div className="flex items-start gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-violet-100 border border-violet-200 flex items-center justify-center text-violet-600 shrink-0">
-              <Icon className="w-5 h-5" />
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h1 className="text-[1.85rem] font-bold text-slate-900 tracking-tight leading-tight">{title}</h1>
+              {badge && (
+                <StatusBadge tone="neutral" pulse={false}>
+                  {badge}
+                </StatusBadge>
+              )}
             </div>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-[1.85rem] font-bold text-slate-900 tracking-tight leading-tight">{title}</h1>
-                {badge && (
-                  <StatusBadge tone="neutral" pulse={false}>
-                    {badge}
-                  </StatusBadge>
-                )}
-              </div>
-              {subtitle && <p className="text-[13px] text-slate-500 mt-1.5 leading-relaxed max-w-3xl">{subtitle}</p>}
-            </div>
+            {subtitle && <p className="text-[13px] text-slate-500 mt-1.5 leading-relaxed max-w-3xl">{subtitle}</p>}
           </div>
         </div>
         {actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}

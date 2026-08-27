@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useCallback, useEffect, useState } from 'react';
-import { RotateCcw, ShieldCheck } from 'lucide-react';
 import { OpportunityWorkspace } from '@/components/hvac/guide/OpportunityWorkspace';
 import { KPIGrid } from '@/components/hvac/KPIGrid';
 import { EmptyState } from '@/components/hvac/EmptyState';
@@ -151,7 +150,6 @@ export const OfficialOpportunityStudio: React.FC<OfficialOpportunityStudioProps>
               load();
             }}
           >
-            <RotateCcw className="w-3.5 h-3.5" />
             Fail-Safe Rollback
           </button>
         ) : undefined
@@ -216,8 +214,8 @@ export const OfficialOpportunityStudio: React.FC<OfficialOpportunityStudioProps>
 
           {Array.isArray(data?.safety_checks) && data.safety_checks.length > 0 && (
             <div className="kpi-tile">
-              <div className="text-[11px] uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5" /> Safety Checks
+              <div className="text-[11px] uppercase tracking-wider text-slate-500 mb-3">
+                Safety Checks
               </div>
               <div className="space-y-2">
                 {data.safety_checks.map((c) => (

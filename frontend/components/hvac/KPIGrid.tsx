@@ -21,17 +21,11 @@ export const KPIGrid: React.FC<{ items: KpiItem[]; emptyText?: string; className
 }) => (
   <div className={className}>
     {items.map((kpi) => {
-      const Icon = kpi.icon;
       const missing = kpi.value === null || kpi.value === undefined || kpi.value === '';
       return (
         <div key={kpi.label} className="kpi-tile">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[11px] font-semibold text-slate-500 tracking-wide">{kpi.label}</span>
-            {Icon ? (
-              <span className="w-9 h-9 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-500 shrink-0">
-                <Icon className="w-4 h-4" />
-              </span>
-            ) : null}
           </div>
           <div
             className={`mt-3 min-h-[1.7rem] text-[1.65rem] font-bold tracking-tight leading-none ${

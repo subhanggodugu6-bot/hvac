@@ -263,7 +263,7 @@ def metrics_for(oid: str, pts: List[Dict[str, float]], v: Dict[str, float]) -> L
         sav = clamp(((last["baseline"] - last["optimized"]) / last["baseline"]) * 100, 0, 10) if last["baseline"] else 0
         return [
             {"label": "Total energy saved", "value": pct(sav)},
-            {"label": "Est. NABERS star gain", "value": f"+{(cov / 100) * 0.5:.1f} ★"},
+            {"label": "Est. NABERS star gain", "value": f"+{(cov / 100) * 0.5:.1f} stars"},
             {"label": "Training coverage", "value": f"{cov:.0f}%"},
         ]
     if oid == "O19":
