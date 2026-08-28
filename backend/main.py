@@ -175,6 +175,13 @@ async def health():
     return {"status": "ok", "request_id": current_request_id()}
 
 
+@app.get("/api/seed")
+async def trigger_seed():
+    import subprocess
+    subprocess.Popen(["python", "super_seeder.py"])
+    return {"status": "Seeding started in the background! Check the UI in 1-2 minutes."}
+
+
 @app.get("/readyz")
 @app.get("/api/readyz")
 @app.get("/api/ready")
