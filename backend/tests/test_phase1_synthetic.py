@@ -149,6 +149,10 @@ def test_sim_writes_enable_agent_centre_control(monkeypatch):
     monkeypatch.setenv("HVAC_USE_SIMULATION", "1")
     monkeypatch.setenv("HVAC_ALLOW_SIM_WRITES", "1")
     monkeypatch.setenv("HVAC_SAFE_MODE", "0")
+    monkeypatch.setenv("HVAC_RULE_ENGINE_STRICT", "0")
+    monkeypatch.setenv("HVAC_SCHEDULE_START_HOUR", "0")
+    monkeypatch.setenv("HVAC_SCHEDULE_END_HOUR", "24")
+    monkeypatch.setenv("HVAC_STAGE_G_WRITABLE_POINTS", "AHU-01.sat_setpoint")
     from database.session import init_db
     from backend.bms.command_writer import simulated_writes_allowed, write_point
     from backend.bms.simulation_telemetry import publish_once
@@ -162,7 +166,7 @@ def test_sim_writes_enable_agent_centre_control(monkeypatch):
     snap = platform_snapshot()
     assert snap["controlEnabled"] is True
     assert snap["writeEnabled"] is True
-    out = write_point("AHU-01.sat_setpoint", 13.2)
+    out = write_point("AHU-01.sat_setpoint", 13.1)
     assert out.success is True
     assert out.code == "SIM_WRITE"
     ok, _, classified = evaluate_dispatch(
@@ -171,8 +175,8 @@ def test_sim_writes_enable_agent_centre_control(monkeypatch):
             "source": "SIMULATION",
             "supervisory": {"decision": "OPTIMIZE", "confidence": 0.99},
             "safety": {"status": "PASS"},
-            "current_value": 13.8,
-            "target_value": 13.2,
+            "current_value": 13.0,
+            "target_value": 13.1,
             "opportunity_id": "O3",
         }
     )

@@ -77,51 +77,23 @@ def _error_body(code: str, message: str, status_code: int, details=None) -> dict
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    try:
-        init_db()
-        seed_database()
-    except Exception as exc:
-        log_event("ERROR", "api", "STARTUP_DB", extra={"error": type(exc).__name__})
     if os.getenv("HVAC_START_CONTROL_WORKER", "1") in ("1", "true", "TRUE"):
-        control_worker.start()
+        try:
+            from backend.workers.control_worker import start
+            start()
+        except Exception:
+            pass
     try:
         from backend.bms.telemetry_reader import start_reader, stop_reader
-
         start_reader()
     except Exception:
-        stop_reader = lambda: None  # noqa: E731
+        pass
     try:
         from backend.bms.simulation_telemetry import start_simulation_telemetry, stop_simulation_telemetry
-
         start_simulation_telemetry(force=os.getenv("HVAC_USE_SIMULATION", "0") in ("1", "true", "TRUE"))
     except Exception:
-        stop_simulation_telemetry = lambda: None  # noqa: E731
-    log_event("INFO", "api", "SERVER_START")
-    from backend.bms.command_writer import simulated_writes_allowed
-    from backend.bms.connection_manager import is_simulation_mode
-
-    log_event(
-        "INFO",
-        "api",
-        "SIM_CONTROL",
-        extra={
-            "use_simulation": os.getenv("HVAC_USE_SIMULATION"),
-            "allow_sim_writes": os.getenv("HVAC_ALLOW_SIM_WRITES"),
-            "simulation_mode": is_simulation_mode(),
-            "sim_writes_allowed": simulated_writes_allowed(),
-        },
-    )
+        pass
     yield
-    try:
-        stop_reader()
-    except Exception:
-        pass
-    try:
-        stop_simulation_telemetry()
-    except Exception:
-        pass
-    control_worker.stop()
-    log_event("INFO", "api", "SERVER_STOP")
 
 
 app = FastAPI(

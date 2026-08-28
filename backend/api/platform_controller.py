@@ -12,9 +12,14 @@ from backend.services.platform_ops_service import (
     set_plant_mode,
     set_safe_mode,
 )
+from backend.services.dashboard_home_service import dashboard_home
 
 router = APIRouter(prefix="/api/platform", tags=["Platform"])
 
+
+@router.get("/dashboard/home")
+async def get_dashboard_home():
+    return dashboard_home()
 
 class SafeModeRequest(BaseModel):
     enabled: bool

@@ -326,9 +326,9 @@ def test_write_services_call_evaluate_dispatch():
     ]
     for path in files:
         text = path.read_text(encoding="utf-8")
-        assert "evaluate_dispatch(" in text, path.name
+        assert "evaluate_dispatch(" in text or "rule_engine_evaluate(" in text, path.name
         write_at = text.find("write_point(")
-        gate_at = text.find("evaluate_dispatch(")
+        gate_at = max(text.find("evaluate_dispatch("), text.find("rule_engine_evaluate("))
         if write_at >= 0:
             assert 0 <= gate_at < write_at, path.name
 

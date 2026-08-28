@@ -8,11 +8,12 @@ const nextConfig = {
   // and leave localhost:3000 as unstyled HTML (Times New Roman, TELNO DATA).
   distDir: isNextDev ? '.next-dev' : '.next',
   async rewrites() {
-    return {
-      beforeFiles: [],
-      afterFiles: [],
-      fallback: [],
-    };
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'http://127.0.0.1:8000/api/:path*',
+      },
+    ];
   },
   async redirects() {
     return [

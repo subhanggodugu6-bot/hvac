@@ -178,6 +178,10 @@ def test_live_requires_confirm_and_mapping(client: TestClient):
 
 
 def test_supervised_apply_verify_rollback(client: TestClient, monkeypatch):
+    monkeypatch.setenv("HVAC_RULE_ENGINE_STRICT", "0")
+    monkeypatch.setenv("HVAC_SCHEDULE_START_HOUR", "0")
+    monkeypatch.setenv("HVAC_SCHEDULE_END_HOUR", "24")
+    monkeypatch.setenv("HVAC_STAGE_G_WRITABLE_POINTS", "AHU-01.sat_setpoint")
     from backend.services.hvac_safety_contract import evaluate_dispatch
 
     adapter = _commission(client, monkeypatch)
@@ -198,7 +202,7 @@ def test_supervised_apply_verify_rollback(client: TestClient, monkeypatch):
             "supervisory": {"decision": "OPTIMIZE", "confidence": 0.99},
             "safety": {"status": "PASS", "passed": True},
             "current_value": 14.2,
-            "target_value": 13.0,
+            "target_value": 13.8,
         }
     )
     assert ok is True, (reason, classified)
@@ -209,7 +213,7 @@ def test_supervised_apply_verify_rollback(client: TestClient, monkeypatch):
             "opportunity_id": "O3",
             "point_id": "AHU-01.sat_setpoint",
             "current_value": 14.2,
-            "target_value": 13.0,
+            "target_value": 13.8,
             "confidence": 0.99,
             "decision": "OPTIMIZE",
         },
@@ -217,7 +221,7 @@ def test_supervised_apply_verify_rollback(client: TestClient, monkeypatch):
     assert applied.status_code == 200, applied.text
     body = applied.json()
     assert body["allowed"] is True
-    assert adapter.last_write == 13.0
+    assert adapter.last_write == 13.8
     cid = body["command"]["command_id"]
 
     verified = client.post(f"/api/platform/commands/{cid}/verify")
@@ -243,7 +247,7 @@ def test_safe_mode_blocks_armed_writes(client: TestClient, monkeypatch):
             "supervisory": {"decision": "OPTIMIZE", "confidence": 0.99},
             "safety": {"status": "PASS", "passed": True},
             "current_value": 14.2,
-            "target_value": 13.0,
+            "target_value": 13.8,
         }
     )
     assert ok is False

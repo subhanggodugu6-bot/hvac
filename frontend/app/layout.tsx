@@ -31,6 +31,8 @@ export const metadata: Metadata = {
   description: "Premium HVAC engineering control and optimization platform (O1–O20).",
 };
 
+import "../public/hvac-shell.css";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,9 +40,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${jakarta.variable} ${jetbrains.variable}`} style={{ colorScheme: "light" }}>
-      <head>
-        <link rel="stylesheet" href="/hvac-shell.css" />
-      </head>
       <body className="hvac-shell text-slate-700 min-h-screen flex flex-col font-sans selection:bg-violet-200 selection:text-violet-950 antialiased">
         <QueryProvider>
           <LiveTelemetryProvider>

@@ -2,7 +2,6 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "backend")))
 
 if os.getenv("HVAC_ENV", "development").lower() == "production":
     raise SystemExit("Refusing to run init_all_dbs.py in production.")
@@ -30,4 +29,9 @@ for db_path in [
         conn.close()
 
 init_db()
+from database.seed.seed_data import seed_database
+try:
+    seed_database()
+except Exception as e:
+    print(f"Seed skipped or failed: {e}")
 print("SUCCESS: Tables recreated cleanly!")

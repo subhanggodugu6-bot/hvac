@@ -18,7 +18,7 @@ function row(label: string, value: string, status?: string | null) {
 export function O15OperatingState({ data }: { data: O15Dashboard }) {
   const cs = data.current_state || {};
   const os = data.optimized_state || {};
-  const units = data.condensers || [];
+  const units = useMemo(() => data.condensers || [], [data.condensers]);
   const ids = useMemo(
     () => units.map((u, i) => String(u.equipment_id || u.name || i)),
     [units]

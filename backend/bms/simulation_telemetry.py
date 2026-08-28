@@ -305,7 +305,6 @@ def apply_simulated_write(point_id: str, value: float) -> None:
 
 
 def seed_synthetic_history(hours: float = 2.0, step_minutes: float = 15.0) -> int:
-    """Backfill SIMULATION samples so Agent Centre and charts have a recent series."""
     global _HISTORY_SEEDED
     hours = max(0.25, float(hours))
     step = max(1.0, float(step_minutes))
@@ -453,14 +452,17 @@ def start_simulation_telemetry(interval: float = 8.0, force: bool = False) -> No
     if _THREAD and _THREAD.is_alive():
         return
     _STOP.clear()
-    try:
-        ensure_synthetic_plant()
-    except Exception:
+    def _run_sim():
         try:
-            publish_once()
+            ensure_synthetic_plant()
         except Exception:
-            pass
-    _THREAD = threading.Thread(target=_loop, args=(max(5.0, interval),), name="sim-telemetry", daemon=True)
+            try:
+                publish_once()
+            except Exception:
+                pass
+        _loop(max(5.0, interval))
+        
+    _THREAD = threading.Thread(target=_run_sim, name="sim-telemetry", daemon=True)
     _THREAD.start()
 
 

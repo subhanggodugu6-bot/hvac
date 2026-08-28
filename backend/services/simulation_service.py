@@ -1,9 +1,9 @@
 import json
 import os
 from typing import Dict, Any, List
-from agents.scheduling_supervisory.orchestrator import SupervisoryOrchestrator
-from agents.scheduling_supervisory.state import AgentMode
-from config.engineering_limits import EngineeringLimitsConfig, DEFAULT_ENGINEERING_LIMITS
+from backend.agents.scheduling_supervisory.orchestrator import SupervisoryOrchestrator
+from backend.agents.scheduling_supervisory.state import AgentMode
+from backend.config.engineering_limits import EngineeringLimitsConfig, DEFAULT_ENGINEERING_LIMITS
 from database.session import SessionLocal
 from database.models import EngineeringLimitDB
 from backend.services.logging_service import log_event

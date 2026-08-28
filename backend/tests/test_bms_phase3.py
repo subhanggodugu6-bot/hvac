@@ -157,5 +157,8 @@ def test_groups_write_disabled(client: TestClient):
         assert g["controlAvailability"] == "WRITE DISABLED"
         assert g.get("cards")
         for card in g["cards"]:
-            assert card["control"] == "WRITE DISABLED"
+            if card.get("kind") in ("ADVISORY", "MAINTENANCE", "REVIEW"):
+                assert card["control"] == card["kind"]
+            else:
+                assert card["control"] == "WRITE DISABLED"
             assert isinstance(card.get("model"), str)
