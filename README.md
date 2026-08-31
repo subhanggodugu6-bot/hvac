@@ -21,7 +21,7 @@ There is **no application login**. Opening `/` redirects to `/overview`. Product
 | --- | --- | --- |
 | Source | GitHub [`subhanggodugu6-bot/hvac`](https://github.com/subhanggodugu6-bot/hvac) | Sole remote / CI source |
 | API | [Render](https://dashboard.render.com) Blueprint `hvac-api` (`render.yaml`) | Docker, auto-deploy on `main` |
-| UI | [Vercel](https://vercel.com) (`vercel.json`, root directory `frontend`) | Next.js, auto-deploy on `main` |
+| UI | [Vercel](https://vercel.com) (`frontend/vercel.json`, root directory `frontend`) | Next.js, auto-deploy on `main` |
 
 **Do not use** Netlify, Hugging Face Spaces, or any other GitHub account/repo for this demo. The API stays on Render — do not deploy FastAPI to Vercel.
 
@@ -242,9 +242,14 @@ render blueprint launch
 ### 3. Vercel — Next.js Control Center
 
 1. Open [Vercel](https://vercel.com/new) → **Add New** → **Project** → import `subhanggodugu6-bot/hvac`.
-2. Set **Root Directory** to `frontend`. Framework preset is detected as Next.js; build settings
-   come from [`vercel.json`](vercel.json) (`npm ci`, `npm run build`).
-3. Project env vars (Settings → Environment Variables), using the Render URL from step 2:
+2. Set **Root Directory** to `frontend` (click *Edit* next to it). Vercel only reads
+   `vercel.json` from inside the root directory, so the config lives at
+   [`frontend/vercel.json`](frontend/vercel.json) (`npm ci`, `npm run build`).
+3. Set **Application/Framework Preset** to **Next.js**. If the importer guessed *FastAPI* it
+   matched the Python API at the repo root — that belongs on Render, not here.
+4. On the import screen, **do not import the auto-detected environment variables**. Those come
+   from `.env.example` and are backend settings. Add only the two below.
+5. Project env vars (Settings → Environment Variables), using the Render URL from step 2:
 
 ```
 HVAC_API_ORIGIN=https://hvac-api.onrender.com
@@ -253,9 +258,9 @@ NEXT_PUBLIC_API_URL=https://hvac-api.onrender.com/api
 
 (Replace host if Render assigned a different subdomain.)
 
-4. Trigger a **new deploy** so `NEXT_PUBLIC_*` is baked into the client bundle. Template: [`frontend/.env.vercel.example`](frontend/.env.vercel.example).
+6. Trigger a **new deploy** so `NEXT_PUBLIC_*` is baked into the client bundle. Template: [`frontend/.env.vercel.example`](frontend/.env.vercel.example).
 
-5. Open the Vercel site URL → `/overview`. Header plant mode **DATASET** should show **SIMULATED** (never green LIVE from the dataset feeder).
+7. Open the Vercel site URL → `/overview`. Header plant mode **DATASET** should show **SIMULATED** (never green LIVE from the dataset feeder).
 
 The API is a separate Render service — Vercel hosts the UI only. Do not deploy FastAPI to Vercel.
 
