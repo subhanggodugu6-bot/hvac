@@ -1,6 +1,8 @@
 """Persist control-path audit and SAFE_MODE. Product alert/approval queues are not exposed."""
 from __future__ import annotations
 
+import threading
+import time
 import uuid
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
@@ -115,25 +117,54 @@ def _env_plant_mode() -> str:
     return PLANT_DATASET
 
 
-def get_plant_mode() -> str:
-    if _plant_mode_persist():
+# Plant mode is read thousands of times per dashboard request (once per telemetry
+# point, via accepts_telemetry_source). Each read was a SQLite round trip, which
+# made the home payload take ~20s. Only the persisted row is memoised -- the env
+# fallback stays live so tests and restarts can retarget the mode immediately.
+_PLANT_MODE_TTL_S = 2.0
+_plant_mode_lock = threading.Lock()
+_persisted_plant_mode_cache: Optional[tuple[float, Optional[str]]] = None
+
+
+def invalidate_plant_mode_cache() -> None:
+    global _persisted_plant_mode_cache
+    with _plant_mode_lock:
+        _persisted_plant_mode_cache = None
+
+
+def _read_persisted_plant_mode() -> Optional[str]:
+    try:
+        db = SessionLocal()
         try:
-            db = SessionLocal()
-            try:
-                row = db.query(PlatformSettingDB).filter_by(key=PLANT_MODE_KEY).first()
-                if row:
-                    parsed = _normalize_plant_mode(row.value)
-                    if parsed:
-                        return parsed
-            finally:
-                db.close()
-        except Exception:
-            pass
+            row = db.query(PlatformSettingDB).filter_by(key=PLANT_MODE_KEY).first()
+            if row:
+                return _normalize_plant_mode(row.value)
+        finally:
+            db.close()
+    except Exception:
+        pass
+    return None
+
+
+def get_plant_mode() -> str:
+    global _persisted_plant_mode_cache
+    if _plant_mode_persist():
+        now = time.monotonic()
+        cached = _persisted_plant_mode_cache
+        if cached is not None and now - cached[0] < _PLANT_MODE_TTL_S:
+            persisted = cached[1]
+        else:
+            persisted = _read_persisted_plant_mode()
+            with _plant_mode_lock:
+                _persisted_plant_mode_cache = (now, persisted)
+        if persisted:
+            return persisted
     return _env_plant_mode()
 
 
 def set_plant_mode(mode: str) -> str:
     parsed = _normalize_plant_mode(mode) or PLANT_DATASET
+    invalidate_plant_mode_cache()
     db = SessionLocal()
     try:
         row = db.query(PlatformSettingDB).filter_by(key=PLANT_MODE_KEY).first()
@@ -147,6 +178,7 @@ def set_plant_mode(mode: str) -> str:
         db.rollback()
     finally:
         db.close()
+    invalidate_plant_mode_cache()
     apply_plant_mode(parsed)
     return parsed
 

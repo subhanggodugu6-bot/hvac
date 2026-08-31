@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import time
 import uuid
 from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional, Type
@@ -77,9 +78,17 @@ def make_adapter(protocol: str) -> BMSGateway:
     return cls()
 
 
+# health() is consulted once per telemetry point while building the dashboard
+# payload (hundreds of times per request), and each call re-read the connection
+# row from SQLite. The row only changes through this manager's own writers, which
+# invalidate the memo; the TTL bounds staleness if anything mutates it elsewhere.
+_ROW_CACHE_TTL_S = 1.5
+
+
 class ConnectionManager:
     def __init__(self) -> None:
         self._adapter: Optional[BMSGateway] = None
+        self._row_cache: Dict[str, tuple] = {}
 
     def _session(self):
         from database.session import SessionLocal
@@ -89,18 +98,29 @@ class ConnectionManager:
     def _building_id(self, building_id: Optional[str] = None) -> str:
         return building_id or os.getenv("HVAC_DEFAULT_BUILDING_ID") or "bldg-corp-hq-01"
 
+    def invalidate_row_cache(self) -> None:
+        self._row_cache.clear()
+
     def current_row(self, building_id: Optional[str] = None):
         from database.models_bms import BmsConnectionDB
 
+        bid = self._building_id(building_id)
+        cached = self._row_cache.get(bid)
+        if cached is not None and time.monotonic() - cached[0] < _ROW_CACHE_TTL_S:
+            return cached[1]
         db = self._session()
         try:
-            bid = self._building_id(building_id)
-            return (
+            row = (
                 db.query(BmsConnectionDB)
                 .filter(BmsConnectionDB.building_id == bid)
                 .order_by(BmsConnectionDB.updated_at.desc())
                 .first()
             )
+            if row is not None:
+                # Detach so the row stays readable after the session closes.
+                db.expunge(row)
+            self._row_cache[bid] = (time.monotonic(), row)
+            return row
         except Exception:
             return None
         finally:
@@ -186,6 +206,7 @@ class ConnectionManager:
                 row.updated_at = now
             db.commit()
             db.refresh(row)
+            self.invalidate_row_cache()
             return {
                 "id": row.id,
                 "building_id": row.building_id,
@@ -216,6 +237,7 @@ class ConnectionManager:
             else:
                 row.write_enabled = False
             db.commit()
+            self.invalidate_row_cache()
         finally:
             db.close()
 
@@ -304,6 +326,7 @@ class ConnectionManager:
             rec.write_enabled = bool(enabled)
             rec.updated_at = _now()
             db.commit()
+            self.invalidate_row_cache()
         finally:
             db.close()
 

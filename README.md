@@ -260,13 +260,30 @@ NEXT_PUBLIC_API_URL=https://hvac-api.onrender.com/api
 
 5. Open the Netlify site URL → `/overview`. Header plant mode **DATASET** should show **SIMULATED** (never green LIVE from the dataset feeder).
 
-### 4. Smoke check
+### 4. Deploy automatically on push
+
+Connecting the repo in each dashboard already gives auto-deploy (`autoDeploy: true` on
+Render, Git integration on Netlify). [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+additionally kicks both services **only after CI passes on `main`**, so a red build never ships.
+
+Add these repository secrets (Settings → Secrets and variables → Actions):
+
+| Secret | Where to get it |
+| --- | --- |
+| `RENDER_DEPLOY_HOOK_URL` | Render → `hvac-api` → Settings → Deploy Hook |
+| `NETLIFY_BUILD_HOOK_URL` | Netlify → Site configuration → Build & deploy → Build hooks |
+
+Either secret may be omitted; the workflow skips that service and still succeeds.
+
+### 5. Smoke check
 
 ```bash
-python scripts/smoke_demo.py https://hvac-api.onrender.com
+python scripts/smoke_demo.py https://hvac-api.onrender.com   # API contract
+python scripts/bench_api.py  https://hvac-api.onrender.com   # endpoint latency
+python scripts/smoke_routes.py https://<site>.netlify.app    # every UI route
 ```
 
-### 5. What not to use
+### 6. What not to use
 
 | Retired | Reason |
 | --- | --- |

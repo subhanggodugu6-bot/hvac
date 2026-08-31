@@ -1,0 +1,21 @@
+# Next.js Control Center (canonical UI host).
+# Repo: https://github.com/subhanggodugu6-bot/hvac
+# Set in Netlify UI (Site settings -> Environment variables):
+#   HVAC_API_ORIGIN=https://hvac-api.onrender.com
+#   NEXT_PUBLIC_API_URL=https://hvac-api.onrender.com/api
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

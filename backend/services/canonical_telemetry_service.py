@@ -30,17 +30,20 @@ def _now() -> datetime:
     return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
-def record_point(
+def _normalize_reading(
     point_id: str,
     value: Optional[float],
     unit: Optional[str],
     source: str,
     quality: str,
-    building_id: Optional[str] = None,
-    asset_id: Optional[str] = None,
-    equipment_id: Optional[str] = None,
-    timestamp: Optional[datetime] = None,
-) -> Dict[str, Any]:
+    building_id: Optional[str],
+    asset_id: Optional[str],
+    equipment_id: Optional[str],
+    timestamp: Optional[datetime],
+):
+    """Shared quality/age derivation for both the single and batch ingest paths."""
+    from database.models_platform import CanonicalTelemetryDB
+
     ts = timestamp or _now()
     age = max(0.0, (_now() - ts).total_seconds())
     src = normalize_telemetry_source(source)
@@ -49,9 +52,6 @@ def record_point(
         q = "GOOD"
     if age > STALE_SECONDS and q == "GOOD" and src in LIVE_SOURCES:
         q = "STALE"
-    from database.session import SessionLocal
-    from database.models_platform import CanonicalTelemetryDB
-
     row = CanonicalTelemetryDB(
         point_id=point_id,
         building_id=building_id,
@@ -63,6 +63,68 @@ def record_point(
         source=src,
         quality=q,
         age_seconds=age,
+    )
+    return row, ts, age, src, q
+
+
+def record_points(readings: Sequence[Dict[str, Any]]) -> int:
+    """Ingest many readings in one transaction.
+
+    The simulation feeder publishes ~160 points per tick; committing each one
+    separately dominated request time, so callers with a full tick use this.
+    """
+    if not readings:
+        return 0
+    from database.session import SessionLocal
+
+    prepared = [
+        _normalize_reading(
+            point_id=r["point_id"],
+            value=r.get("value"),
+            unit=r.get("unit"),
+            source=r.get("source") or "SIMULATION",
+            quality=r.get("quality") or "GOOD",
+            building_id=r.get("building_id"),
+            asset_id=r.get("asset_id"),
+            equipment_id=r.get("equipment_id"),
+            timestamp=r.get("timestamp"),
+        )
+        for r in readings
+    ]
+    db = SessionLocal()
+    try:
+        db.add_all([p[0] for p in prepared])
+        db.commit()
+        payloads = [as_contract(p[0]) for p in prepared]
+    except Exception:
+        db.rollback()
+        return 0
+    finally:
+        db.close()
+    cache_clear(_CACHE_PREFIX)
+    for payload in payloads:
+        try:
+            buffer_push(payload["point_id"], payload)
+        except Exception:
+            pass
+    return len(payloads)
+
+
+def record_point(
+    point_id: str,
+    value: Optional[float],
+    unit: Optional[str],
+    source: str,
+    quality: str,
+    building_id: Optional[str] = None,
+    asset_id: Optional[str] = None,
+    equipment_id: Optional[str] = None,
+    timestamp: Optional[datetime] = None,
+) -> Dict[str, Any]:
+    from database.session import SessionLocal
+
+    row, ts, age, src, q = _normalize_reading(
+        point_id, value, unit, source, quality, building_id, asset_id, equipment_id, timestamp
     )
     db = SessionLocal()
     committed = False

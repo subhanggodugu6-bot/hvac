@@ -1,0 +1,36 @@
+name: Deploy
+
+# Fires after CI passes on main/master. Render and Netlify each expose a
+# "deploy hook" URL; storing them as repo secrets lets a push deploy both
+# without relying on the dashboards' own git integrations.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy API to Render
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL not set; skipping Render deploy."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" && echo "Render deploy triggered."
+
+      - name: Deploy UI to Netlify
+        env:
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "NETLIFY_BUILD_HOOK_URL not set; skipping Netlify deploy."
+            exit 0
+          fi
+          curl -fsS -X POST -d '{}' "$HOOK" && echo "Netlify deploy triggered."

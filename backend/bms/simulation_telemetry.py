@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Tuple
 
 from backend.bms.connection_manager import is_simulation_mode
-from backend.services.canonical_telemetry_service import record_point
+from backend.services.canonical_telemetry_service import record_point, record_points
 from backend.services.opportunity_feature_catalog import CATALOG
 
 _STOP = threading.Event()
@@ -266,24 +266,43 @@ def publish_once(timestamp: Optional[datetime] = None, tick: Optional[float] = N
     weather = weather_service.snapshot()
     oat = weather.get("oat")
     rh = weather.get("humidity") or weather.get("oah")
-    n = 0
     t = time.time() if tick is None else float(tick)
     drift = math.sin(t / 40.0) * 0.04
+    readings = []
     for eq, canon, pid in _catalog_points():
         if pid in _OVERRIDES:
             value = float(_OVERRIDES[pid])
         else:
             base = _BASE.get(canon, 1.0)
             value = _value_for(canon, base, drift, oat)
-        _emit(pid, value, _UNITS.get(canon), eq, timestamp=timestamp)
-        n += 1
+        readings.append(
+            {
+                "point_id": pid,
+                "value": value,
+                "unit": _UNITS.get(canon),
+                "equipment_id": eq,
+                "source": "SIMULATION",
+                "quality": "GOOD",
+                "timestamp": timestamp,
+            }
+        )
     for pid, (eq, unit, base) in _EXTRA.items():
         if pid in _OVERRIDES:
             value = float(_OVERRIDES[pid])
         else:
             value = _extra_value(pid, float(base), drift, oat, rh)
-        _emit(pid, value, unit, eq, timestamp=timestamp)
-        n += 1
+        readings.append(
+            {
+                "point_id": pid,
+                "value": value,
+                "unit": unit,
+                "equipment_id": eq,
+                "source": "SIMULATION",
+                "quality": "GOOD",
+                "timestamp": timestamp,
+            }
+        )
+    n = record_points(readings)
     if timestamp is None:
         try:
             from backend.services.dataset_persist_service import persist_dataset_modules

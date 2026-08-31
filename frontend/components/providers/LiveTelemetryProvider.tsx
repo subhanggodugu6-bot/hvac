@@ -5,15 +5,15 @@ import { telemetrySocket } from '@/lib/hvac/telemetrySocket';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 import type { TelemetryEvent, TelemetryFrame } from '@/lib/hvac/telemetrySocket';
 
+import { apiJson } from '@/lib/api/client';
+
 async function restFrame(): Promise<TelemetryFrame | null> {
   try {
-    const [stRes, telRes] = await Promise.all([
-      fetch('/api/platform/status', { cache: 'no-store' }),
-      fetch('/api/platform/telemetry', { cache: 'no-store' }),
+    const [status, telBody] = await Promise.all([
+      apiJson('/platform/status'),
+      apiJson('/platform/telemetry').catch(() => ({ points: [] })),
     ]);
-    if (!stRes.ok) return null;
-    const status = await stRes.json();
-    const telBody = telRes.ok ? await telRes.json() : { points: [] };
+    if (!status) return null;
     const events: TelemetryEvent[] = (telBody.points || []).map((p: Record<string, unknown>) => {
       const pid = String(p.point_id || '');
       return {

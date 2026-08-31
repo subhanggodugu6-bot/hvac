@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSupervisoryStore } from '@/lib/store';
 import { AgentMode } from '@/lib/types';
 import { DEFAULT_FACILITY_CONFIG } from '@/lib/facilityConfig';
-import { hvacFetch } from '@/lib/api/client';
+import { hvacFetch, apiJson, API_BASE } from '@/lib/api/client';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 import type { TelemetryFrame } from '@/lib/hvac/telemetrySocket';
@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
   const applyFrame = useLiveTelemetry((s) => s.applyFrame);
 
   const setPlant = async (mode: 'DATASET' | 'LIVE_BMS') => {
-    const res = await hvacFetch('/api/platform/plant-mode', {
+    const res = await hvacFetch(`${API_BASE}/platform/plant-mode`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ mode, reason: 'header-toggle' }),
@@ -92,12 +92,11 @@ export const Header: React.FC = () => {
     let cancelled = false;
     const load = async () => {
       try {
-        const [statusRes, homeRes] = await Promise.all([
-          fetch('/api/platform/status', { cache: 'no-store' }),
-          fetch('/api/platform/dashboard/home', { cache: 'no-store' }),
+        const [body, homeData] = await Promise.all([
+          apiJson('/platform/status'),
+          apiJson('/platform/dashboard/home').catch(() => null),
         ]);
-        if (statusRes.ok && !cancelled) {
-          const body = (await statusRes.json()) as Record<string, unknown>;
+        if (body && !cancelled) {
           const facility = (body.facility || body.building) as
             | { name?: string; location?: string; timezone?: string }
             | undefined;
@@ -124,9 +123,8 @@ export const Header: React.FC = () => {
             );
           }
         }
-        if (homeRes.ok && !cancelled) {
-          const home = await homeRes.json();
-          setAlertCount(Number(home?.kpis?.alertCount || home?.alerts?.length || 0));
+        if (homeData && !cancelled) {
+          setAlertCount(Number(homeData?.kpis?.alertCount || homeData?.alerts?.length || 0));
         }
       } catch {
         /* keep last known */
@@ -163,7 +161,7 @@ export const Header: React.FC = () => {
   const dayLabel = facilityTime.dayState;
 
   const toggleSafe = async () => {
-    await hvacFetch('/api/platform/safe-mode', {
+    await hvacFetch(`${API_BASE}/platform/safe-mode`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ enabled: !safeMode, reason: 'header-toggle' }),
