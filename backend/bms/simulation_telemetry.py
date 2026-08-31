@@ -18,6 +18,8 @@ from backend.services.opportunity_feature_catalog import CATALOG
 _STOP = threading.Event()
 _THREAD: Optional[threading.Thread] = None
 _HISTORY_SEEDED = False
+_HYDRATED = False
+_HYDRATE_LOCK = threading.Lock()
 _OVERRIDES: Dict[str, float] = {}
 
 _UNITS: Dict[str, Optional[str]] = {
@@ -389,13 +391,39 @@ def ensure_synthetic_plant() -> int:
     return seed_synthetic_history()
 
 
+def reset_hydration_state() -> None:
+    """Forget that this process seeded the demo tables.
+
+    Called by init_db so a rebuilt schema (notably between tests) is re-seeded
+    instead of being skipped by the once-per-process guard.
+    """
+    global _HYDRATED
+    with _HYDRATE_LOCK:
+        _HYDRATED = False
+
+
 def hydrate_synthetic_dataset() -> int:
     """Fill canonical + DEMO tables so every page can run without LIVE BMS.
 
     Gated on HVAC_USE_SIMULATION so pytest (flag off) still sees empty plants.
+    The demo seeders are idempotent but slow, so they run once per process and
+    later calls only top up the plant; reset_hydration_state clears the guard.
     """
+    global _HYDRATED
     if not _use_simulation_flag() or not is_simulation_mode():
         return 0
+    with _HYDRATE_LOCK:
+        if _HYDRATED:
+            try:
+                return ensure_synthetic_plant()
+            except Exception:
+                return 0
+        n = _hydrate_synthetic_dataset_inner()
+        _HYDRATED = True
+        return n
+
+
+def _hydrate_synthetic_dataset_inner() -> int:
     n = 0
     try:
         n = ensure_synthetic_plant()
@@ -473,12 +501,15 @@ def start_simulation_telemetry(interval: float = 8.0, force: bool = False) -> No
     _STOP.clear()
     def _run_sim():
         try:
-            ensure_synthetic_plant()
+            hydrate_synthetic_dataset()
         except Exception:
             try:
-                publish_once()
+                ensure_synthetic_plant()
             except Exception:
-                pass
+                try:
+                    publish_once()
+                except Exception:
+                    pass
         _loop(max(5.0, interval))
         
     _THREAD = threading.Thread(target=_run_sim, name="sim-telemetry", daemon=True)

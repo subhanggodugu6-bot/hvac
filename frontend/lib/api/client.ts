@@ -12,6 +12,18 @@ export const API_BASE =
       ? `${process.env['HVAC_API_ORIGIN'].replace(/\/$/, '')}/api`
       : 'http://localhost:8000/api');
 
+/** Turn `/api/...`, `/platform/...`, or a full URL into a fetchable API URL. */
+export function resolveApiUrl(input: string): string {
+  if (/^https?:/i.test(input)) return input;
+  let suffix = input.startsWith('/') ? input : `/${input}`;
+  if (suffix.startsWith('/api/')) suffix = suffix.slice(4);
+  else if (suffix === '/api') suffix = '';
+  const direct = publicApiBase();
+  if (direct) return `${direct}${suffix}`;
+  if (typeof window !== 'undefined') return `/api${suffix}`;
+  return `${API_BASE}${suffix}`;
+}
+
 export class ApiError extends Error {
   code?: string;
   requestId?: string;
@@ -40,6 +52,7 @@ async function fetchWithTimeout(input: string, init: RequestInit, ms: number): P
 
 /** Unauthenticated HVAC API client: request IDs, structured errors, timeout, one retry on GET. */
 export async function hvacFetch(input: string, init: RequestInit = {}): Promise<Response> {
+  const url = resolveApiUrl(input);
   const headers = new Headers(init.headers || {});
   if (!headers.has("X-Request-ID")) headers.set("X-Request-ID", requestId());
   if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
@@ -49,7 +62,7 @@ export async function hvacFetch(input: string, init: RequestInit = {}): Promise<
   let lastErr: unknown;
   for (let i = 0; i < attempts; i++) {
     try {
-      last = await fetchWithTimeout(input, { ...init, headers }, 20000);
+      last = await fetchWithTimeout(url, { ...init, headers }, 20000);
       if (last.status >= 500 && i < attempts - 1) continue;
       return last;
     } catch (e) {
@@ -63,16 +76,7 @@ export async function hvacFetch(input: string, init: RequestInit = {}): Promise<
 
 /** Browser uses NEXT_PUBLIC_API_URL when set (Render); otherwise same-origin `/api`. */
 export async function apiJson(path: string, init: RequestInit = {}) {
-  const suffix = path.startsWith("/") ? path : `/${path}`;
-  const direct = publicApiBase();
-  const url = path.startsWith("http")
-    ? path
-    : direct
-      ? `${direct}${suffix}`
-      : typeof window !== "undefined"
-        ? `/api${suffix}`
-        : `${API_BASE}${suffix}`;
-  const res = await hvacFetch(url, { ...init, cache: init.cache ?? "no-store" });
+  const res = await hvacFetch(path, { ...init, cache: init.cache ?? "no-store" });
   if (!res.ok) {
     let message = `DATA SOURCE ERROR ${res.status}`;
     let code: string | undefined;

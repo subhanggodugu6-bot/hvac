@@ -53,6 +53,12 @@ def init_db():
     if _allow_create_all():
         Base.metadata.create_all(bind=engine)
     try:
+        from backend.bms.simulation_telemetry import reset_hydration_state
+
+        reset_hydration_state()
+    except Exception:
+        pass
+    try:
         from backend.services.o1_telemetry_service import ensure_point_map_and_config
         ensure_point_map_and_config()
     except Exception as exc:

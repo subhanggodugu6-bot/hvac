@@ -7,15 +7,9 @@ const nextConfig = {
   // build while the dev server is up used to wipe `.next/static/css/app/layout.css`
   // and leave localhost:3000 as unstyled HTML (Times New Roman, TELNO DATA).
   distDir: isNextDev ? '.next-dev' : '.next',
-  async rewrites() {
-    if (!isNextDev) return [];
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://127.0.0.1:8000/api/:path*',
-      },
-    ];
-  },
+  // No `/api` rewrite here on purpose. app/api/[...path]/route.ts proxies to
+  // HVAC_API_ORIGIN, and a filesystem route always wins over an afterFiles
+  // rewrite, so a rewrite would be dead config that only misleads.
   async redirects() {
     return [
       {

@@ -21,6 +21,15 @@ router = APIRouter(prefix="/api/platform", tags=["Platform"])
 async def get_dashboard_home():
     return dashboard_home()
 
+
+@router.get("/opportunities")
+async def get_platform_opportunities():
+    home = dashboard_home()
+    rows = []
+    for chapter in home.get("chapters") or []:
+        rows.extend(chapter.get("opportunities") or [])
+    return {"opportunities": rows, "chapters": home.get("chapters") or []}
+
 class SafeModeRequest(BaseModel):
     enabled: bool
     reason: Optional[str] = None
