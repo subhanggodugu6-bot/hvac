@@ -1,5 +1,5 @@
 # Hugging Face Space: FastAPI + O1–O20 agents only (no Next.js UI).
-# UI is deployed on Netlify.
+# UI is deployed on Vercel.
 
 FROM python:3.12-slim-bookworm
 
@@ -39,7 +39,7 @@ ENV HVAC_ALLOW_CREATE_ALL=1
 ENV HVAC_START_CONTROL_WORKER=1
 ENV HVAC_SAFE_MODE=0
 ENV HVAC_CORS_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
-ENV HVAC_CORS_ORIGIN_REGEX=https://.*\.(netlify\.app|onrender\.com)
+ENV HVAC_CORS_ORIGIN_REGEX=https://.*\.(vercel\.app|onrender\.com)
 ENV PORT=7860
 
 EXPOSE 7860

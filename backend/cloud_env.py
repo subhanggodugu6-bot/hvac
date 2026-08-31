@@ -1,13 +1,13 @@
-"""Hosted-demo defaults for Render (API) and Netlify (UI)."""
+"""Hosted-demo defaults for Render (API) and Vercel (UI)."""
 from __future__ import annotations
 
 import os
 
-DEMO_CORS_ORIGIN_REGEX = r"https://.*\.(netlify\.app|onrender\.com)"
+DEMO_CORS_ORIGIN_REGEX = r"https://.*\.(vercel\.app|onrender\.com)"
 
 
 def is_hosted_demo() -> bool:
-    return any(os.getenv(k) for k in ("RENDER", "NETLIFY"))
+    return any(os.getenv(k) for k in ("RENDER", "VERCEL"))
 
 
 def apply_cloud_demo_env() -> None:

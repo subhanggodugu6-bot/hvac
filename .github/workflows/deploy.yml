@@ -1,6 +1,6 @@
 name: Deploy
 
-# Fires after CI passes on main/master. Render and Netlify each expose a
+# Fires after CI passes on main/master. Render and Vercel each expose a
 # "deploy hook" URL; storing them as repo secrets lets a push deploy both
 # without relying on the dashboards' own git integrations.
 on:
@@ -25,12 +25,12 @@ jobs:
           fi
           curl -fsS -X POST "$HOOK" && echo "Render deploy triggered."
 
-      - name: Deploy UI to Netlify
+      - name: Deploy UI to Vercel
         env:
-          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
         run: |
           if [ -z "$HOOK" ]; then
-            echo "NETLIFY_BUILD_HOOK_URL not set; skipping Netlify deploy."
+            echo "VERCEL_DEPLOY_HOOK_URL not set; skipping Vercel deploy."
             exit 0
           fi
-          curl -fsS -X POST -d '{}' "$HOOK" && echo "Netlify deploy triggered."
+          curl -fsS -X POST "$HOOK" && echo "Vercel deploy triggered."

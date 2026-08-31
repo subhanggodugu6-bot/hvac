@@ -1,7 +1,7 @@
 # Render Blueprint: FastAPI demo API (simulation, production BMS writes off).
 # Source: https://github.com/subhanggodugu6-bot/hvac
 # Dashboard: https://dashboard.render.com → New → Blueprint
-# Pair with Netlify UI (netlify.toml). Do not use Vercel.
+# Pair with the Vercel UI (vercel.json).
 previewsEnabled: false
 
 services:
@@ -39,4 +39,4 @@ services:
       - key: HVAC_CORS_ORIGINS
         value: "http://localhost:3000,http://127.0.0.1:3000"
       - key: HVAC_CORS_ORIGIN_REGEX
-        value: 'https://.*\.(netlify\.app|onrender\.com)'
+        value: 'https://.*\.(vercel\.app|onrender\.com)'

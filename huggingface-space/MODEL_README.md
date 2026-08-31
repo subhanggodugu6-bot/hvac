@@ -17,9 +17,9 @@ FastAPI backend and **O1–O20** supervisory agents (simulation BMS, writes disa
 | --- | --- |
 | Source | GitHub [`subhanggodugu6-bot/hvac`](https://github.com/subhanggodugu6-bot/hvac) |
 | API | Render Blueprint `hvac-api` (`render.yaml`) |
-| UI | Netlify (`netlify.toml`) |
+| UI | Vercel (`vercel.json`) |
 
-Do **not** point Netlify at a Hugging Face Space URL. Use the Render service URL:
+Do **not** point Vercel at a Hugging Face Space URL. Use the Render service URL:
 
 ```
 HVAC_API_ORIGIN=https://hvac-api.onrender.com

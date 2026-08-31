@@ -21,9 +21,9 @@ There is **no application login**. Opening `/` redirects to `/overview`. Product
 | --- | --- | --- |
 | Source | GitHub [`subhanggodugu6-bot/hvac`](https://github.com/subhanggodugu6-bot/hvac) | Sole remote / CI source |
 | API | [Render](https://dashboard.render.com) Blueprint `hvac-api` (`render.yaml`) | Docker, auto-deploy on `main` |
-| UI | [Netlify](https://app.netlify.com) (`netlify.toml`, `base = frontend`) | Next.js via `@netlify/plugin-nextjs` |
+| UI | [Vercel](https://vercel.com) (`vercel.json`, root directory `frontend`) | Next.js, auto-deploy on `main` |
 
-**Do not use** Vercel, Hugging Face Spaces, or any other GitHub account/repo for this demo. Old Vercel projects and the previous GitHub remote are retired.
+**Do not use** Netlify, Hugging Face Spaces, or any other GitHub account/repo for this demo. The API stays on Render — do not deploy FastAPI to Vercel.
 
 ```bash
 gh repo clone subhanggodugu6-bot/hvac
@@ -204,9 +204,9 @@ Set `HVAC_START_CONTROL_WORKER=0` on the API process if you run the control loop
 
 ---
 
-## Hosted demo — Netlify UI + Render API
+## Hosted demo — Vercel UI + Render API
 
-Canonical stack only: **GitHub `subhanggodugu6-bot/hvac` → Render API → Netlify UI**. Simulation BMS; production writes off (`HVAC_BMS_WRITE_ENABLED=0`).
+Canonical stack only: **GitHub `subhanggodugu6-bot/hvac` → Render API → Vercel UI**. Simulation BMS; production writes off (`HVAC_BMS_WRITE_ENABLED=0`).
 
 ### 1. GitHub
 
@@ -215,7 +215,7 @@ Canonical stack only: **GitHub `subhanggodugu6-bot/hvac` → Render API → Netl
 - CI: [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (Python 3.12 + Node 20)  
 - Clone: `gh repo clone subhanggodugu6-bot/hvac`
 
-Connect **Netlify** and **Render** to this repository only. Do not point those services at older forks or Vercel projects.
+Connect **Vercel** and **Render** to this repository only. Do not point those services at older forks.
 
 ### 2. Render — FastAPI (`hvac-api`)
 
@@ -230,7 +230,7 @@ Connect **Netlify** and **Render** to this repository only. Do not point those s
 4. After first deploy, copy the public URL, e.g. `https://hvac-api.onrender.com`.
 5. Confirm: `GET https://<service>.onrender.com/healthz` returns OK.
 
-Blueprint defaults (demo-safe): `HVAC_BMS_MODE=simulation`, `HVAC_BMS_WRITE_ENABLED=0`, `HVAC_DEPLOYMENT_MODE=demo`, CORS regex allows `*.netlify.app` and `*.onrender.com`.
+Blueprint defaults (demo-safe): `HVAC_BMS_MODE=simulation`, `HVAC_BMS_WRITE_ENABLED=0`, `HVAC_DEPLOYMENT_MODE=demo`, CORS regex allows `*.vercel.app` and `*.onrender.com`.
 
 Optional CLI:
 
@@ -239,15 +239,12 @@ Optional CLI:
 render blueprint launch
 ```
 
-### 3. Netlify — Next.js Control Center
+### 3. Vercel — Next.js Control Center
 
-1. Open [Netlify](https://app.netlify.com) → **Add new site** → Import from Git → `subhanggodugu6-bot/hvac`.
-2. Build settings come from [`netlify.toml`](netlify.toml):
-   - Base directory: `frontend`
-   - Build: `npm run build`
-   - Plugin: `@netlify/plugin-nextjs`
-   - Node: `20`
-3. Site env vars (Site settings → Environment variables), using the Render URL from step 2:
+1. Open [Vercel](https://vercel.com/new) → **Add New** → **Project** → import `subhanggodugu6-bot/hvac`.
+2. Set **Root Directory** to `frontend`. Framework preset is detected as Next.js; build settings
+   come from [`vercel.json`](vercel.json) (`npm ci`, `npm run build`).
+3. Project env vars (Settings → Environment Variables), using the Render URL from step 2:
 
 ```
 HVAC_API_ORIGIN=https://hvac-api.onrender.com
@@ -256,14 +253,16 @@ NEXT_PUBLIC_API_URL=https://hvac-api.onrender.com/api
 
 (Replace host if Render assigned a different subdomain.)
 
-4. Trigger a **new deploy** so `NEXT_PUBLIC_*` is baked into the client bundle. Template: [`frontend/.env.netlify.example`](frontend/.env.netlify.example).
+4. Trigger a **new deploy** so `NEXT_PUBLIC_*` is baked into the client bundle. Template: [`frontend/.env.vercel.example`](frontend/.env.vercel.example).
 
-5. Open the Netlify site URL → `/overview`. Header plant mode **DATASET** should show **SIMULATED** (never green LIVE from the dataset feeder).
+5. Open the Vercel site URL → `/overview`. Header plant mode **DATASET** should show **SIMULATED** (never green LIVE from the dataset feeder).
+
+The API is a separate Render service — Vercel hosts the UI only. Do not deploy FastAPI to Vercel.
 
 ### 4. Deploy automatically on push
 
 Connecting the repo in each dashboard already gives auto-deploy (`autoDeploy: true` on
-Render, Git integration on Netlify). [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+Render, Git integration on Vercel). [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
 additionally kicks both services **only after CI passes on `main`**, so a red build never ships.
 
 Add these repository secrets (Settings → Secrets and variables → Actions):
@@ -271,7 +270,7 @@ Add these repository secrets (Settings → Secrets and variables → Actions):
 | Secret | Where to get it |
 | --- | --- |
 | `RENDER_DEPLOY_HOOK_URL` | Render → `hvac-api` → Settings → Deploy Hook |
-| `NETLIFY_BUILD_HOOK_URL` | Netlify → Site configuration → Build & deploy → Build hooks |
+| `VERCEL_DEPLOY_HOOK_URL` | Vercel → Project → Settings → Git → Deploy Hooks |
 
 Either secret may be omitted; the workflow skips that service and still succeeds.
 
@@ -280,15 +279,16 @@ Either secret may be omitted; the workflow skips that service and still succeeds
 ```bash
 python scripts/smoke_demo.py https://hvac-api.onrender.com   # API contract
 python scripts/bench_api.py  https://hvac-api.onrender.com   # endpoint latency
-python scripts/smoke_routes.py https://<site>.netlify.app    # every UI route
+python scripts/smoke_routes.py https://<project>.vercel.app  # every UI route
 ```
 
 ### 6. What not to use
 
 | Retired | Reason |
 | --- | --- |
-| Vercel (UI or API) | Replaced by Netlify + Render; remove old Vercel projects from the dashboard |
+| Netlify | Replaced by Vercel for the UI |
 | Hugging Face Spaces | Not the demo API host; prefer Render Blueprint |
+| FastAPI on Vercel | The API belongs on Render; Vercel hosts the Next.js UI only |
 | Other GitHub accounts / forks | Sole source of truth is `subhanggodugu6-bot/hvac` |
 
 ---
@@ -321,7 +321,7 @@ Copy [`.env.example`](.env.example). Important variables:
 | `HVAC_ENV` | `development` | `production` tightens CORS and DB create-all |
 | `HVAC_DEPLOYMENT_MODE` | `local` | Marks local / demo vs production deployment |
 | `HVAC_CORS_ORIGINS` | `http://localhost:3000,...` | Allowed UI origins |
-| `HVAC_CORS_ORIGIN_REGEX` | empty locally | Hosted UI hosts (`*.netlify.app`) |
+| `HVAC_CORS_ORIGIN_REGEX` | empty locally | Hosted UI hosts (`*.vercel.app`) |
 | `HVAC_BMS_MODE` | `simulation` | `simulation` or `production` |
 | `HVAC_BMS_PROTOCOL` | `bacnet` | `bacnet` / `mqtt` / `rest` / `modbus` |
 | `HVAC_BMS_WRITE_ENABLED` | `0` | Master write switch |

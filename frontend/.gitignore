@@ -2,4 +2,4 @@
 .next-dev
 node_modules
 .vercel
-.netlify
+.vercel
