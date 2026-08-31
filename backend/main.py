@@ -90,7 +90,17 @@ async def lifespan(app: FastAPI):
         pass
     try:
         from backend.bms.simulation_telemetry import start_simulation_telemetry, stop_simulation_telemetry
-        start_simulation_telemetry(force=os.getenv("HVAC_USE_SIMULATION", "0") in ("1", "true", "TRUE"))
+        # A short feed interval starves a small instance, so it is tunable.
+        start_simulation_telemetry(
+            interval=float(os.getenv("HVAC_SIM_FEED_SECONDS", "20")),
+            force=os.getenv("HVAC_USE_SIMULATION", "0") in ("1", "true", "TRUE"),
+        )
+    except Exception:
+        pass
+    try:
+        from backend.services.dashboard_home_service import prime_dashboard_home
+
+        prime_dashboard_home()
     except Exception:
         pass
     yield
@@ -166,6 +176,18 @@ async def unhandled_handler(request: Request, exc: Exception):
     log_event("ERROR", "api", "UNHANDLED", extra={"error": type(exc).__name__})
     body = _error_body("INTERNAL_ERROR", "An unexpected error occurred.", 500)
     return JSONResponse(status_code=500, content=body, headers={"X-Request-ID": body["request_id"]})
+
+
+@app.get("/")
+async def root():
+    return {
+        "service": "HVAC Optimization & Scheduling Supervisory Engine",
+        "status": "ok",
+        "health": "/healthz",
+        "docs": "/docs",
+        "dashboard": "/api/platform/dashboard/home",
+        "request_id": current_request_id(),
+    }
 
 
 @app.get("/healthz")

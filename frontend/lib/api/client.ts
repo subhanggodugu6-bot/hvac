@@ -62,7 +62,7 @@ export async function hvacFetch(input: string, init: RequestInit = {}): Promise<
   let lastErr: unknown;
   for (let i = 0; i < attempts; i++) {
     try {
-      last = await fetchWithTimeout(url, { ...init, headers }, 20000);
+      last = await fetchWithTimeout(url, { ...init, headers }, 90000);
       if (last.status >= 500 && i < attempts - 1) continue;
       return last;
     } catch (e) {

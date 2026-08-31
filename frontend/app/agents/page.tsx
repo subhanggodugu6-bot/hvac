@@ -11,7 +11,7 @@ import { hvacFetch } from '@/lib/api/client';
 import { PLATFORM_POLL_MS } from '@/lib/hvac/poll';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 import { AlertRail, SystemsHub } from '@/components/hvac/bms-home';
-import type { DashboardHome } from '@/lib/hvac/dashboardHome';
+import { mergeDashboardChapters, type DashboardHome } from '@/lib/hvac/dashboardHome';
 import { getOpportunity } from '@/lib/hvac/opportunityConfig';
 
 const RAIL: Record<string, string> = {
@@ -57,6 +57,7 @@ export default function AgentsPage() {
   });
   const groups = data?.groups || [];
   const dash = home.data as DashboardHome | undefined;
+  const chapters = mergeDashboardChapters(dash?.chapters);
   const pageControl = (() => {
     for (const g of groups as { controlAvailability?: string; cards?: { control?: string }[] }[]) {
       const ga = controlLabel(g.controlAvailability);
@@ -69,7 +70,7 @@ export default function AgentsPage() {
     return 'WRITE DISABLED';
   })();
 
-  const counts = (dash?.chapters || []).reduce(
+  const counts = chapters.reduce(
     (acc, ch) => {
       acc.live += ch.counts.live;
       acc.sim += ch.counts.simulated;
@@ -104,7 +105,7 @@ export default function AgentsPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
         <div className="xl:col-span-9 space-y-4">
-          <SystemsHub chapters={dash?.chapters} variant="full" />
+          <SystemsHub chapters={chapters} variant="full" />
         </div>
         <div className="xl:col-span-3">
           <AlertRail alerts={dash?.alerts} />

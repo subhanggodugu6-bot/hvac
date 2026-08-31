@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import os
 import re
+import threading
+import time
 from typing import Any, Dict, List, Optional
 
 from backend.bms.command_writer import (
@@ -513,7 +515,65 @@ def plant_overview() -> Dict[str, List[Dict[str, Any]]]:
     return {k: list(v.values()) for k, v in groups.items()}
 
 
+def _agent_groups_ttl() -> float:
+    try:
+        return max(0.0, float(os.getenv("HVAC_AGENT_GROUPS_CACHE_SECONDS", "60")))
+    except ValueError:
+        return 60.0
+
+
+_AGENT_GROUPS_LOCK = threading.Lock()
+_AGENT_GROUPS_CACHE: Dict[str, Any] = {"at": 0.0, "payload": None, "sig": None}
+
+
+def control_state_signature() -> tuple:
+    """Cheap fingerprint of everything that changes control/mode labels.
+
+    Cached payloads must never outlive a plant-mode or write-enable change, so the
+    fingerprint is part of the cache key instead of relying on the TTL alone.
+    """
+    return (
+        control_writes_status(),
+        write_enabled_flag(),
+        physical_writes_allowed(),
+        simulated_writes_allowed(),
+        is_safe_mode(),
+        is_simulation_mode(),
+        os.getenv("HVAC_BMS_MODE", ""),
+        os.getenv("HVAC_USE_SIMULATION", ""),
+    )
+
+
 def agent_groups() -> List[Dict[str, Any]]:
+    """Cached briefly: this walks all 20 opportunities and their ML registry rows."""
+    ttl = _agent_groups_ttl()
+    if not ttl:
+        return _build_agent_groups()
+    sig = control_state_signature()
+    cached = _AGENT_GROUPS_CACHE.get("payload")
+    fresh = (
+        cached is not None
+        and _AGENT_GROUPS_CACHE.get("sig") == sig
+        and (time.monotonic() - float(_AGENT_GROUPS_CACHE["at"])) < ttl
+    )
+    if fresh:
+        return cached
+    with _AGENT_GROUPS_LOCK:
+        cached = _AGENT_GROUPS_CACHE.get("payload")
+        if (
+            cached is not None
+            and _AGENT_GROUPS_CACHE.get("sig") == sig
+            and (time.monotonic() - float(_AGENT_GROUPS_CACHE["at"])) < ttl
+        ):
+            return cached
+        payload = _build_agent_groups()
+        _AGENT_GROUPS_CACHE["payload"] = payload
+        _AGENT_GROUPS_CACHE["sig"] = sig
+        _AGENT_GROUPS_CACHE["at"] = time.monotonic()
+        return payload
+
+
+def _build_agent_groups() -> List[Dict[str, Any]]:
     try:
         from backend.ml.registry.demo_seed import ensure_demo_ml_models
 

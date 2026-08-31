@@ -3,7 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 
 function apiOrigin(): string {
-  return process.env['HVAC_API_ORIGIN'] || 'http://127.0.0.1:8000';
+  const raw = process.env['HVAC_API_ORIGIN'] || process.env['NEXT_PUBLIC_API_URL'] || '';
+  if (raw) {
+    return raw.replace(/\/api\/?$/, '').replace(/\/$/, '');
+  }
+  return 'http://127.0.0.1:8000';
 }
 
 async function proxy(req: NextRequest, path: string[]) {

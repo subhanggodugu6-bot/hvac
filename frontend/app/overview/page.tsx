@@ -11,7 +11,13 @@ import { AlertRail, AssetRail, AssetRailEmpty, KpiRow, PlantCanvas, SystemsHub }
 import { hvacFetch } from '@/lib/api/client';
 import { PLATFORM_POLL_MS } from '@/lib/hvac/poll';
 import { getOpportunity } from '@/lib/hvac/opportunityConfig';
-import type { DashboardHome, DashboardOpportunity, PlantEquipment } from '@/lib/hvac/dashboardHome';
+import { DEFAULT_FACILITY_CONFIG } from '@/lib/facilityConfig';
+import {
+  mergeDashboardChapters,
+  type DashboardHome,
+  type DashboardOpportunity,
+  type PlantEquipment,
+} from '@/lib/hvac/dashboardHome';
 
 function EnergySparkline({ points, unit }: { points: { t?: string; v?: number }[]; unit?: string }) {
   if (!points.length) {
@@ -56,12 +62,16 @@ export default function FleetOverviewPage() {
       return res.json() as Promise<DashboardHome>;
     },
     refetchInterval: PLATFORM_POLL_MS,
+    retry: 3,
+    retryDelay: 4000,
+    staleTime: 15_000,
   });
   const data = home.data;
   const layers = data?.layers;
+  const chapters = useMemo(() => mergeDashboardChapters(data?.chapters), [data?.chapters]);
   const allOpps: DashboardOpportunity[] = useMemo(
-    () => (data?.chapters || []).flatMap((c) => c.opportunities),
-    [data?.chapters],
+    () => chapters.flatMap((c) => c.opportunities),
+    [chapters],
   );
   const firstRow = useMemo(() => {
     for (const rows of Object.values(layers || {})) {
@@ -81,7 +91,7 @@ export default function FleetOverviewPage() {
       <PageHeader
         icon={LayoutDashboard}
         title="Building operations"
-        subtitle={`${data?.building?.name || 'NO BUILDING IN DATABASE'} · OEH / AIRAH O1–O20 Table 1`}
+        subtitle={`${data?.building?.name || DEFAULT_FACILITY_CONFIG.name} · OEH / AIRAH O1–O20 Table 1`}
         badge={tel}
         actions={
           <div className="flex flex-wrap gap-2">
@@ -94,6 +104,14 @@ export default function FleetOverviewPage() {
           </div>
         }
       />
+
+      {home.isLoading && !data ? (
+        <EmptyState
+          title="LOADING PLANT DATA"
+          detail="Waking the API (free Render can take up to a minute). Keep this tab open."
+          onRetry={() => void home.refetch()}
+        />
+      ) : null}
 
       {home.isError && !data ? (
         <EmptyState
@@ -136,7 +154,9 @@ export default function FleetOverviewPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
         <div className="xl:col-span-8 space-y-4">
-          {plantEmpty ? (
+          {home.isLoading && plantEmpty ? (
+            <div className="card-static p-8 text-[13px] text-slate-500">Loading plant canvas from simulated telemetry…</div>
+          ) : plantEmpty ? (
             <AssetRailEmpty />
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
@@ -163,7 +183,7 @@ export default function FleetOverviewPage() {
 
       <div>
         <div className="text-[13px] font-semibold text-slate-800 mb-3">Guide chapters</div>
-        <SystemsHub chapters={data?.chapters} variant="compact" />
+        <SystemsHub chapters={chapters} variant="compact" />
         <p className="text-[10px] font-mono text-slate-400 mt-2">GUIDE_POTENTIAL · non-cumulative · not measured LIVE</p>
       </div>
 

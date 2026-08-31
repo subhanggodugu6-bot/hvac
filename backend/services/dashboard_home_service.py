@@ -1,6 +1,9 @@
 """Operator home payload: OEH Table 1 + live plant. GUIDE_POTENTIAL is never measured kW."""
 from __future__ import annotations
 
+import os
+import threading
+import time
 from typing import Any, Dict, List, Optional
 
 from backend.knowledge.hvac_guide_catalog import GUIDE_PAGES, GUIDE_SECTIONS, catalog_record
@@ -258,7 +261,73 @@ def _energy_series() -> Dict[str, Any]:
         return {"unit": "kW", "points": []}
 
 
+def _cache_ttl() -> float:
+    try:
+        return max(0.0, float(os.getenv("HVAC_DASHBOARD_CACHE_SECONDS", "60")))
+    except ValueError:
+        return 60.0
+
+
+_CACHE_LOCK = threading.Lock()
+_CACHE: Dict[str, Any] = {"at": 0.0, "payload": None, "sig": None}
+_REFRESHING = threading.Event()
+
+
+def _signature() -> tuple:
+    from backend.services.platform_bms_service import control_state_signature
+
+    return control_state_signature()
+
+
+def _refresh_locked() -> Dict[str, Any]:
+    with _CACHE_LOCK:
+        payload = _build_dashboard_home()
+        _CACHE["payload"] = payload
+        _CACHE["sig"] = _signature()
+        _CACHE["at"] = time.monotonic()
+        return payload
+
+
+def _refresh_in_background() -> None:
+    if _REFRESHING.is_set():
+        return
+    _REFRESHING.set()
+
+    def _run() -> None:
+        try:
+            _refresh_locked()
+        except Exception:
+            pass
+        finally:
+            _REFRESHING.clear()
+
+    threading.Thread(target=_run, name="hvac-dashboard-refresh", daemon=True).start()
+
+
+def prime_dashboard_home() -> None:
+    """Build the first snapshot at startup so no browser request pays for it."""
+    _refresh_in_background()
+
+
 def dashboard_home() -> Dict[str, Any]:
+    """Serve the cached snapshot and refresh it off the request path.
+
+    Building this payload walks the whole plant and all 20 opportunities, which a
+    small instance cannot finish inside a browser's patience, so a stale snapshot
+    is returned while a background thread refreshes it.
+    """
+    ttl = _cache_ttl()
+    if not ttl:
+        return _build_dashboard_home()
+    cached = _CACHE.get("payload")
+    if cached is None or _CACHE.get("sig") != _signature():
+        return _refresh_locked()
+    if (time.monotonic() - float(_CACHE["at"])) >= ttl:
+        _refresh_in_background()
+    return cached
+
+
+def _build_dashboard_home() -> Dict[str, Any]:
     snap = platform_snapshot()
     plant = plant_overview()
     points = latest_points(limit=400)
