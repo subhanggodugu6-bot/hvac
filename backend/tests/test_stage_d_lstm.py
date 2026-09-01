@@ -77,14 +77,14 @@ def test_iter_windows_shapes():
 
 
 def test_insufficient_sequence_code():
-    from backend.ai.lstm.sequences import build_feature_matrix, iter_windows, FEATURE_COLS
+    from backend.ai.lstm.sequences import ALL_FEATURE_COLS, build_feature_matrix, iter_windows, FEATURE_COLS
 
     matrix = np.zeros((10, len(FEATURE_COLS)))
     X, y = iter_windows(matrix, lookback=60, horizon=60, target_col=0)
     assert X.shape[0] == 0
     assert y.shape[0] == 0
     empty, stamps = build_feature_matrix([])
-    assert empty.shape == (0, len(FEATURE_COLS))
+    assert empty.shape == (0, len(ALL_FEATURE_COLS))
     assert stamps == []
 
 

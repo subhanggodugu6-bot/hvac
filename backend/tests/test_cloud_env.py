@@ -8,6 +8,7 @@ from backend.cloud_env import DEMO_CORS_ORIGIN_REGEX, apply_cloud_demo_env, is_h
 _DEMO_KEYS = (
     "HVAC_CORS_ORIGIN_REGEX",
     "HVAC_START_CONTROL_WORKER",
+    "HVAC_USE_AI_PIPELINE",
     "HVAC_BMS_MODE",
     "HVAC_USE_SIMULATION",
     "HVAC_BMS_WRITE_ENABLED",

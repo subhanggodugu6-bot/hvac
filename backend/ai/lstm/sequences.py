@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 
+from backend.ai.rls.features_export import RLS_FEATURE_COLS, enrich_records_with_rls
 from backend.services.ai_normalized_telemetry import build_ai_records
 
 FEATURE_COLS = (
@@ -18,6 +19,8 @@ FEATURE_COLS = (
     "HVAC_Power",
     "Equipment_Status",
 )
+
+ALL_FEATURE_COLS = FEATURE_COLS + RLS_FEATURE_COLS
 
 TARGET_FIELD = {
     "zone_temp": "Indoor_Temp",
@@ -54,17 +57,24 @@ def _row_ok(row: Dict[str, Any]) -> bool:
     return True
 
 
-def build_feature_matrix(records: Sequence[Dict[str, Any]]) -> Tuple[np.ndarray, List[str]]:
+def build_feature_matrix(
+    records: Sequence[Dict[str, Any]],
+    *,
+    zone_id: str = "ZONE-01",
+    feature_cols: Optional[Sequence[str]] = None,
+) -> Tuple[np.ndarray, List[str]]:
     """Return (N, F) float matrix and ISO timestamps for usable rows only."""
+    cols = tuple(feature_cols or ALL_FEATURE_COLS)
+    enriched = enrich_records_with_rls(list(records), zone_id=zone_id)
     rows: List[List[float]] = []
     stamps: List[str] = []
-    for r in records:
+    for r in enriched:
         if not _row_ok(r):
             continue
-        rows.append([float(r[c]) for c in FEATURE_COLS])
+        rows.append([float(r.get(c) or 0.0) for c in cols])
         stamps.append(str(r.get("Timestamp") or ""))
     if not rows:
-        return np.zeros((0, len(FEATURE_COLS)), dtype=float), []
+        return np.zeros((0, len(cols)), dtype=float), []
     return np.asarray(rows, dtype=float), stamps
 
 
@@ -123,9 +133,10 @@ def build_dataset(
         building_id=building_id,
     )
     records = payload.get("records") or []
-    matrix, stamps = build_feature_matrix(records)
+    feature_cols = list(ALL_FEATURE_COLS)
+    matrix, stamps = build_feature_matrix(records, zone_id=zone_id or "ZONE-01", feature_cols=feature_cols)
     L = max(1, int(round(lookback_min * 60 / step)))
-    target_col = FEATURE_COLS.index(TARGET_FIELD[target])
+    target_col = feature_cols.index(TARGET_FIELD[target])
     by_h: Dict[str, Any] = {}
     min_windows = None
     for h_min in horizons_min:
@@ -147,7 +158,8 @@ def build_dataset(
             "n_rows": int(matrix.shape[0]),
             "n_windows": 0,
             "horizons": by_h,
-            "feature_cols": list(FEATURE_COLS),
+            "feature_cols": feature_cols,
+            "rls_wired": True,
             "timestamps": stamps[-min(5, len(stamps)) :],
         }
     return {
@@ -159,7 +171,8 @@ def build_dataset(
         "n_rows": int(matrix.shape[0]),
         "n_windows": int(X.shape[0]),
         "horizons": by_h,
-        "feature_cols": list(FEATURE_COLS),
+        "feature_cols": feature_cols,
+        "rls_wired": True,
         "X": X,
         "y": y,
         "matrix": matrix,

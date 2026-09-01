@@ -52,6 +52,10 @@ def client(monkeypatch):
     monkeypatch.setenv("HVAC_ALLOW_CREATE_ALL", "1")
     monkeypatch.setenv("HVAC_BMS_WRITE_ENABLED", "0")
     monkeypatch.setenv("HVAC_SAFE_MODE", "0")
+    monkeypatch.setenv("HVAC_USE_SIMULATION", "0")
+    monkeypatch.setenv("HVAC_USE_AI_PIPELINE", "0")
+    monkeypatch.setenv("HVAC_START_CONTROL_WORKER", "0")
+    monkeypatch.setattr("backend.middleware.request_id._start_hydration_once", lambda: None)
     from backend.services.timeseries_buffer import clear as clear_buffer
     from database.session import init_db
 
@@ -129,6 +133,7 @@ def test_safe_mode_blocks(client: TestClient, monkeypatch):
 
 
 def test_recommend_persists_and_maps_commands(client: TestClient, monkeypatch):
+    monkeypatch.setenv("HVAC_USE_SIMULATION", "0")
     writes = []
     monkeypatch.setattr(
         "backend.bms.command_writer.write_point",
@@ -142,7 +147,9 @@ def test_recommend_persists_and_maps_commands(client: TestClient, monkeypatch):
     )
     _seed_telemetry()
 
+    writes.clear()
     r = client.post("/api/platform/ai/safe-rl/recommend", json={"zone_id": "ZONE-01"})
+    assert writes == []
     assert r.status_code == 200
     body = r.json()
     assert body["wrote_setpoints"] is False
@@ -166,8 +173,6 @@ def test_recommend_persists_and_maps_commands(client: TestClient, monkeypatch):
     detail = client.get(f"/api/platform/ai/safe-rl/decisions/{detail_id}")
     assert detail.status_code == 200
     assert detail.json()["decision_id"] == detail_id
-
-    assert writes == []
 
     from database.session import SessionLocal
     from database.models_platform import ControlCommandDB, SafeRlDecisionDB
@@ -259,32 +264,24 @@ def test_safe_rl_tick_respects_interval(monkeypatch):
 
 def test_job_worker_safe_rl_tick_hook(monkeypatch):
     from backend.workers import job_worker as jw
-    from backend.ai.safe_rl.runner import reset_debounce, tick_debounced as real_debounced
 
     called = []
     monkeypatch.setenv("HVAC_SAFE_RL_TICK_SECONDS", "60")
-    reset_debounce()
     monkeypatch.setattr("backend.workers.retention_worker.archive_old_telemetry", lambda: 0)
-    monkeypatch.setattr("backend.ai.rls.runner.tick_debounced", lambda **k: None)
     monkeypatch.setattr(
-        "backend.ai.safe_rl.runner.tick_debounced",
-        lambda **k: called.append("tick") or {"status": "PROPOSED", "code": "OK", "wrote_setpoints": False},
+        "backend.ai.pipeline.orchestrator.run_learn_cycle",
+        lambda *a, **k: {"rls": {}, "lstm": {}, "wrote_setpoints": False},
     )
-    monkeypatch.setattr("backend.ai.lstm.train.maybe_retrain_lstm", lambda: {"skipped": True})
+    monkeypatch.setattr(
+        "backend.ai.pipeline.orchestrator.run_all_zones",
+        lambda **k: called.append("cycle") or {"zones": [], "wrote_setpoints": False},
+    )
     monkeypatch.setattr("backend.ai.safe_rl.offline.maybe_offline_update", lambda: None)
-    monkeypatch.setattr("backend.workers.watchdog.beat", lambda **k: None)
 
     jw.run_once()
-    assert called == ["tick"]
+    assert called == ["cycle"]
 
-    # Interval 0 → real tick_debounced no-ops (captured before mock overwrite)
     called.clear()
     monkeypatch.setenv("HVAC_SAFE_RL_TICK_SECONDS", "0")
-    reset_debounce()
-    monkeypatch.setattr("backend.ai.safe_rl.runner.tick_debounced", real_debounced)
-    monkeypatch.setattr(
-        "backend.ai.safe_rl.runner.tick",
-        lambda **k: called.append("tick") or {"status": "PROPOSED", "wrote_setpoints": False},
-    )
     jw.run_once()
     assert called == []

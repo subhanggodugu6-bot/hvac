@@ -12,7 +12,7 @@ _HEARTBEAT_PATH = os.getenv(
 STALE_S = float(os.getenv("HVAC_WATCHDOG_STALE_SECONDS", "30"))
 AI_STALE_S = float(os.getenv("HVAC_AI_WATCHDOG_STALE_SECONDS", "600"))
 
-_SERVICES = ("control", "rls", "lstm", "safe_rl", "rules")
+_SERVICES = ("control", "ai_pipeline", "rls", "lstm", "safe_rl", "rules")
 _beats: Dict[str, Dict[str, Any]] = {s: {"ts": None, "note": "not-started"} for s in _SERVICES}
 # Legacy single-slot for control (also mirrored into _beats["control"])
 _last = {"ts": None, "alive": False, "note": "not-started"}
@@ -71,7 +71,7 @@ def ai_watchdog_status() -> Dict[str, Any]:
     for svc in _SERVICES:
         slot = _beats.get(svc) or {}
         age = _age_seconds(slot.get("ts"))
-        stale_limit = STALE_S if svc == "control" else AI_STALE_S
+        stale_limit = STALE_S if svc in ("control", "ai_pipeline") else AI_STALE_S
         ok = bool(age is not None and age <= stale_limit)
         out[svc] = {
             "ok": ok,

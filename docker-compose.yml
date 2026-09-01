@@ -18,15 +18,20 @@ services:
   api:
     build: .
     command: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+    env_file:
+      - .env
     environment:
       HVAC_ENV: development
-      HVAC_START_CONTROL_WORKER: "0"
+      HVAC_START_CONTROL_WORKER: "1"
+      HVAC_USE_AI_PIPELINE: "1"
+      HVAC_AI_PIPELINE_INTERVAL_SECONDS: "60"
       DATABASE_URL: postgresql://hvac:hvac@postgres:5432/hvac
       HVAC_ALLOW_CREATE_ALL: "1"
       HVAC_DEPLOYMENT_MODE: local
       HVAC_CORS_ORIGINS: http://localhost:3000
       HVAC_BMS_MODE: simulation
       HVAC_BMS_WRITE_ENABLED: "0"
+      HVAC_ALLOW_SIM_WRITES: "1"
       HVAC_EDGE_MODE: "0"
       HVAC_CLOUD_URL: ""
     ports:
@@ -41,6 +46,9 @@ services:
       DATABASE_URL: postgresql://hvac:hvac@postgres:5432/hvac
       HVAC_BMS_MODE: simulation
       HVAC_BMS_WRITE_ENABLED: "0"
+      HVAC_ALLOW_SIM_WRITES: "1"
+      HVAC_USE_AI_PIPELINE: "1"
+      HVAC_AI_PIPELINE_INTERVAL_SECONDS: "60"
       HVAC_EDGE_MODE: "0"
     depends_on:
       - postgres
@@ -52,6 +60,10 @@ services:
       DATABASE_URL: postgresql://hvac:hvac@postgres:5432/hvac
       HVAC_TELEMETRY_RETAIN_DAYS: "90"
       HVAC_TELEMETRY_PURGE: "1"
+      HVAC_SAFE_RL_TICK_SECONDS: "60"
+      HVAC_USE_AI_PIPELINE: "1"
+      HVAC_ALLOW_SIM_WRITES: "1"
+      HVAC_BMS_MODE: simulation
       HVAC_EDGE_MODE: "0"
     depends_on:
       - postgres
@@ -90,6 +102,9 @@ services:
       HVAC_BMS_MODE: production
       HVAC_BMS_LAB: "1"
       HVAC_BMS_WRITE_ENABLED: "0"
+      HVAC_USE_AI_PIPELINE: "1"
+      HVAC_AI_PIPELINE_INTERVAL_SECONDS: "60"
+      HVAC_SAFE_RL_TICK_SECONDS: "60"
     depends_on:
       - postgres
 
@@ -103,6 +118,9 @@ services:
       HVAC_TELEMETRY_RETAIN_DAYS: "90"
       HVAC_TELEMETRY_PURGE: "1"
       HVAC_LSTM_RETRAIN_SECONDS: "86400"
+      HVAC_USE_AI_PIPELINE: "1"
+      HVAC_SAFE_RL_TICK_SECONDS: "60"
+      HVAC_ALLOW_SIM_WRITES: "1"
     depends_on:
       - postgres
 

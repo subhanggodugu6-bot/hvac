@@ -337,7 +337,12 @@ Copy [`.env.example`](.env.example). Important variables:
 | `HVAC_TELEMETRY_RETAIN_DAYS` | `90` | Retention candidate age |
 | `HVAC_TELEMETRY_PURGE` | `0` | Physical purge; counts only unless `1` |
 | `HVAC_DISPATCH_CONFIDENCE_MIN` | `0.65` | Minimum confidence to dispatch |
-| `HVAC_START_CONTROL_WORKER` | `1` | Embed control loop in the API process |
+| `HVAC_START_CONTROL_WORKER` | `1` | Embed NB2 pipeline worker in the API process |
+| `HVAC_USE_AI_PIPELINE` | `1` | RLS→LSTM→Safe RL→Rules→BMS (vs legacy scheduling worker) |
+| `HVAC_AI_PIPELINE_INTERVAL_SECONDS` | `60` | Pipeline cycle interval |
+| `HVAC_AI_PIPELINE_ZONES` | `ZONE-01` | Zones optimized per cycle |
+| `HVAC_AI_PIPELINE_AUTO_DISPATCH` | `0` | Force approve→apply; sim auto-dispatches when `ALLOW_SIM_WRITES=1` |
+| `HVAC_SAFE_RL_TICK_SECONDS` | `60` | Job-worker full pipeline cycle |
 | `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api` | Browser → API |
 | `OPENWEATHER_API_KEY` | empty | Optional outdoor weather |
 | `FACILITY_*` | Bengaluru defaults | Display / weather location |
@@ -354,6 +359,8 @@ Production BMS hosts (`HVAC_BACNET_HOST`, `HVAC_MQTT_URL`, `HVAC_OPCUA_URL`) sta
 - Stage C RLS (online, no setpoint writes): `GET /api/platform/ai/rls/status`, `/params`, `/errors` — learning health also on `/ml`
 - Stage D LSTM (advisory forecast, no setpoint writes): optional `pip install -r backend/requirements-lstm.txt`; `GET /api/platform/ai/lstm/sequence|forecast|status`, `POST /api/platform/ai/lstm/train` — chart on `/ml`
 - Stage E Safe RL (NB2 Optimizer recommend, no setpoint writes): `POST /api/platform/ai/safe-rl/recommend`, `GET /api/platform/ai/safe-rl/status|decisions` — NB2 card on `/ml`; maps winner to O\* `control_commands` as PROPOSED
+- **NB2 pipeline orchestrator:** `GET /api/platform/ai/pipeline/status`, `POST /api/platform/ai/pipeline/run` — full RLS→LSTM→Safe RL→Rules→BMS cycle; UI on `/ml` and `/agents`
+- **Free LLM narrative:** `GET /api/platform/ai/llm/status`, `POST /api/platform/ai/llm/explain` — Ollama / Groq / Gemini / OpenRouter free tiers + template fallback; button on `/ml`
 - Stage F Rule Engine (checklist gate): `POST /api/platform/rules/evaluate`, `GET /api/platform/rules/audit` — R01–R10 must APPROVE before `command_writer` / apply; checklist on `/ml`
 - Stage G controlled writes (Level 7, one point): `GET /api/platform/bms/stage-g/status`; `POST /api/platform/commands/{id}/approve|apply` (plus existing verify/rollback). Lifecycle: Safe RL/O* **PROPOSED** → operator **APPROVED** → Rule Engine → allowlist → `command_writer` → lab/real BMS → verify → auto-rollback on fail. First point: `ZONE-01.cooling_setpoint` (`HVAC_STAGE_G_WRITABLE_POINTS`). After `verify_stats.expand_ready` (window × `HVAC_STAGE_G_VERIFY_SUCCESS_MIN`), ops may append `AHU-01.sat_setpoint` to the env allowlist — process never auto-mutates env. Recommend remains write-free. UI: `/platform/bms` Stage G panel.
 - Stage H closed loop (Level 8 ≈95%): VERIFIED → lagged RLS learn (`HVAC_RLS_POST_WRITE_*`); job_worker LSTM retrain with versioned registry (`GET /api/platform/ai/lstm/models`); Safe RL realized reward + offline weight update; edge Compose profile (`docker compose --profile edge up …`) + `GET /api/platform/edge/status` cloud-down proof; per-AI watchdogs on `/readyz`. Data contract: [`docs/NB2-DATA-CONTRACT.md`](docs/NB2-DATA-CONTRACT.md). Still one-point Stage G writes; recommend never writes alone.

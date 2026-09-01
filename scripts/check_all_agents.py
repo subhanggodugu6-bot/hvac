@@ -43,6 +43,7 @@ SECTIONS = [
     ("variable-speed", "/api/variable-speed/dashboard"),
     ("operations", "/api/hvac/operations-maintenance/dashboard"),
     ("agent-center", "/api/agents"),
+    ("nb2-pipeline", "/api/platform/ai/pipeline/status"),
 ]
 
 
@@ -101,6 +102,9 @@ def main() -> int:
             if name == "agent-center":
                 groups = body.get("groups") or []
                 note = f"groups={len(groups)}"
+            elif name == "nb2-pipeline":
+                w = (body.get("worker") or {}) if isinstance(body.get("worker"), dict) else {}
+                note = f"worker={w.get('worker_running')} cycles={w.get('cycle_count')}"
             elif "opportunities" in body:
                 opps = body.get("opportunities") or []
                 note = f"opps={len(opps)}"

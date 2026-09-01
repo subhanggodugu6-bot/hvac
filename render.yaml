@@ -32,6 +32,12 @@ services:
         value: "1"
       - key: HVAC_START_CONTROL_WORKER
         value: "1"
+      - key: HVAC_USE_AI_PIPELINE
+        value: "1"
+      - key: HVAC_AI_PIPELINE_INTERVAL_SECONDS
+        value: "60"
+      - key: HVAC_SAFE_RL_TICK_SECONDS
+        value: "60"
       - key: HVAC_PLANT_MODE_PERSIST
         value: "1"
       - key: HVAC_SAFE_MODE

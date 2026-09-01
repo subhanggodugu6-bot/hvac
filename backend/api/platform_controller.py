@@ -256,6 +256,61 @@ async def safe_rl_decision_detail(decision_id: str):
     return row
 
 
+@router.get("/ai/pipeline/status")
+async def pipeline_status():
+    from backend.ai.pipeline.orchestrator import auto_dispatch_enabled
+    from backend.workers.ai_pipeline_worker import get_worker
+    from backend.workers.watchdog import ai_watchdog_status
+
+    worker = get_worker()
+    return {
+        "pipeline": "RLS→LSTM→SafeRL→Rules→BMS",
+        "use_ai_pipeline": __import__("os").getenv("HVAC_USE_AI_PIPELINE", "1"),
+        "auto_dispatch": auto_dispatch_enabled(),
+        "worker": worker.get_status() if worker else None,
+        "ai_watchdogs": ai_watchdog_status(),
+        "wrote_setpoints": False,
+    }
+
+
+@router.post("/ai/pipeline/run")
+async def pipeline_run(
+    zone_id: str = Query(default="ZONE-01"),
+    building_id: Optional[str] = Query(default=None),
+    retrain_lstm: bool = Query(default=False),
+    auto_dispatch: Optional[bool] = Query(default=None),
+):
+    from backend.ai.pipeline.orchestrator import run_pipeline_cycle
+
+    return run_pipeline_cycle(
+        zone_id,
+        building_id=building_id,
+        force_rls=True,
+        retrain_lstm=retrain_lstm,
+        auto_dispatch=auto_dispatch,
+    )
+
+
+@router.get("/ai/llm/status")
+async def llm_status():
+    from backend.ai.llm.hook import status
+
+    return status()
+
+
+class LlmExplainRequest(BaseModel):
+    zone_id: str = "ZONE-01"
+    decision_id: Optional[str] = None
+
+
+@router.post("/ai/llm/explain")
+async def llm_explain(req: LlmExplainRequest):
+    """Free-tier LLM narrative for last Safe RL decision (does not change optimizer)."""
+    from backend.ai.llm.hook import explain_safe_rl_decision
+
+    return explain_safe_rl_decision(req.decision_id, zone_id=req.zone_id or "ZONE-01")
+
+
 @router.post("/rules/evaluate")
 async def rules_evaluate(req: RulesEvaluateRequest):
     """Dry-run Rule Engine checklist — no BMS write."""

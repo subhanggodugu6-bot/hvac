@@ -1,6 +1,7 @@
-"""Background jobs: weather, M&V, retention, RLS, LSTM retrain, Safe RL offline."""
+"""Background jobs: weather, M&V, retention, NB2 pipeline learn cycle."""
 from __future__ import annotations
 
+import os
 import time
 
 from backend.services.logging_service import log_event
@@ -14,37 +15,43 @@ def run_once() -> None:
         log_event("INFO", "job-worker", "RETENTION", extra={"candidates": n})
     except Exception as exc:
         log_event("ERROR", "job-worker", "RETENTION_FAIL", extra={"error": type(exc).__name__})
-    try:
-        from backend.ai.rls.runner import tick_debounced
-        from backend.workers.watchdog import beat
 
-        rls = tick_debounced()
-        beat(note="tick", service="rls")
-        if rls:
-            log_event("INFO", "job-worker", "RLS_TICK", extra={"updated": rls.get("updated"), "wrote_setpoints": False})
-    except Exception as exc:
-        log_event("ERROR", "job-worker", "RLS_TICK_FAIL", extra={"error": type(exc).__name__})
     try:
-        from backend.ai.safe_rl.runner import tick_debounced as safe_rl_tick
+        from backend.ai.pipeline.orchestrator import _zones, run_learn_cycle
 
-        srl = safe_rl_tick()
-        if srl:
+        for zone_id in _zones():
+            learn = run_learn_cycle(zone_id)
             log_event(
                 "INFO",
                 "job-worker",
-                "SAFE_RL_TICK",
-                extra={"status": srl.get("status"), "code": srl.get("code"), "wrote_setpoints": False},
+                "PIPELINE_LEARN",
+                extra={
+                    "zone_id": zone_id,
+                    "rls_updated": (learn.get("rls") or {}).get("updated"),
+                    "wrote_setpoints": False,
+                },
             )
     except Exception as exc:
-        log_event("ERROR", "job-worker", "SAFE_RL_TICK_FAIL", extra={"error": type(exc).__name__})
-    try:
-        from backend.ai.lstm.train import maybe_retrain_lstm
+        log_event("ERROR", "job-worker", "PIPELINE_LEARN_FAIL", extra={"error": type(exc).__name__})
 
-        lstm = maybe_retrain_lstm()
-        if lstm and not lstm.get("skipped"):
-            log_event("INFO", "job-worker", "LSTM_RETRAIN", extra={"wrote_setpoints": False})
+    try:
+        tick_seconds = float(os.getenv("HVAC_SAFE_RL_TICK_SECONDS", "60") or "0")
+        if tick_seconds > 0:
+            from backend.ai.pipeline.orchestrator import auto_dispatch_enabled, run_all_zones
+
+            cycle = run_all_zones(retrain_lstm=False, auto_dispatch=auto_dispatch_enabled())
+            log_event(
+                "INFO",
+                "job-worker",
+                "PIPELINE_CYCLE",
+                extra={
+                    "wrote_setpoints": cycle.get("wrote_setpoints"),
+                    "zones": len(cycle.get("zones") or []),
+                },
+            )
     except Exception as exc:
-        log_event("ERROR", "job-worker", "LSTM_RETRAIN_FAIL", extra={"error": type(exc).__name__})
+        log_event("ERROR", "job-worker", "PIPELINE_CYCLE_FAIL", extra={"error": type(exc).__name__})
+
     try:
         from backend.ai.safe_rl.offline import maybe_offline_update
 

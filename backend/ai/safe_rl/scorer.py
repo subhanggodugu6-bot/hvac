@@ -28,7 +28,11 @@ def _weights() -> Dict[str, float]:
         }
 
 
-def _lstm_power_delta_kwh(state: Dict[str, Any], horizon_min: int = 60) -> Optional[float]:
+def _lstm_power_delta_kwh(
+    state: Dict[str, Any],
+    candidate: Optional[Dict[str, Any]] = None,
+    horizon_min: int = 60,
+) -> Optional[float]:
     lstm = state.get("lstm") or {}
     series = (lstm.get("series") or {}).get("hvac_power")
     if not series:
@@ -39,7 +43,23 @@ def _lstm_power_delta_kwh(state: Dict[str, Any], horizon_min: int = 60) -> Optio
     target = next((p for p in points if int(p.get("horizon_min") or 0) == horizon_min), None)
     if baseline is None or target is None or target.get("yhat") is None:
         return None
-    return float(baseline) - float(target["yhat"])
+    energy_delta = float(baseline) - float(target["yhat"])
+
+    # Action-conditioned adjustment from setpoint delta (LSTM is plant-level; blend per candidate)
+    if candidate:
+        old_v = candidate.get("old_value")
+        new_v = candidate.get("new_value")
+        point = str(candidate.get("point_id") or "")
+        if old_v is not None and new_v is not None:
+            sp_delta = float(new_v) - float(old_v)
+            if "cooling_setpoint" in point or candidate.get("mapped_opportunity") == "O2":
+                energy_delta += -0.2 * sp_delta
+            elif "SAT" in point.upper() or candidate.get("mapped_opportunity") == "O3":
+                energy_delta += 0.15 * sp_delta
+            elif candidate.get("mapped_opportunity") in ("O5", "O14", "O16"):
+                energy_delta += 0.05 * abs(sp_delta)
+
+    return energy_delta
 
 
 def _action_energy_prior(action_id: str) -> float:
@@ -96,7 +116,7 @@ def score_candidate(state: Dict[str, Any], candidate: Dict[str, Any]) -> Dict[st
             "components": {"energy_kwh": 0.0, "cost_usd": 0.0},
         }
 
-    energy_delta = _lstm_power_delta_kwh(state)
+    energy_delta = _lstm_power_delta_kwh(state, candidate=candidate)
     if energy_delta is None:
         energy_delta = _action_energy_prior(action_id)
 

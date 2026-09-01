@@ -17,6 +17,7 @@ from backend.ai.lstm.model import (
     torch_required_strict,
 )
 from backend.ai.lstm.sequences import (
+    ALL_FEATURE_COLS,
     FEATURE_COLS,
     HORIZONS_MIN,
     MODEL_IDS,
@@ -117,7 +118,15 @@ def forecast(
             continue
 
         L = int(art["lookback"])
-        window = ds["matrix"][-L:]
+        feat_cols = list(art.get("feature_cols") or FEATURE_COLS)
+        ds_cols = list(ds.get("feature_cols") or ALL_FEATURE_COLS)
+        try:
+            col_idx = [ds_cols.index(c) for c in feat_cols]
+        except ValueError:
+            col_idx = list(range(min(len(feat_cols), ds["matrix"].shape[1])))
+        matrix = ds["matrix"][:, col_idx]
+        window = matrix[-L:]
+        target_col = ds_cols.index(TARGET_FIELD[target]) if TARGET_FIELD[target] in ds_cols else ds["target_col"]
         Xs = standardize_apply(window[np.newaxis, :, :], art["mean"], art["std"])
         net = LstmForecastNet(n_features=art["n_features"], horizon=art["horizon"], hidden=32)
         net.load_state_dict(art["state_dict"])
@@ -138,7 +147,7 @@ def forecast(
                 }
             )
         for i, ts in enumerate(stamps[-L:]):
-            actual_tail.append({"t": ts, "y": float(ds["matrix"][-L + i, ds["target_col"]])})
+            actual_tail.append({"t": ts, "y": float(ds["matrix"][-L + i, target_col])})
 
         series[target] = {
             "points": points,

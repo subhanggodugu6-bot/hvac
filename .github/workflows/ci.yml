@@ -23,7 +23,7 @@ jobs:
           HVAC_START_CONTROL_WORKER: "0"
           HVAC_ALLOW_CREATE_ALL: "1"
           HVAC_DEPLOYMENT_MODE: local
-        run: python -m pytest backend/tests/test_p0_security.py backend/tests/test_runtime_contracts.py backend/tests/test_cloud_env.py backend/tests/test_oeh_guide.py backend/tests/test_stage_a_live_lab.py backend/tests/test_stage_b_ai_data.py backend/tests/test_stage_c_rls.py backend/tests/test_stage_d_lstm.py backend/tests/test_stage_e_safe_rl.py backend/tests/test_stage_f_rules.py backend/tests/test_stage_g_writes.py backend/tests/test_stage_h_closed_loop.py backend/tests/test_dashboard_home.py -q
+        run: python -m pytest backend/tests/test_p0_security.py backend/tests/test_runtime_contracts.py backend/tests/test_cloud_env.py backend/tests/test_oeh_guide.py backend/tests/test_ai_pipeline.py backend/tests/test_llm_hook.py backend/tests/test_stage_a_live_lab.py backend/tests/test_stage_b_ai_data.py backend/tests/test_stage_c_rls.py backend/tests/test_stage_d_lstm.py backend/tests/test_stage_e_safe_rl.py backend/tests/test_stage_f_rules.py backend/tests/test_stage_g_writes.py backend/tests/test_stage_h_closed_loop.py backend/tests/test_dashboard_home.py -q
 
   frontend:
     runs-on: ubuntu-latest
