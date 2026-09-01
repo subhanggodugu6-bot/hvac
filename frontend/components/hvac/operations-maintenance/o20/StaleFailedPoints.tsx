@@ -28,7 +28,7 @@ export function StaleFailedPoints({ data }: { data: OmOpportunity }) {
                 <span className="font-mono text-xs text-rose-200">{it.kind} · {it.count} pts</span>
                 <StatusBadge tone="danger">{it.priority}</StatusBadge>
               </div>
-              <dl className="mt-2 grid grid-cols-2 gap-1 text-[11px] font-mono text-slate-400">
+              <dl className="mt-2 grid grid-cols-2 gap-1 text-[11px] font-mono text-slate-600">
                 <div>Equipment {o20ControllerField(data, 'controller_id')}</div>
                 <div>Last seen {o20SecondsAgo(data.telemetry?.lastUpdated || data.timestamp)}</div>
                 <div>Quality {formatDash(data.telemetry?.quality)}</div>

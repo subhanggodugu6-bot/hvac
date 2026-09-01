@@ -109,7 +109,7 @@ export function PlanningRecommendationCard({ data }: { data: OmOpportunity }) {
           Record planning action
         </button>
         {!eligible ? (
-          <span className="text-[11px] font-mono text-amber-300">{formatDash(reason)}</span>
+          <span className="text-[11px] font-mono text-amber-800">{formatDash(reason)}</span>
         ) : (
           <span className="text-[11px] text-slate-500">Advisory PLAN_DISPATCH only. No automatic BMS control from this UI.</span>
         )}

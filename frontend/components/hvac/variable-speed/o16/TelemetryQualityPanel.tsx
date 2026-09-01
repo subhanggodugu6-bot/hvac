@@ -24,7 +24,7 @@ export function TelemetryQualityPanel({ data, points }: { data: O16Dashboard; po
         Telemetry Quality
       </h2>
       {sim && (
-        <div className="text-[11px] font-semibold text-amber-300 mb-2">
+        <div className="text-[11px] font-semibold text-amber-800 mb-2">
           Quality SIMULATION · Source SIMULATOR · BMS OFFLINE
         </div>
       )}
@@ -50,7 +50,7 @@ export function TelemetryQualityPanel({ data, points }: { data: O16Dashboard; po
                   <td>{sim ? 'SIMULATION' : fmtDash(p.quality)}</td>
                   <td>{sim ? 'SIMULATOR' : fmtDash(p.source)}</td>
                   <td>{p.timestamp ? secondsAgo(p.timestamp) : p.age_seconds != null ? `${fmtDash(p.age_seconds)} sec` : '—'}</td>
-                  <td className={status === 'LIVE' && !sim ? 'text-emerald-700' : status === 'SIMULATION' ? 'text-amber-300' : ''}>
+                  <td className={status === 'LIVE' && !sim ? 'text-emerald-700' : status === 'SIMULATION' ? 'text-amber-800' : ''}>
                     {status === 'LIVE' && sim ? 'SIMULATION' : status}
                   </td>
                 </tr>

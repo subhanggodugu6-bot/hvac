@@ -4,6 +4,7 @@ import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./design-tokens.css";
 import "./theme.css";
 import "./globals.css";
+import { SkipToContent } from "@/components/layout/SkipToContent";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { QueryProvider } from "@/components/providers/QueryProvider";
@@ -41,6 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${jakarta.variable} ${jetbrains.variable}`} style={{ colorScheme: "light" }}>
       <body className="hvac-shell text-slate-700 min-h-screen flex flex-col font-sans selection:bg-violet-200 selection:text-violet-950 antialiased">
+        <SkipToContent />
         <QueryProvider>
           <LiveTelemetryProvider>
             <Header />
@@ -52,7 +54,7 @@ export default function RootLayout({
             >
               <Sidebar />
             </Suspense>
-            <main className="hvac-main flex-1 overflow-y-auto w-full">
+            <main id="main-content" className="hvac-main flex-1 overflow-y-auto w-full" tabIndex={-1}>
               <div className="max-w-[1600px] mx-auto w-full">
                 <ErrorBoundary>{children}</ErrorBoundary>
               </div>

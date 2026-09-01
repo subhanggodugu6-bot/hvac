@@ -206,9 +206,11 @@ def apply_plant_mode(mode: Optional[str] = None) -> str:
         except Exception:
             pass
         try:
+            from backend.bms.connection_manager import auto_connect_if_configured
             from backend.bms.telemetry_reader import poll_once, start_reader
 
             start_reader()
+            auto_connect_if_configured()
             poll_once(include_unmapped=False)
         except Exception:
             pass

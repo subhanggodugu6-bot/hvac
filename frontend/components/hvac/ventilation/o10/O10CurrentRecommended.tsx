@@ -36,7 +36,7 @@ export function O10CurrentRecommended({ data }: { data: VentilationOpportunity }
       <div className="kpi-tile">
         <h2 className="text-[11px] uppercase tracking-wider text-slate-500 mb-2">Recommended</h2>
         {!hasRec ? (
-          <p className="text-[11px] font-mono text-amber-300">NO DATA</p>
+          <p className="text-[11px] font-mono text-amber-800">NO DATA</p>
         ) : (
           <>
             <Row label="Economy Cycle State" value={o10Str(data, 'economizer_status')} />

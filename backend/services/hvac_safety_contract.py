@@ -258,8 +258,10 @@ def evaluate_dispatch(context: Dict[str, Any]) -> Tuple[bool, str, Dict[str, Any
             return False, "Dispatch requires completed approval.", {**classified, "code": "APPROVAL_REQUIRED"}
     from backend.bms.command_writer import physical_writes_allowed, write_enabled_flag
 
-    if not write_enabled_flag() or not physical_writes_allowed():
+    if action != "ROLLBACK" and (not write_enabled_flag() or not physical_writes_allowed()):
         return False, "Supervised writes are not enabled.", {**classified, "code": "WRITE_DISABLED"}
+    if action == "ROLLBACK":
+        return True, "OK", {**classified, "code": "DISPATCH_OK"}
     return True, "OK", {**classified, "code": "DISPATCH_OK"}
 
 

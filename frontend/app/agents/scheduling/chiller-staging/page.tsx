@@ -286,7 +286,7 @@ export default function ChillerStagingPage() {
             <span className="text-xs font-mono text-slate-600">2 Centrifugal Chillers</span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -312,7 +312,7 @@ export default function ChillerStagingPage() {
                         className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
                           ch.status === 'RUNNING'
                             ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
-                            : 'bg-slate-200 border-slate-200 text-slate-400'
+                            : 'bg-slate-200 border-slate-200 text-slate-600'
                         }`}
                       >
                         {ch.status}
@@ -348,7 +348,7 @@ export default function ChillerStagingPage() {
             <span className="text-xs font-mono text-slate-600">4 Total Stages</span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -364,13 +364,13 @@ export default function ChillerStagingPage() {
                 {compressors.map((c: any) => (
                   <tr key={c.stage_id} className={c.status === 'RUNNING' ? 'bg-cyan-50' : ''}>
                     <td className="text-slate-900 font-bold">{c.stage_id}</td>
-                    <td className="text-slate-400">{c.chiller_id}</td>
+                    <td className="text-slate-600">{c.chiller_id}</td>
                     <td>
                       <span
                         className={`px-2 py-0.5 rounded-full text-[9px] font-semibold border ${
                           c.status === 'RUNNING'
                             ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
-                            : 'bg-slate-200 border-slate-200 text-slate-400'
+                            : 'bg-slate-200 border-slate-200 text-slate-600'
                         }`}
                       >
                         {c.status}
@@ -421,7 +421,7 @@ export default function ChillerStagingPage() {
                       className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
                         isSelected
                           ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800'
-                          : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                          : 'pill-fail'
                       }`}
                     >
                       {sc.decision}
@@ -448,7 +448,7 @@ export default function ChillerStagingPage() {
                   </div>
 
                   <div className="flex items-center justify-between text-[11px] text-slate-600 font-sans">
-                    <span>Power Impact: <strong className={isSelected ? 'text-emerald-700' : 'text-rose-400'}>{sc.power_impact}</strong></span>
+                    <span>Power Impact: <strong className={isSelected ? 'text-emerald-700' : 'text-rose-700'}>{sc.power_impact}</strong></span>
                     <span>Anti-Cycling: <strong className="text-emerald-700">{sc.anti_cycling_safety}</strong></span>
                   </div>
                 </div>
@@ -469,7 +469,7 @@ export default function ChillerStagingPage() {
             <span className="text-xs font-mono text-slate-600 font-medium">Lift vs Fan Trade-Off</span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -582,12 +582,9 @@ export default function ChillerStagingPage() {
         {/* 8. Plant Efficiency & Power Trade-Off */}
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Plant Efficiency & Power Trade-Off
               </h3>
-            </div>
             <span className="text-xs font-mono text-emerald-700 font-bold">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Net Shed` : 'NO DATA'}</span>
           </div>
 
@@ -611,7 +608,7 @@ export default function ChillerStagingPage() {
 
           <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-1 text-xs font-mono">
             <div className="flex justify-between text-[11px]"><span className="text-slate-600">Chiller Lift Savings:</span><span className="text-emerald-700">{powerData?.delta?.chiller || 'NO DATA'}</span></div>
-            <div className="flex justify-between text-[11px]"><span className="text-slate-600">Fan Compensation:</span><span className="text-amber-400">{powerData?.delta?.fan || 'NO DATA'}</span></div>
+            <div className="flex justify-between text-[11px]"><span className="text-slate-600">Fan Compensation:</span><span className="text-amber-800">{powerData?.delta?.fan || 'NO DATA'}</span></div>
             <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200"><span className="text-slate-800">Net Power Impact:</span><span className="text-emerald-700">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Net Plant Shed` : 'NO DATA'}</span></div>
           </div>
         </div>
@@ -638,7 +635,7 @@ export default function ChillerStagingPage() {
                   className={`text-xs font-mono px-2 py-0.5 rounded border transition-all ${
                     timeRangeHours === hrs
                       ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800 font-semibold'
-                      : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-800'
+                      : 'bg-slate-50 border-slate-200 text-slate-600 hover:text-slate-800'
                   }`}
                 >
                   {hrs}h
@@ -698,12 +695,9 @@ export default function ChillerStagingPage() {
         {/* 14. Plant Safety Validation */}
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-700" />
-              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Central Plant Safety Validation
               </h3>
-            </div>
             <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded pill-live">
               {safetyTotal ? `${safetyPassed}/${safetyTotal} PASSED` : 'NO DATA'}
             </span>
@@ -740,12 +734,9 @@ export default function ChillerStagingPage() {
         {/* 15. BMS Action, Verification & Rollback */}
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div className="flex items-center gap-2">
-              <Building className="w-4 h-4 text-cyan-800" />
-              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 BMS Control Action & Verification
               </h3>
-            </div>
             <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-700">
               {bmsActionData?.bms_status || 'NO DATA'}
             </span>
@@ -758,7 +749,7 @@ export default function ChillerStagingPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">PREVIOUS STATE</span>
-              <span className="text-slate-400 truncate block">{bmsActionData?.previous_state || 'NO DATA'}</span>
+              <span className="text-slate-600 truncate block">{bmsActionData?.previous_state || 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">APPLIED STATE</span>
@@ -799,16 +790,13 @@ export default function ChillerStagingPage() {
         {/* Optimization History */}
         <div className="glass-card overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-slate-400" />
-              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O4 Optimization History
               </h3>
-            </div>
             <span className="text-xs font-mono text-slate-600">Database Records</span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -825,7 +813,7 @@ export default function ChillerStagingPage() {
               <tbody className="font-mono text-xs">
                 {(historyData || []).map((h: any, i: number) => (
                   <tr key={i}>
-                    <td className="text-slate-400">{h.time}</td>
+                    <td className="text-slate-600">{h.time}</td>
                     <td className="text-slate-900 font-bold">{h.cooling_load}</td>
                     <td className="text-slate-700">{h.new_stage}</td>
                     <td className="text-cyan-800 font-bold">{h.new_chws}</td>
@@ -859,7 +847,7 @@ export default function ChillerStagingPage() {
             </span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -871,7 +859,7 @@ export default function ChillerStagingPage() {
               <tbody className="font-mono text-xs">
                 {(activitiesData || []).slice(0, 8).map((act: any, i: number) => (
                   <tr key={i}>
-                    <td className="text-slate-400">{act.time}</td>
+                    <td className="text-slate-600">{act.time}</td>
                     <td className="text-slate-900 font-sans font-medium">{act.event}</td>
                     <td className="text-slate-700 font-sans text-xs">{act.detail}</td>
                   </tr>

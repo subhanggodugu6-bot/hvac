@@ -50,7 +50,7 @@ export function PlanningDataQuality({ data, dash }: { data: OmOpportunity; dash?
         </div>
       </dl>
       {isO17Simulation(data) ? (
-        <p className="text-[11px] text-amber-300">SIMULATION — not LIVE.</p>
+        <p className="text-[11px] text-amber-800">SIMULATION — not LIVE.</p>
       ) : null}
     </section>
   );

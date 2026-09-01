@@ -305,7 +305,7 @@ export function VentilationDetailView({ opportunityId }: { opportunityId: 'O10' 
 
       <div className="kpi-tile">
         <div className="text-[11px] uppercase tracking-wider text-slate-500">Fail-Safe Rollback</div>
-        <div className="text-lg font-mono text-amber-300 mt-2">{formatDash(data?.failSafe?.policy)}</div>
+        <div className="text-lg font-mono text-amber-800 mt-2">{formatDash(data?.failSafe?.policy)}</div>
         <div className="mt-3 space-y-0">
           <Row label="Previous state" value={fmtSet(data?.failSafe?.previous)} />
           <Row label="Recommended state" value={fmtSet(data?.failSafe?.recommended)} />

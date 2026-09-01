@@ -162,7 +162,7 @@ function BmsPageInner() {
   const defaultPorts: Record<string, string> = { bacnet: '47808', modbus: '502', mqtt: '1883', rest: '443' };
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <PageHeader icon={Radio} title="Gateway" subtitle="Commissioning: connect, discover, and map canonical points so O1–O20 can run." badge="READ-ONLY" />
       <div className="flex flex-wrap gap-1.5">
         {(['status', 'connection', 'devices', 'points', 'mapping', 'writes'] as BmsTab[]).map((id) => (
@@ -202,10 +202,10 @@ function BmsPageInner() {
             <StatusBadge tone="neutral">{st.plantMode || '—'}</StatusBadge>
             <StatusBadge tone={st.write_enabled ? 'live' : 'warn'}>{st.write_enabled ? 'WRITES ARMED' : 'WRITES OFF'}</StatusBadge>
           </div>
-          <div className="text-[12px] font-mono text-slate-400">
+          <div className="text-[12px] font-mono text-slate-600">
             Devices {deviceRows.length} · Mappings {mapRows.length} · Protocol {st.protocol || '—'}
           </div>
-          <div className="text-[12px] text-slate-400">Last error: {st.last_error || st.lastError || '—'}</div>
+          <div className="text-[12px] text-slate-600">Last error: {st.last_error || st.lastError || '—'}</div>
           {message ? <div className="text-[12px] text-slate-600 font-mono">{message}</div> : null}
         </section>
       ) : null}
@@ -214,7 +214,7 @@ function BmsPageInner() {
         <section className="glass-card p-5 space-y-4">
           <div className="text-[11px] font-semibold tracking-[0.14em] text-slate-500 uppercase">BMS Connection</div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <label className="text-[11px] text-slate-400 space-y-1.5">
+            <label className="text-[11px] text-slate-600 space-y-1.5">
               Protocol
               <select
                 value={protocol}
@@ -231,11 +231,11 @@ function BmsPageInner() {
                 <option value="rest">REST</option>
               </select>
             </label>
-            <label className="text-[11px] text-slate-400 space-y-1.5">
+            <label className="text-[11px] text-slate-600 space-y-1.5">
               Host
               <input value={host} onChange={(e) => setHost(e.target.value)} placeholder="gateway IP" className="form-control" />
             </label>
-            <label className="text-[11px] text-slate-400 space-y-1.5">
+            <label className="text-[11px] text-slate-600 space-y-1.5">
               Port
               <input value={port} onChange={(e) => setPort(e.target.value)} className="form-control" />
             </label>
@@ -298,7 +298,7 @@ function BmsPageInner() {
           )}
           {selected ? (
             <div className="space-y-2">
-              <div className="text-[11px] font-semibold tracking-[0.12em] text-slate-400 uppercase">Points</div>
+              <div className="text-[11px] font-semibold tracking-[0.12em] text-slate-600 uppercase">Points</div>
               <div className="overflow-auto max-h-48">
                 <table className="bms-table">
                   <thead>
@@ -418,7 +418,7 @@ function BmsPageInner() {
       <>
       <section className="glass-card p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="text-[11px] font-semibold tracking-[0.12em] text-slate-400 uppercase">Stage G — controlled writes</div>
+          <div className="text-[11px] font-semibold tracking-[0.12em] text-slate-600 uppercase">Stage G — controlled writes</div>
           <StatusBadge tone={sgOk || sgOkToEnable ? 'live' : 'warn'}>
             {sgOk ? 'G1 APPLY READY' : sgOkToEnable ? 'G1 ARM READY' : 'G1 BLOCKED'}
           </StatusBadge>
@@ -493,8 +493,8 @@ function BmsPageInner() {
       </section>
 
       <section className="glass-card p-4 space-y-3">
-        <div className="text-[11px] font-semibold tracking-[0.12em] text-slate-400 uppercase">Supervised write</div>
-        <p className="text-[12px] text-slate-400">
+        <div className="text-[11px] font-semibold tracking-[0.12em] text-slate-600 uppercase">Supervised write</div>
+        <p className="text-[12px] text-slate-600">
           Apply an existing Safe RL / O* <span className="font-mono">control_commands</span> row — PROPOSED → APPROVED → APPLY → VERIFY →
           ROLLBACK.
         </p>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
+import { EmptyState } from '@/components/hvac/EmptyState';
 import type { OmOpportunity } from '@/lib/hvac/omTypes';
 import { formatDash, formatKwh, formatPercent } from '@/lib/hvac/formatters';
 import {
@@ -35,7 +36,7 @@ export function TrainingRecommendationCard({ data }: { data: OmOpportunity }) {
     <section id="o18-recommendations" className="space-y-3" aria-label="Training recommendations">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Training recommendations</h2>
       {items.length === 0 ? (
-        <div className="kpi-tile text-[11px] font-mono text-amber-700">NO DATA AVAILABLE</div>
+        <EmptyState title="NO RECOMMENDATIONS" detail="No training gaps or recommendation actions were returned." />
       ) : (
         items.map((item, i) => <Card key={`${item.title}-${i}`} data={data} item={item} />)
       )}

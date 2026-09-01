@@ -32,7 +32,7 @@ export function ControlChangeHistory({
     <section className="col-span-12 kpi-tile space-y-3" aria-label="Change management">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Software control change workflow</h2>
       <p className="text-[11px] text-amber-800">Automatic software deployment is prohibited. Change requests enter REVIEW_REQUIRED supervisory process only.</p>
-      <p className="text-[11px] font-mono text-slate-400">{block}</p>
+      <p className="text-[11px] font-mono text-slate-600">{block}</p>
       <form
         className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2"
         onSubmit={(e) => {

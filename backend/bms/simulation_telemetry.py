@@ -195,6 +195,7 @@ _EXTRA: Dict[str, Tuple[str, Optional[str], float]] = {
     "CHW.SupplySetpoint": ("CH-01", "°C", 7.0),
     "CHW.PlantFlow": ("CH-01", "GPM", 338.0),
     "CHILLER1.CompressorPower": ("CH-01", "kW", 40.8),
+    "CH-01.power": ("CH-01", "kW", 105.0),
     "CHW.SecondaryPumpPower": ("P-01", "kW", 8.5),
     "CWS.SupplyTemp": ("CW-01", "°C", 29.0),
     "CWR.ReturnTemp": ("CW-01", "°C", 34.0),

@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { OpportunityWorkspace } from '@/components/hvac/guide/OpportunityWorkspace';
+import { EmptyState } from '@/components/hvac/EmptyState';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { getOpportunity } from '@/lib/hvac/opportunityConfig';
 import { provenanceFromAgent } from '@/lib/hvac/provenance';
 import { actionErrorText } from '@/lib/hvac/actionError';
@@ -163,7 +165,7 @@ function TemperatureResetContent() {
       }
     >
 
-      <div className="grid grid-cols-3 border border-slate-200 rounded-lg bg-[#0d1524] p-0.5">
+      <div className="grid grid-cols-3 border border-slate-200 rounded-lg bg-slate-100 p-0.5">
         {(
           [
             { mode: 'HHW' as const, label: 'O6 Heating Hot Water' },
@@ -174,10 +176,10 @@ function TemperatureResetContent() {
           <button
             key={mode}
             onClick={() => selectMode(mode)}
-            className={`py-2.5 px-2 text-[11px] font-semibold tracking-wide ${
+            className={`py-2.5 px-2 text-[11px] font-semibold tracking-wide rounded-md transition-colors ${
               activeMode === mode
-                ? 'bg-cyan-500/15 text-cyan-800 border-b-2 border-cyan-400'
-                : 'text-slate-400 hover:text-slate-800'
+                ? 'bg-white text-cyan-800 shadow-sm border border-slate-200'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
             }`}
           >
             {label}
@@ -189,7 +191,7 @@ function TemperatureResetContent() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {/* Current Setpoint */}
         <div className="kpi-tile relative overflow-hidden">
-          <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Current Setpoint</div>
+          <div className="text-[11px] font-mono text-slate-600 uppercase tracking-wider">Current Setpoint</div>
           <div className="text-2xl font-bold text-slate-900 mt-1 font-mono">
             {data?.current_setpoint != null ? `${data.current_setpoint} °C` : 'NO DATA'}
           </div>
@@ -219,7 +221,7 @@ function TemperatureResetContent() {
 
         {/* Demand / Load */}
         <div className="kpi-tile relative overflow-hidden">
-          <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider">Current Load / Demand</div>
+          <div className="text-[11px] font-mono text-slate-600 uppercase tracking-wider">Current Load / Demand</div>
           <div className="text-lg font-bold text-slate-900 mt-1.5 font-mono truncate">
             {data?.demand_load || 'NO DATA'}
           </div>
@@ -357,10 +359,7 @@ function TemperatureResetContent() {
         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-              <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                Supervisory Decision
-              </h3>
+              <h3 className="text-sm font-semibold text-slate-900">Supervisory decision</h3>
               <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 text-[10px] font-mono">
                 CONFIDENCE {data?.confidence != null ? `${(data.confidence * 100).toFixed(0)}%` : 'NO DATA'}
               </span>
@@ -434,7 +433,7 @@ function TemperatureResetContent() {
                 <th className="pb-2 text-right">Decision</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.04]">
+            <tbody className="divide-y divide-slate-100">
               {data && data.candidates && data.candidates.length > 0 ? (
                 data.candidates.map((c: any, i: number) => (
                   <tr key={i} className={c.decision === 'SELECTED_OPTIMAL' ? 'bg-cyan-500/10' : ''}>
@@ -448,7 +447,7 @@ function TemperatureResetContent() {
                         {c.safety_status}
                       </span>
                     </td>
-                    <td className="py-2.5 text-slate-400">{c.comfort_risk || 'NO DATA'}</td>
+                    <td className="py-2.5 text-slate-600">{c.comfort_risk || 'NO DATA'}</td>
                     <td className="py-2.5 text-right">
                       {c.decision === 'SELECTED_OPTIMAL' ? (
                         <span className="text-cyan-800 font-bold flex items-center justify-end gap-1">
@@ -461,11 +460,11 @@ function TemperatureResetContent() {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={6} className="py-4 text-center text-slate-500">
-                    NO DATA — no candidates returned for {activeMode}.
-                  </td>
-                </tr>
+                <TableEmptyState
+                  colSpan={6}
+                  title="NO CANDIDATES"
+                  detail={`No reset candidates returned for ${activeMode}.`}
+                />
               )}
             </tbody>
           </table>

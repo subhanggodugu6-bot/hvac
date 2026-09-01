@@ -34,7 +34,7 @@ export default function TelemetryPage() {
     live.connectionState === 'open' ? 'WS OPEN' : live.connectionState === 'connecting' ? 'WS CONNECTING' : 'WS CLOSED · REST FALLBACK';
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <PageHeader icon={Activity} title="Telemetry" subtitle="Canonical points from the FastAPI stream. Simulation stamps SIMULATION, never LIVE_BMS." badge="CANONICAL" />
       <div className="flex flex-wrap gap-2">
         <StatusBadge tone={toneForStatus(live.bmsStatus)}>BMS {live.bmsStatus}</StatusBadge>
@@ -77,7 +77,7 @@ export default function TelemetryPage() {
                   <tr key={pid + String(p.timestamp || i)}>
                     <td className="font-mono text-slate-800">{p.equipment_id || '—'}</td>
                     <td className="font-mono">{p.point || '—'}</td>
-                    <td className={q === 'GOOD' ? 'text-emerald-800' : q === 'STALE' ? 'text-amber-300' : q === 'BAD' ? 'text-rose-800' : 'text-slate-400'}>{shown}</td>
+                    <td className={q === 'GOOD' ? 'text-emerald-800' : q === 'STALE' ? 'text-amber-800' : q === 'BAD' ? 'text-rose-800' : 'text-slate-600'}>{shown}</td>
                     <td>{p.unit || '—'}</td>
                     <td>{p.quality || '—'}</td>
                     <td>{p.source || '—'}</td>

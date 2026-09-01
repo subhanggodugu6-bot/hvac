@@ -84,6 +84,18 @@ async def lifespan(app: FastAPI):
         except Exception:
             pass
     try:
+        from backend.services.platform_ops_service import apply_plant_mode, get_plant_mode
+
+        apply_plant_mode(get_plant_mode())
+    except Exception:
+        pass
+    try:
+        from backend.bms.connection_manager import auto_connect_if_configured
+
+        auto_connect_if_configured()
+    except Exception:
+        pass
+    try:
         from backend.bms.telemetry_reader import start_reader, stop_reader
         start_reader()
     except Exception:

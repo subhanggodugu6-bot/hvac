@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
+import { EmptyState } from '@/components/hvac/EmptyState';
 import type { OmOpportunity } from '@/lib/hvac/omTypes';
 import { formatDash } from '@/lib/hvac/formatters';
 import { o20ConfidencePct, o20ControllerField, o20QualityLabel } from '@/lib/hvac/o20Format';
@@ -11,8 +12,7 @@ export function ControlRecommendation({ data }: { data: OmOpportunity }) {
   if (!data.recommendation?.action) {
     return (
       <section className="kpi-tile">
-        <h2 className="text-[11px] uppercase tracking-wider text-slate-500 mb-2">Recommendation</h2>
-        <p className="text-[11px] font-mono text-amber-300">NO DATA AVAILABLE</p>
+        <EmptyState title="NO RECOMMENDATION" detail="Control recommendation action was not returned by the API." />
       </section>
     );
   }

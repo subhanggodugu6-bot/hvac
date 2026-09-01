@@ -25,24 +25,24 @@ export function O10AhuDiagram({ data }: { data: VentilationOpportunity }) {
       <p className="text-[11px] text-slate-600">Conceptual sequence (guide Figure 12). Damper percentages shown only when telemetry exists.</p>
       <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-700">
         <Node title="Outdoor air" value={vis} />
-        <span className="text-slate-400">↓</span>
+        <span className="text-slate-600">↓</span>
         <Node title="OA damper" value={oa} />
-        <span className="text-slate-400">↓</span>
+        <span className="text-slate-600">↓</span>
         <Node title="Mixed air" value={o10Temp(data, 'mixed_air_temp_c')} />
-        <span className="text-slate-400">↓</span>
+        <span className="text-slate-600">↓</span>
         <Node title="Cooling coil" value={cooling} />
-        <span className="text-slate-400">↓</span>
+        <span className="text-slate-600">↓</span>
         <Node title="Supply fan" value={o10Str(data, 'fan_status', 'fan_state')} />
-        <span className="text-slate-400">↓</span>
+        <span className="text-slate-600">↓</span>
         <Node title="Space" value="—" />
       </div>
       <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono text-slate-700">
         <Node title="Space" value="—" />
-        <span className="text-slate-400">↓</span>
+        <span className="text-slate-600">↓</span>
         <Node title="Return air" value="—" />
-        <span className="text-slate-400">↓</span>
+        <span className="text-slate-600">↓</span>
         <Node title="Return damper" value={ra} />
-        <span className="text-slate-400">↓</span>
+        <span className="text-slate-600">↓</span>
         <Node title="Relief / exhaust" value={relief} />
       </div>
     </section>

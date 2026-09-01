@@ -222,3 +222,40 @@ class LabBacnetGateway(BMSGateway):
 
     def write_points(self, writes: List[Dict[str, Any]]) -> List[WriteOutcome]:
         return reject_writes(writes)
+
+
+def seed_lab_history(hours: float = 3.0, step_minutes: float = 1.0) -> int:
+    """Backfill LIVE_BMS lab historian so LSTM lookback works right after Stage A."""
+    import math
+    import time
+    from datetime import datetime, timedelta, timezone
+
+    from backend.services.canonical_telemetry_service import record_point
+
+    span_h = max(0.5, float(hours))
+    step = max(1.0, float(step_minutes))
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    steps = max(2, int((span_h * 60.0) / step))
+    total = 0
+    for eq, pt, unit, base, _writable in STAGE_A_POINTS:
+        pid = f"{eq}.{pt}"
+        for i in range(steps, 0, -1):
+            ts = now - timedelta(minutes=step * i)
+            drift = math.sin((time.time() - step * 60.0 * i) / 40.0) * 0.04
+            if pt in ("enable", "status", "occupancy_schedule"):
+                val = float(base)
+            elif pt == "occupancy":
+                val = round(float(base), 3)
+            else:
+                val = round(float(base) * (1.0 + drift), 3)
+            record_point(
+                point_id=pid,
+                value=val,
+                unit=unit,
+                source="LIVE_BMS",
+                quality="GOOD",
+                equipment_id=eq,
+                timestamp=ts,
+            )
+            total += 1
+    return total

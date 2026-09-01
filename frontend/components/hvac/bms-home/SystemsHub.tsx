@@ -42,7 +42,7 @@ export function SystemsHub({
               ))}
             </div>
             {variant === 'full' ? (
-              <p className="text-[9px] font-mono text-slate-400 mt-2">GUIDE_POTENTIAL · non-cumulative</p>
+              <p className="text-[9px] font-mono text-slate-600 mt-2">GUIDE_POTENTIAL · non-cumulative</p>
             ) : null}
           </Link>
         );

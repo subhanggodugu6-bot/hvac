@@ -42,7 +42,7 @@ export function ControlHealthOverview({ data }: { data: OmOpportunity }) {
           </PieChart>
         </EngineeringChart>
       )}
-      <ul className="grid grid-cols-2 gap-1 text-[11px] font-mono text-slate-400">
+      <ul className="grid grid-cols-2 gap-1 text-[11px] font-mono text-slate-600">
         {['Healthy', 'Warning', 'Drift', 'Stale', 'Failed'].map((name) => {
           const row = slices.find((s) => s.name === name);
           return (

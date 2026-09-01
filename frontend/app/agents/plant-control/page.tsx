@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Sliders, Activity } from 'lucide-react';
+import { Sliders } from 'lucide-react';
 import { fetchPlantControlDashboard, fetchPlantControlActivity, PlantControlDashboardState } from '@/lib/plantControlApi';
 import { SectionDashboard } from '@/components/hvac/SectionDashboard';
 import { getOpportunity, TEMP_RESET_OPPS } from '@/lib/hvac/opportunityConfig';
@@ -96,8 +96,7 @@ export default function PlantControlDashboardPage() {
     >
       <MlSectionStrip opportunityIds={['O5', 'O6', 'O7', 'O8', 'O9']} />
       <div className="glass-card p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <Activity className="w-4 h-4 text-slate-500" />
+        <div className="mb-3">
           <h3 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">Activity</h3>
         </div>
         <div className="space-y-1.5 font-mono text-xs">
@@ -107,7 +106,7 @@ export default function PlantControlDashboardPage() {
           {activities.map((act, i) => (
             <div key={act.id || i} className="grid grid-cols-1 sm:grid-cols-[4.5rem_9rem_1fr_5.5rem] gap-1 sm:gap-3 px-2 py-1.5 border border-slate-100 rounded-xl text-slate-600">
               <span className="text-violet-600 font-semibold">{act.opportunity || 'SYS'}</span>
-              <span className="text-slate-400 truncate">{act.timestamp}</span>
+              <span className="text-slate-600 truncate">{act.timestamp}</span>
               <span className="truncate text-slate-700">{act.message}</span>
               <span className="text-emerald-600 sm:text-right">{act.stage}</span>
             </div>

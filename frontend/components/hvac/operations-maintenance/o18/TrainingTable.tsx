@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { EngineeringTable } from '@/components/hvac/EngineeringTable';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import type { OmOpportunity } from '@/lib/hvac/omTypes';
 import { formatDash, formatPercent } from '@/lib/hvac/formatters';
@@ -78,7 +79,7 @@ export function TrainingTable({ data }: { data: OmOpportunity }) {
               type="button"
               aria-pressed={filter === f}
               className={`px-2 py-1.5 text-[11px] font-mono border focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                filter === f ? 'border-cyan-500/40 text-cyan-800' : 'border-slate-200 text-slate-400'
+                filter === f ? 'border-cyan-500/40 text-cyan-800' : 'border-slate-200 text-slate-600'
               }`}
               onClick={() => setFilter(f)}
             >
@@ -122,17 +123,9 @@ export function TrainingTable({ data }: { data: OmOpportunity }) {
         </thead>
         <tbody>
           {!programs ? (
-            <tr>
-              <td colSpan={7} className="text-amber-300">
-                NO DATA AVAILABLE
-              </td>
-            </tr>
+            <TableEmptyState colSpan={7} detail="Training program list was not returned by the API." />
           ) : visible.length === 0 ? (
-            <tr>
-              <td colSpan={7} className="text-amber-300">
-                NO DATA AVAILABLE
-              </td>
-            </tr>
+            <TableEmptyState colSpan={7} detail="No training programs match the selected filter." />
           ) : (
             visible.map((r) => (
               <tr key={r.item}>

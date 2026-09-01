@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Bell, ChevronDown, Settings2 } from 'lucide-react';
 import { useSupervisoryStore } from '@/lib/store';
 import { AgentMode } from '@/lib/types';
 import { DEFAULT_FACILITY_CONFIG } from '@/lib/facilityConfig';
 import { hvacFetch, apiJson, API_BASE } from '@/lib/api/client';
-import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 import type { TelemetryFrame } from '@/lib/hvac/telemetrySocket';
 import { OPPORTUNITIES } from '@/lib/hvac/opportunityConfig';
@@ -48,6 +48,52 @@ function formatFacilityClock(timeZone: string, now: Date) {
   };
 }
 
+type DotTone = 'ok' | 'warn' | 'danger' | 'muted';
+
+function statusDot(tone: DotTone) {
+  const map: Record<DotTone, string> = {
+    ok: 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.55)]',
+    warn: 'bg-amber-500 shadow-[0_0_6px_rgba(245,158,11,0.45)]',
+    danger: 'bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.45)]',
+    muted: 'bg-slate-400',
+  };
+  return <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${map[tone]}`} aria-hidden />;
+}
+
+function HeaderStatusGroup({
+  bmsStatus,
+  telemetryLabel,
+  ageText,
+}: {
+  bmsStatus: string;
+  telemetryLabel: string;
+  ageText: string;
+}) {
+  const bmsConnected = bmsStatus === 'CONNECTED';
+  const telLive = telemetryLabel === 'LIVE';
+  const telSim = /SIM/i.test(telemetryLabel);
+
+  const bmsTone: DotTone = bmsConnected ? 'ok' : 'danger';
+  const telTone: DotTone = telLive ? 'ok' : telSim ? 'warn' : 'muted';
+
+  const bmsLabel = bmsConnected ? 'BMS live' : 'BMS off';
+  const telLabel = telLive ? `Tel ${ageText}` : telSim ? `Sim ${ageText}` : `Tel ${telemetryLabel || '—'}`;
+
+  return (
+    <div className="header-status-group" title={`${bmsLabel} · ${telLabel}`}>
+      <span className="header-status-item">
+        {statusDot(bmsTone)}
+        <span>{bmsLabel}</span>
+      </span>
+      <span className="header-status-divider" aria-hidden />
+      <span className="header-status-item">
+        {statusDot(telTone)}
+        <span>{telLabel}</span>
+      </span>
+    </div>
+  );
+}
+
 export const Header: React.FC = () => {
   const router = useRouter();
   const { agentMode, setAgentMode } = useSupervisoryStore();
@@ -59,6 +105,8 @@ export const Header: React.FC = () => {
   const [humidity, setHumidity] = useState<number | null>(null);
   const [search, setSearch] = useState('');
   const [alertCount, setAlertCount] = useState(0);
+  const [controlsOpen, setControlsOpen] = useState(false);
+  const controlsRef = useRef<HTMLDivElement>(null);
   const bmsStatus = live.bmsStatus;
   const telemetryLabel = live.telemetryStatus;
   const telemetryAge = live.telemetryAgeSeconds;
@@ -158,7 +206,23 @@ export const Header: React.FC = () => {
     return () => clearInterval(interval);
   }, [timezone]);
 
-  const dayLabel = facilityTime.dayState;
+  useEffect(() => {
+    if (!controlsOpen) return;
+    const onPointer = (e: MouseEvent) => {
+      if (controlsRef.current && !controlsRef.current.contains(e.target as Node)) {
+        setControlsOpen(false);
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setControlsOpen(false);
+    };
+    document.addEventListener('mousedown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [controlsOpen]);
 
   const toggleSafe = async () => {
     await hvacFetch(`${API_BASE}/platform/safe-mode`, {
@@ -181,45 +245,52 @@ export const Header: React.FC = () => {
     ).slice(0, 6);
   }, [search]);
 
+  const writeLabel = live.controlLabel || 'WRITE DISABLED';
+
   return (
-    <header className="sticky top-0 z-40 min-h-[4.25rem] py-2 bg-[color:var(--bg-header)] backdrop-blur-xl border-b border-slate-200/70 shadow-[0_1px_0_rgba(255,255,255,0.8)] px-4 lg:px-6 flex items-center select-none">
-      <div className="flex flex-wrap items-center justify-between w-full gap-2">
-        <div className="flex items-center gap-3 shrink-0 min-w-0">
+    <header className="app-header sticky top-0 z-40 select-none" role="banner">
+      <span className="sr-only">{writeLabel}</span>
+      <div className="app-header-inner">
+        {/* Brand */}
+        <div className="app-header-brand">
           <div className="min-w-0 hidden sm:block">
             <div className="text-[13px] font-semibold text-slate-900 tracking-tight leading-none">HVAC AI Control</div>
-            <div className="text-[11px] text-slate-500 truncate flex items-center gap-1 mt-1 max-w-[14rem] lg:max-w-[18rem]">
-              <span className="text-slate-700 truncate">{buildingName}</span>
-              <span className="text-slate-300">·</span>
-              <span className="truncate">{buildingLocation || 'Location unavailable'}</span>
+            <div className="text-[11px] text-slate-500 truncate mt-1 max-w-[14rem] lg:max-w-[20rem]">
+              <span className="text-slate-700">{buildingName}</span>
+              <span className="text-slate-300 mx-1">·</span>
+              <span>{buildingLocation || 'Location unavailable'}</span>
             </div>
           </div>
           <div className="sm:hidden text-[13px] font-semibold text-slate-900">HVAC</div>
         </div>
 
-        <div className="hidden md:flex items-center gap-2 flex-1 min-w-0 max-w-2xl xl:max-w-3xl mx-1">
-          <div className="bh-pill bh-pill-dark gap-2 shrink-0 max-w-[40%] xl:max-w-none">
-            <span className="text-[10px] font-semibold tracking-wide text-slate-500 shrink-0">{dayLabel}</span>
-            <span className="truncate text-[11px]">
+        {/* Center: clock + search */}
+        <div className="app-header-center hidden md:flex">
+          <div className="header-clock-pill">
+            <span className="header-clock-phase">{facilityTime.dayState}</span>
+            <span className="header-clock-date truncate">
               {facilityTime.weekday}, {facilityTime.dateStr}
             </span>
-            <span className="text-slate-500">|</span>
-            <span className="tabular-nums shrink-0">{facilityTime.timeStr || '—'}</span>
-            <span className="text-slate-500 hidden xl:inline">
-              · {oat != null ? `${oat.toFixed(1)}°C` : 'OAT —'} · {humidity != null ? `RH ${Math.round(humidity)}%` : 'RH —'}
+            <span className="header-clock-sep" aria-hidden />
+            <span className="header-clock-time tabular-nums">{facilityTime.timeStr || '—'}</span>
+            <span className="header-clock-weather hidden xl:inline">
+              {oat != null ? `${oat.toFixed(1)}°C` : 'OAT —'}
+              <span className="mx-1 text-slate-500">·</span>
+              {humidity != null ? `RH ${Math.round(humidity)}%` : 'RH —'}
             </span>
           </div>
-          <div className="relative flex-1 min-w-0">
-            <div className="bh-pill bh-pill-search w-full gap-2 min-w-0">
+          <div className="relative flex-1 min-w-0 max-w-md">
+            <div className="header-search-pill">
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search O1–O20…"
-                className="bg-transparent border-0 outline-none w-full min-w-0 text-[12px] text-violet-950 placeholder:text-violet-400/70"
+                className="bg-transparent border-0 outline-none w-full min-w-0 text-[12px] text-slate-800 placeholder:text-slate-400"
                 aria-label="Search opportunities"
               />
             </div>
             {searchHits.length > 0 ? (
-              <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 rounded-2xl border border-slate-200/90 bg-white/98 backdrop-blur-md shadow-xl overflow-hidden">
+              <div className="header-search-results">
                 {searchHits.map((o) => (
                   <button
                     key={o.id}
@@ -239,79 +310,109 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-wrap justify-end">
-          <div className="hidden md:flex h-9 rounded-full border border-slate-200 bg-white p-0.5">
+        {/* Actions */}
+        <div className="app-header-actions">
+          <div className="md:hidden">
+            <HeaderStatusGroup bmsStatus={bmsStatus} telemetryLabel={telemetryLabel} ageText={ageText} />
+          </div>
+
+          <div className="header-segment" role="group" aria-label="Plant data source">
             <button
               type="button"
               onClick={() => setPlant('DATASET')}
-              className={`px-2.5 sm:px-3 text-[10px] font-semibold tracking-wide rounded-full ${
-                plantMode === 'DATASET' ? 'bg-amber-500 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'
-              }`}
+              className={`header-segment-btn ${plantMode === 'DATASET' ? 'is-active is-dataset' : ''}`}
             >
-              DATASET
+              Dataset
             </button>
             <button
               type="button"
               onClick={() => setPlant('LIVE_BMS')}
-              className={`px-2.5 sm:px-3 text-[10px] font-semibold tracking-wide rounded-full ${
-                plantMode === 'LIVE_BMS' ? 'bg-violet-600 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'
-              }`}
+              className={`header-segment-btn ${plantMode === 'LIVE_BMS' ? 'is-active is-live' : ''}`}
             >
-              LIVE BMS
+              Live BMS
             </button>
           </div>
-          <div className="hidden xl:flex items-center gap-1.5">
-            <StatusBadge tone={bmsStatus === 'CONNECTED' ? 'live' : 'danger'} pulse={false}>
-              BMS {bmsStatus}
-            </StatusBadge>
-            <StatusBadge tone={toneForStatus(telemetryLabel)} pulse={telemetryLabel === 'LIVE'}>
-              TEL {telemetryLabel} {ageText}
-            </StatusBadge>
+
+          <div className="hidden md:block">
+            <HeaderStatusGroup bmsStatus={bmsStatus} telemetryLabel={telemetryLabel} ageText={ageText} />
           </div>
+
           <button
             type="button"
-            className="relative h-9 px-3 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-600 hover:border-violet-300"
+            className="header-icon-btn"
             onClick={() => router.push('/overview')}
             title="Alerts"
-            aria-label="Alerts"
+            aria-label={`Alerts${alertCount > 0 ? `, ${alertCount} active` : ''}`}
           >
-            Alerts
+            <Bell className="w-4 h-4" strokeWidth={2} />
             {alertCount > 0 ? (
-              <span className="ml-1.5 inline-flex min-w-[1rem] h-4 px-1 rounded-full bg-pink-500 text-[9px] font-bold text-white items-center justify-center">
-                {alertCount > 99 ? '99+' : alertCount}
-              </span>
+              <span className="header-icon-badge">{alertCount > 99 ? '99+' : alertCount}</span>
             ) : null}
           </button>
-          <button
-            type="button"
-            className="h-9 px-3 rounded-full bg-white border border-slate-200 text-[11px] font-semibold text-slate-600 hover:border-violet-300"
-            onClick={() => router.push('/platform/bms')}
-            title="Gateway settings"
-            aria-label="Gateway settings"
-          >
-            Gateway
-          </button>
-          <select
-            value={agentMode}
-            onChange={(e) => setAgentMode(e.target.value as AgentMode)}
-            className="h-9 rounded-full bg-white border border-slate-200 px-2 text-[11px] font-semibold text-violet-700 focus:outline-none max-w-[7.5rem]"
-            aria-label="Agent mode"
-          >
-            <option value="AUTO">AUTO</option>
-            <option value="APPROVAL_REQUIRED">APPROVAL</option>
-            <option value="ADVISORY">ADVISORY</option>
-            <option value="SAFE_MODE">SAFE MODE</option>
-          </select>
-          <button type="button" onClick={toggleSafe} className={safeMode ? 'btn-danger' : 'btn-ghost'}>
-            {safeMode ? 'SAFE ON' : 'SAFE'}
-          </button>
-          <div className="hidden lg:flex items-center gap-2 pl-1">
-            <div className="w-8 h-8 rounded-full bg-violet-500 text-white text-[11px] font-bold flex items-center justify-center">
-              OP
-            </div>
-            <div className="hidden 2xl:block leading-tight">
-              <div className="text-[12px] font-semibold text-slate-800">Operator</div>
-              <div className="text-[10px] text-slate-500">{live.controlLabel || 'WRITE DISABLED'}</div>
+
+          <div className="relative" ref={controlsRef}>
+            <button
+              type="button"
+              className="header-controls-btn"
+              onClick={() => setControlsOpen((v) => !v)}
+              aria-expanded={controlsOpen}
+              aria-haspopup="menu"
+            >
+              <Settings2 className="w-3.5 h-3.5" strokeWidth={2} />
+              <span className="hidden lg:inline">Controls</span>
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${controlsOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {controlsOpen ? (
+              <div className="header-controls-menu" role="menu">
+                <div className="header-controls-section">
+                  <span className="header-controls-label">Operator</span>
+                  <span className="header-controls-value">{writeLabel}</span>
+                </div>
+                <div className="header-controls-section">
+                  <span className="header-controls-label">Agent mode</span>
+                  <select
+                    value={agentMode}
+                    onChange={(e) => setAgentMode(e.target.value as AgentMode)}
+                    className="header-controls-select"
+                    aria-label="Agent mode"
+                  >
+                    <option value="AUTO">Auto</option>
+                    <option value="APPROVAL_REQUIRED">Approval required</option>
+                    <option value="ADVISORY">Advisory</option>
+                    <option value="SAFE_MODE">Safe mode</option>
+                  </select>
+                </div>
+                <div className="header-controls-row">
+                  <button
+                    type="button"
+                    className="header-controls-link"
+                    onClick={() => {
+                      router.push('/platform/bms');
+                      setControlsOpen(false);
+                    }}
+                  >
+                    Gateway settings
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      toggleSafe();
+                      setControlsOpen(false);
+                    }}
+                    className={safeMode ? 'header-controls-danger' : 'header-controls-ghost'}
+                  >
+                    {safeMode ? 'Safe mode on' : 'Safe mode'}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="header-user-chip hidden lg:flex">
+            <div className="header-user-avatar">OP</div>
+            <div className="leading-tight min-w-0">
+              <div className="text-[12px] font-semibold text-slate-800 truncate">Operator</div>
+              <div className="text-[10px] text-slate-500 truncate">{writeLabel}</div>
             </div>
           </div>
         </div>

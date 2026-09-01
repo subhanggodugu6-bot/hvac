@@ -13,6 +13,7 @@ import {
   CartesianGrid,
   ReferenceLine,
 } from 'recharts';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { OpportunityWorkspace } from '@/components/hvac/guide/OpportunityWorkspace';
 import { getOpportunity } from '@/lib/hvac/opportunityConfig';
 import { provenanceFromAgent } from '@/lib/hvac/provenance';
@@ -284,7 +285,7 @@ export default function OptimumStartStopPage() {
             <span className="text-xs font-mono text-slate-600">Target: 08:00 Occupancy</span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -298,7 +299,7 @@ export default function OptimumStartStopPage() {
               </thead>
               <tbody className="font-mono text-xs">
                 {(startCandidatesData || []).length === 0 ? (
-                  <tr><td colSpan={6} className="text-slate-500 text-center py-4">NO DATA</td></tr>
+                  <TableEmptyState colSpan={6} detail="No rows returned for this view." />
                 ) : (startCandidatesData || []).map((c: any, i: number) => (
                   <tr key={i} className={String(c.decision || '').includes('SELECTED') ? 'bg-cyan-50' : ''}>
                     <td className="font-bold text-slate-900 text-sm">{c.candidate_time}</td>
@@ -311,8 +312,8 @@ export default function OptimumStartStopPage() {
                           String(c.comfort_risk || '').startsWith('LOW') || c.comfort_risk === 'NIL'
                             ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                             : c.comfort_risk === 'MODERATE'
-                            ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                            : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                            ? 'bg-amber-50 border border-amber-200 text-amber-800'
+                            : 'pill-fail'
                         }`}
                       >
                         {c.comfort_risk || 'NO DATA'}
@@ -323,7 +324,7 @@ export default function OptimumStartStopPage() {
                         className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
                           String(c.decision || '').includes('SELECTED')
                             ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800'
-                            : 'bg-slate-200 border-slate-200 text-slate-400'
+                            : 'bg-slate-200 border-slate-200 text-slate-600'
                         }`}
                       >
                         {c.decision}
@@ -348,7 +349,7 @@ export default function OptimumStartStopPage() {
             <span className="text-xs font-mono text-slate-600">Limit: ≤ 24.0°C at 18:00</span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -362,7 +363,7 @@ export default function OptimumStartStopPage() {
               </thead>
               <tbody className="font-mono text-xs">
                 {(coastCandidatesData || []).length === 0 ? (
-                  <tr><td colSpan={6} className="text-slate-500 text-center py-4">NO DATA</td></tr>
+                  <TableEmptyState colSpan={6} detail="No rows returned for this view." />
                 ) : (coastCandidatesData || []).map((c: any, i: number) => (
                   <tr key={i} className={String(c.decision || '').includes('SELECTED') ? 'bg-cyan-50' : ''}>
                     <td className="font-bold text-slate-900 text-sm">{c.candidate_time}</td>
@@ -375,8 +376,8 @@ export default function OptimumStartStopPage() {
                           c.safety === 'PASS'
                             ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                             : c.safety === 'WARNING'
-                            ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                            : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                            ? 'bg-amber-50 border border-amber-200 text-amber-800'
+                            : 'pill-fail'
                         }`}
                       >
                         {c.safety || 'NO DATA'}
@@ -387,7 +388,7 @@ export default function OptimumStartStopPage() {
                         className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
                           String(c.decision || '').includes('SELECTED')
                             ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800'
-                            : 'bg-slate-200 border-slate-200 text-slate-400'
+                            : 'bg-slate-200 border-slate-200 text-slate-600'
                         }`}
                       >
                         {c.decision}
@@ -497,7 +498,7 @@ export default function OptimumStartStopPage() {
                       ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                       : tl.status === 'PENDING'
                       ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-800'
-                      : 'bg-slate-200 border-slate-200 text-slate-400'
+                      : 'bg-slate-200 border-slate-200 text-slate-600'
                   }`}
                 >
                   {tl.status}
@@ -515,12 +516,9 @@ export default function OptimumStartStopPage() {
         {/* 8. Safety Validation */}
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-700" />
-              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Comfort & Safety Validation
               </h3>
-            </div>
             <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded pill-live">
               {safetyTotal ? `${safetyPassed}/${safetyTotal} PASSED` : 'NO DATA'}
             </span>
@@ -557,12 +555,9 @@ export default function OptimumStartStopPage() {
         {/* 9. BMS Action, Verification & Rollback */}
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div className="flex items-center gap-2">
-              <Building className="w-4 h-4 text-cyan-800" />
-              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 BMS Command Action & Verification
               </h3>
-            </div>
             <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-700">
               {bmsActionData?.bms_status || 'NO DATA'}
             </span>
@@ -575,7 +570,7 @@ export default function OptimumStartStopPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">PREVIOUS STATE</span>
-              <span className="text-slate-400 truncate block">{bmsActionData?.previous_state || 'NO DATA'}</span>
+              <span className="text-slate-600 truncate block">{bmsActionData?.previous_state || 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">APPLIED STATE</span>
@@ -623,7 +618,7 @@ export default function OptimumStartStopPage() {
           <span className="text-xs font-mono text-slate-600">Database Records</span>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto eng-scroll">
           <table className="bms-table">
             <thead>
               <tr>
@@ -645,10 +640,10 @@ export default function OptimumStartStopPage() {
             </thead>
             <tbody className="font-mono text-xs">
               {(historyData || []).length === 0 ? (
-                <tr><td colSpan={14} className="text-slate-500 text-center py-4">NO DATA</td></tr>
+                <TableEmptyState colSpan={14} detail="No rows returned for this view." />
               ) : (historyData || []).map((h: any, i: number) => (
                 <tr key={i}>
-                  <td className="text-slate-400">{h.date}</td>
+                  <td className="text-slate-600">{h.date}</td>
                   <td className="text-slate-700">{h.oat}</td>
                   <td className="text-slate-700">{h.initial_temp}</td>
                   <td className="text-cyan-800 font-bold">{h.target_temp}</td>
@@ -657,7 +652,7 @@ export default function OptimumStartStopPage() {
                   <td className="text-slate-800">{h.actual_start}</td>
                   <td className="text-cyan-800 font-semibold">{h.target_reached}</td>
                   <td className="text-slate-700">{h.pulldown_duration}</td>
-                  <td className="text-slate-400">{h.prediction_error}</td>
+                  <td className="text-slate-600">{h.prediction_error}</td>
                   <td className="text-cyan-800 font-bold">{h.optimized_stop}</td>
                   <td className="text-emerald-700">{h.comfort}</td>
                   <td className="text-emerald-700 font-semibold">{h.energy_saved}</td>
@@ -680,12 +675,9 @@ export default function OptimumStartStopPage() {
         {/* 11. Energy Impact */}
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O1 Energy & Runtime Savings Realization
               </h3>
-            </div>
             <span className="text-xs font-mono text-emerald-700 font-bold">{energyData?.verification_status || 'UNAVAILABLE'}</span>
           </div>
 
@@ -733,7 +725,7 @@ export default function OptimumStartStopPage() {
             </span>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -744,10 +736,10 @@ export default function OptimumStartStopPage() {
               </thead>
               <tbody className="font-mono text-xs">
                 {(activitiesData || []).length === 0 ? (
-                  <tr><td colSpan={3} className="text-slate-500 text-center py-4">NO DATA</td></tr>
+                  <TableEmptyState colSpan={3} detail="No rows returned for this view." />
                 ) : (activitiesData || []).slice(0, 8).map((act: any, i: number) => (
                   <tr key={i}>
-                    <td className="text-slate-400">{act.time}</td>
+                    <td className="text-slate-600">{act.time}</td>
                     <td className="text-slate-900 font-sans font-medium">{act.event}</td>
                     <td className="text-slate-700 font-sans text-xs">{act.detail}</td>
                   </tr>

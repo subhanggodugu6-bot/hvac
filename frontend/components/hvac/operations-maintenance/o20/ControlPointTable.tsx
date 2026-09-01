@@ -36,7 +36,7 @@ export function ControlPointTable({ data }: { data: OmOpportunity }) {
               type="button"
               aria-pressed={filter === f}
               className={`px-2 py-1.5 text-[11px] font-mono border focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                filter === f ? 'border-cyan-500/40 text-cyan-800' : 'border-slate-200 text-slate-400'
+                filter === f ? 'border-cyan-500/40 text-cyan-800' : 'border-slate-200 text-slate-600'
               }`}
               onClick={() => setFilter(f)}
             >

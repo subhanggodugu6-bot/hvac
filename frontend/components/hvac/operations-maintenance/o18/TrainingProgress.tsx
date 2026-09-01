@@ -1,5 +1,6 @@
 'use client';
 
+import { EmptyState } from '@/components/hvac/EmptyState';
 import type { OmOpportunity } from '@/lib/hvac/omTypes';
 import { formatDash } from '@/lib/hvac/formatters';
 import { o18Counts, o18Programs } from '@/lib/hvac/o18Format';
@@ -8,7 +9,7 @@ function Bar({ label, value, total, tone }: { label: string; value: number | nul
   const pct = value == null || total == null || total === 0 ? null : Math.round((value / total) * 100);
   return (
     <div>
-      <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1">
+      <div className="flex justify-between text-[11px] font-mono text-slate-600 mb-1">
         <span>{label}</span>
         <span>{value == null ? '—' : value}</span>
       </div>
@@ -44,7 +45,7 @@ export function TrainingProgress({ data }: { data: OmOpportunity }) {
         <Bar label="Pending" value={counts.pending} total={counts.total} tone="bg-amber-400/80" />
       </div>
       {counts.total == null ? (
-        <p className="text-[11px] font-mono text-amber-300">NO DATA AVAILABLE — program list was not returned.</p>
+        <EmptyState title="NO PROGRAMS" detail="Training program list was not returned." />
       ) : null}
       <p className="text-[10px] font-mono text-slate-600">Readiness {formatDash(data.current?.operatorReadiness)}</p>
     </section>

@@ -18,7 +18,7 @@ function Block({ title, children }: { title: string; children: ReactNode }) {
       <summary className="cursor-pointer text-[12px] font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400">
         {title}
       </summary>
-      <div className="mt-2 text-[12px] text-slate-400 leading-relaxed">{children}</div>
+      <div className="mt-2 text-[12px] text-slate-600 leading-relaxed">{children}</div>
     </details>
   );
 }

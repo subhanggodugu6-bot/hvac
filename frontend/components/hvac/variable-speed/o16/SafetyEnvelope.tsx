@@ -48,7 +48,7 @@ export function SafetyEnvelope({ data }: { data: O16Dashboard }) {
         </div>
       </div>
       {hold && (
-        <div className="text-xs text-amber-300">
+        <div className="text-xs text-amber-800">
           {data.reason || data.safety?.overall || 'Optimization held. See backend safety gates.'}
         </div>
       )}
@@ -56,8 +56,8 @@ export function SafetyEnvelope({ data }: { data: O16Dashboard }) {
         <ul className="space-y-1 text-xs font-mono">
           {checks.map((c) => (
             <li key={c.check_name} className="flex justify-between gap-3 border-b border-slate-200 py-1">
-              <span className="text-slate-400">{c.check_name}</span>
-              <span className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-300'}>
+              <span className="text-slate-600">{c.check_name}</span>
+              <span className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-800'}>
                 {c.result === 'PASS' ? 'PASS' : 'BLOCKED'}
                 {c.result !== 'PASS' && c.reason ? ` · ${c.reason}` : ''}
               </span>

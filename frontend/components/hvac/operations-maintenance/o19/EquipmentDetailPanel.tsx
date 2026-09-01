@@ -66,7 +66,7 @@ export function EquipmentDetailPanel({ data, selectedId }: { data: OmOpportunity
       <div>
         <h3 className="text-[11px] text-slate-500 mb-1">Recent activity</h3>
         {findings.length === 0 ? (
-          <p className="text-[11px] font-mono text-amber-300">NO DATA AVAILABLE</p>
+          <EmptyState title="NO FINDINGS" detail="No recent maintenance findings for this equipment." />
         ) : (
           <ul className="text-[11px] text-slate-600 space-y-1">
             {findings.map((f) => (

@@ -51,7 +51,7 @@ export const SectionDashboard: React.FC<SectionDashboardProps> = ({
   cards,
   children,
 }) => (
-  <div className="space-y-6 pb-12">
+  <div className="page-shell">
     <PageHeader icon={icon} title={title} subtitle={subtitle} badge={badge} />
     {chapterId ? <ChapterChrome chapterId={chapterId} /> : (
       <p className="text-[11px] font-mono text-slate-500 -mt-2">OEH / AIRAH chapter · GUIDE_POTENTIAL is not measured LIVE kW</p>
@@ -60,9 +60,9 @@ export const SectionDashboard: React.FC<SectionDashboardProps> = ({
     {kpis && kpis.length > 0 && <KPIGrid items={kpis} emptyText={kpiEmptyText} />}
 
     <div>
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-[13px] font-semibold text-slate-700">Opportunities</h2>
-        <span className="text-[11px] font-mono text-slate-400">{cards.length} modules</span>
+      <div className="section-heading mb-3">
+        <h2 className="section-heading-label">Opportunities</h2>
+        <span className="text-[11px] font-mono text-slate-600">{cards.length} modules</span>
       </div>
       <div
         className={`grid grid-cols-1 md:grid-cols-2 ${cards.length >= 5 ? 'xl:grid-cols-3' : cards.length >= 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'} gap-4`}

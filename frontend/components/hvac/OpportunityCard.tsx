@@ -59,7 +59,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         <h3 className="text-[15px] font-semibold text-slate-900 mt-3 tracking-tight leading-snug group-hover:text-violet-700 transition-colors">
           {title}
         </h3>
-        {telemetryLabel ? <p className="text-[10px] font-mono text-slate-400 mt-1">{telemetryLabel}</p> : null}
+        {telemetryLabel ? <p className="text-[10px] font-mono text-slate-600 mt-1">{telemetryLabel}</p> : null}
       </div>
 
       <div className="my-3 space-y-1.5 py-3 border-y border-slate-100 text-xs">

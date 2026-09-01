@@ -43,7 +43,7 @@ export function TrainingDataQuality({ data, dash }: { data: OmOpportunity; dash?
           <dd className="font-mono text-slate-800 mt-0.5">{formatAgeSeconds(data.telemetry?.ageSeconds)}</dd>
         </div>
       </dl>
-      {isO18Simulation(data) ? <p className="text-[11px] font-semibold text-amber-300">SIMULATED — never LIVE.</p> : null}
+      {isO18Simulation(data) ? <p className="text-[11px] font-semibold text-amber-800">SIMULATED — never LIVE.</p> : null}
     </section>
   );
 }

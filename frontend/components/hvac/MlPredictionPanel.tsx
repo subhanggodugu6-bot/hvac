@@ -74,7 +74,7 @@ export function MlPredictionPanel({ opportunityId }: { opportunityId: string }) 
           'Kaggle/training data is not LIVE BMS. ML cannot dispatch equipment by itself.'}
       </p>
       {pred.data?.top_features?.length ? (
-        <ul className="text-[11px] font-mono text-slate-400 space-y-0.5">
+        <ul className="text-[11px] font-mono text-slate-600 space-y-0.5">
           {pred.data.top_features.slice(0, 5).map((f) => (
             <li key={f.feature}>
               {f.feature}={f.value ?? '—'} importance={f.importance ?? '—'}

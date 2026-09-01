@@ -34,7 +34,7 @@ export function PressureEnergyOptimizationChart({ data, points }: { data: O16Das
       <p className="text-[11px] text-slate-500">
         Pump power versus condensing pressure from persisted snapshots. No synthetic compressor curve is drawn.
       </p>
-      {sim && <div className="text-[11px] font-semibold text-amber-300">SIMULATED — not production LIVE</div>}
+      {sim && <div className="text-[11px] font-semibold text-amber-800">SIMULATED — not production LIVE</div>}
       {!hist.length && !current.length && !recommended.length ? (
         <EmptyState title="No telemetry available" detail="Paired pressure and power samples are required." />
       ) : (

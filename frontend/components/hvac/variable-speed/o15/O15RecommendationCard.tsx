@@ -79,7 +79,7 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
               <div className="text-lg text-slate-900 mt-1">{conf}</div>
             </div>
           </div>
-          <div className="text-xs text-slate-400">
+          <div className="text-xs text-slate-600">
             Expected impact:{' '}
             {data.energy_impact_class === 'PREDICTED' && data.predicted_power_delta_kw != null
               ? `${fmtUnit(data.predicted_power_delta_kw, 'kW')} (PREDICTED)`
@@ -91,7 +91,7 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
             <p className="text-xs text-slate-700 leading-relaxed">{data.reason || '—'}</p>
             <ul className="mt-2 space-y-1 text-xs font-mono">
               {checks.map((c) => (
-                <li key={c.check_name} className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-300'}>
+                <li key={c.check_name} className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-800'}>
                   {c.result === 'PASS' ? 'PASS' : 'FAIL'} {c.check_name}
                   {c.result !== 'PASS' && c.reason ? ` — ${c.reason}` : ''}
                 </li>
@@ -100,7 +100,7 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
             {why.reason_for_change && <p className="text-[11px] text-slate-500 mt-2">{why.reason_for_change}</p>}
           </div>
           {block && (
-            <div className="text-xs font-semibold text-amber-300" role="status">
+            <div className="text-xs font-semibold text-amber-800" role="status">
               Apply Optimization DISABLED — {block}
             </div>
           )}
@@ -153,7 +153,7 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
             <p className="text-xs font-mono text-slate-700">
               {fmtDash(cmd?.old_value)} → {fmtDash(cmd?.new_value)} · {cmd?.point_id || '—'}
             </p>
-            {block && <p className="text-xs text-amber-300">{block}</p>}
+            {block && <p className="text-xs text-amber-800">{block}</p>}
             <div className="flex gap-2">
               <button type="button" className="px-3 py-1.5 border border-slate-200 text-xs" onClick={() => setConfirm(false)}>
                 Cancel

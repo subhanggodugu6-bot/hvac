@@ -90,6 +90,16 @@ def main() -> int:
     rows = poll_once(include_unmapped=False)
     print("POLLED", len(rows))
 
+    try:
+        from backend.bms.lab_bacnet_gateway import seed_lab_history
+
+        seeded = seed_lab_history(hours=3.0, step_minutes=1.0)
+        print("SEEDED_HISTORY", seeded)
+        rows = poll_once(include_unmapped=False)
+        print("POLLED_AFTER_SEED", len(rows))
+    except Exception as exc:
+        print("SEED_HISTORY_SKIP", type(exc).__name__)
+
     snap = bms.platform_snapshot()
     tel = snap.get("telemetry") or {}
     print(

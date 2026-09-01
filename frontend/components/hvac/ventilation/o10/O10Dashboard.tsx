@@ -39,7 +39,7 @@ export function O10Dashboard() {
   const sourceError = opp.isError;
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
         {opp.isFetching && !opp.data ? (
           <div className="col-span-12 text-[11px] font-mono text-slate-500" aria-busy="true">

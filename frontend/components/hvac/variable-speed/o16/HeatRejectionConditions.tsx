@@ -19,7 +19,7 @@ export function HeatRejectionConditions({ data }: { data: O16Dashboard }) {
         <div>Condenser water return {fmtUnit(cs.clwt_c, '°C')}</div>
         <div>Plant load {fmtUnit(cs.load_pct, '%')}</div>
       </div>
-      <div className="text-[11px] font-mono text-slate-400 leading-6 border border-slate-200 px-3 py-2">
+      <div className="text-[11px] font-mono text-slate-600 leading-6 border border-slate-200 px-3 py-2">
         Outdoor conditions
         <div className="text-cyan-500/70">↓</div>
         Cooling tower

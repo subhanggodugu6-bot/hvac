@@ -24,7 +24,7 @@ export function AlertRail({ alerts }: { alerts?: DashboardAlert[] }) {
     <section className="card-static p-4 space-y-3 h-full">
         <div className="flex items-center justify-between">
         <div className="text-[13px] font-semibold text-slate-800">Alert Feed</div>
-        <span className="text-[11px] font-semibold text-slate-400">{rows.length}</span>
+        <span className="text-[11px] font-semibold text-slate-600">{rows.length}</span>
       </div>
       {rows.length === 0 ? (
         <p className="text-[12px] text-slate-500">No stale, bad, BMS, or maintenance alerts.</p>
@@ -45,7 +45,7 @@ export function AlertRail({ alerts }: { alerts?: DashboardAlert[] }) {
                   <span className={`text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full border ${style.tag}`}>
                     {style.label}
                   </span>
-                  <span className="text-[10px] text-slate-400 shrink-0">{ageLabel(a.age_seconds)}</span>
+                  <span className="text-[10px] text-slate-600 shrink-0">{ageLabel(a.age_seconds)}</span>
                 </div>
                 <div className="mt-1.5 text-[12px] font-semibold text-slate-800 leading-snug">
                   {a.point_id || a.equipment_id || a.message}

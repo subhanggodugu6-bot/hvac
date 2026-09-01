@@ -44,7 +44,7 @@ function GuideReferenceInner({ opportunityId }: { opportunityId: string }) {
   if (q.isError) {
     return (
       <section className="kpi-tile kpi-tile-flush" aria-label="OEH / AIRAH Guide">
-        <div className="text-[10px] font-mono tracking-[0.18em] text-amber-400/80">GUIDE REFERENCE</div>
+        <div className="text-[10px] font-mono tracking-[0.18em] text-amber-800/80">GUIDE REFERENCE</div>
         <p className="text-[11px] text-slate-500 mt-2">DATA SOURCE ERROR — guide catalog unavailable.</p>
       </section>
     );
@@ -63,13 +63,13 @@ function GuideReferenceInner({ opportunityId }: { opportunityId: string }) {
     <section className="kpi-tile space-y-3" aria-label="OEH / AIRAH Guide">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-[10px] font-mono tracking-[0.18em] text-amber-400/90">GUIDE REFERENCE</div>
+          <div className="text-[10px] font-mono tracking-[0.18em] text-amber-800/90">GUIDE REFERENCE</div>
           <h2 className="text-sm text-slate-900 mt-1">OEH / AIRAH Guide</h2>
           <p className="text-[11px] text-slate-500 mt-0.5">
             Educational source information — not live telemetry, not measured savings.
           </p>
         </div>
-        <span className="text-[10px] font-mono px-2 py-1 rounded border border-slate-200 text-slate-400">
+        <span className="text-[10px] font-mono px-2 py-1 rounded border border-slate-200 text-slate-600">
           {rec.energy_impact_class ?? 'GUIDE_POTENTIAL'}
         </span>
       </div>

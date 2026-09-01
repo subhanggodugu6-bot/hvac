@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
+import { EmptyState } from '@/components/hvac/EmptyState';
 import type { OmOpportunity, TelemetryValue } from '@/lib/hvac/omTypes';
 import { formatDash, formatKw } from '@/lib/hvac/formatters';
 import { o19ConfidencePct, o19Issues, o19QualityLabel } from '@/lib/hvac/o19Format';
@@ -26,7 +27,7 @@ export function MaintenanceRecommendation({ data }: { data: OmOpportunity }) {
     <section className="col-span-12 space-y-3" aria-label="Maintenance recommendations">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Maintenance recommendation</h2>
       {cards.length === 0 ? (
-        <div className="kpi-tile text-[11px] font-mono text-amber-700">NO DATA AVAILABLE</div>
+        <EmptyState title="NO RECOMMENDATIONS" detail="No maintenance findings or recommendation actions were returned." />
       ) : (
         cards.map((c, i) => <Card key={`${c.finding}-${i}`} data={data} issue={c} />)
       )}

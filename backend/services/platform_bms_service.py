@@ -175,7 +175,6 @@ def classify_platform_telemetry(points: List[Dict[str, Any]], bms_connected: boo
 def platform_snapshot() -> Dict[str, Any]:
     from backend.services.platform_ops_service import get_plant_mode
     from backend.workers.watchdog import watchdog_status
-    from backend.services.simulation_service import sim_service
 
     mgr = get_connection_manager()
     health = mgr.health()
@@ -185,11 +184,15 @@ def platform_snapshot() -> Dict[str, Any]:
     safe = is_safe_mode()
     plant = get_plant_mode()
     dataset = plant == "DATASET"
-    try:
-        mode = getattr(getattr(sim_service, "orchestrator", None), "mode", None)
-        mode_s = getattr(mode, "value", None) or str(mode or "ADVISORY")
-    except Exception:
-        mode_s = "ADVISORY"
+    mode_s = "ADVISORY"
+    if os.getenv("HVAC_USE_SIMULATION", "0").strip() in ("1", "true", "TRUE"):
+        try:
+            from backend.services.simulation_service import sim_service
+
+            mode = getattr(getattr(sim_service, "orchestrator", None), "mode", None)
+            mode_s = getattr(mode, "value", None) or str(mode or "ADVISORY")
+        except Exception:
+            mode_s = "ADVISORY"
     control = physical_writes_allowed() or simulated_writes_allowed()
     bms_status = "CONNECTED" if connected else "DISCONNECTED"
     if dataset:
@@ -560,6 +563,13 @@ def _agent_groups_telemetry_sig() -> tuple:
 
 def agent_groups_cache_signature() -> tuple:
     return control_state_signature() + _agent_groups_telemetry_sig()
+
+
+def invalidate_agent_groups_cache() -> None:
+    with _AGENT_GROUPS_LOCK:
+        _AGENT_GROUPS_CACHE["payload"] = None
+        _AGENT_GROUPS_CACHE["sig"] = None
+        _AGENT_GROUPS_CACHE["at"] = 0.0
 
 
 def agent_groups() -> List[Dict[str, Any]]:

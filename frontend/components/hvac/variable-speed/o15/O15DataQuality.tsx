@@ -30,7 +30,7 @@ export function O15DataQuality({ data }: { data: O15Dashboard }) {
       </div>
       <StatusBadge tone={toneForStatus(health)}>{health}</StatusBadge>
       {sim && (
-        <div className="text-xs font-semibold text-amber-300" role="status">
+        <div className="text-xs font-semibold text-amber-800" role="status">
           SIMULATION DATA — BMS WRITE DISABLED
         </div>
       )}

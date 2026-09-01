@@ -38,6 +38,12 @@ def tick(
     records = payload.get("records") or []
     # Prefer GOOD; allow STALE already handled in features.row_ok
     result = update_from_records(records, zone_id=zone_id or "ZONE-01", building_id=building_id)
+    try:
+        from backend.workers.watchdog import beat
+
+        beat(note=f"tick-{int(result.get('updated') or 0)}", service="rls")
+    except Exception:
+        pass
     return {
         **result,
         "records_used": len(records),

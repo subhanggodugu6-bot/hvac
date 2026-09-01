@@ -224,7 +224,7 @@ export function StrategyGuidePanel({ opportunityId }: { opportunityId: string })
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
           {item.sliders.map((sl) => (
             <label key={sl.key} className="block">
-              <span className="text-[11px] font-mono text-slate-400">{sl.label}</span>
+              <span className="text-[11px] font-mono text-slate-600">{sl.label}</span>
               <div className="flex items-center gap-2 mt-1">
                 <input
                   type="range"
@@ -284,9 +284,9 @@ export function StrategyGuidePanel({ opportunityId }: { opportunityId: string })
         <p className="text-[11px] text-slate-500 mb-3">Not verified M&amp;V. Not a BMS result. Assumed spend only.</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <label className="block">
-            <span className="text-[11px] font-mono text-slate-400">Assumed annual {item.scope} spend (USD)</span>
+            <span className="text-[11px] font-mono text-slate-600">Assumed annual {item.scope} spend (USD)</span>
             <div className="mt-1 flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2">
-              <span className="text-slate-400 font-mono">$</span>
+              <span className="text-slate-600 font-mono">$</span>
               <input
                 type="number"
                 className="w-full bg-transparent py-2 text-sm font-mono outline-none"
@@ -298,7 +298,7 @@ export function StrategyGuidePanel({ opportunityId }: { opportunityId: string })
             </div>
           </label>
           <label className="block">
-            <span className="text-[11px] font-mono text-slate-400">Assumed achievement (% of OEH max {item.pct}%)</span>
+            <span className="text-[11px] font-mono text-slate-600">Assumed achievement (% of OEH max {item.pct}%)</span>
             <div className="flex items-center gap-2 mt-2">
               <input type="range" className="flex-1" style={{ accentColor: cat.color }} min={0} max={100} value={achieved} onChange={(e) => setAchieved(Number(e.target.value))} />
               <span className="w-10 text-right text-[11px] font-mono" style={{ color: cat.color }}>
@@ -336,7 +336,7 @@ export function StrategyGuidePanel({ opportunityId }: { opportunityId: string })
             <li key={eq}>
               <button type="button" className="flex items-start gap-2 text-left text-sm text-slate-700" onClick={() => setChecks((c) => ({ ...c, [i]: !c[i] }))}>
                 <span className={`mt-0.5 w-4 h-4 rounded border shrink-0 ${checks[i] ? '' : 'border-slate-300'}`} style={checks[i] ? { background: cat.color, borderColor: cat.color } : undefined} />
-                <span className={checks[i] ? 'text-slate-400 line-through' : 'text-slate-700'}>{eq}</span>
+                <span className={checks[i] ? 'text-slate-500 line-through' : 'text-slate-700'}>{eq}</span>
               </button>
             </li>
           ))}

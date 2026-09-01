@@ -10,7 +10,7 @@ function row(label: string, value: string, status?: string | null) {
     <tr key={label}>
       <td className="text-slate-500">{label}</td>
       <td className="font-mono text-slate-900">{value}</td>
-      <td className="font-mono text-slate-400">{status || '—'}</td>
+      <td className="font-mono text-slate-600">{status || '—'}</td>
     </tr>
   );
 }

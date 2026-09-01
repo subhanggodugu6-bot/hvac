@@ -1,12 +1,18 @@
 import json
 import os
-from typing import Dict, Any, List
+from typing import Any, Dict, List, Optional
+
 from backend.agents.scheduling_supervisory.orchestrator import SupervisoryOrchestrator
 from backend.agents.scheduling_supervisory.state import AgentMode
 from backend.config.engineering_limits import EngineeringLimitsConfig, DEFAULT_ENGINEERING_LIMITS
 from database.session import SessionLocal
 from database.models import EngineeringLimitDB
 from backend.services.logging_service import log_event
+
+
+def _simulation_enabled() -> bool:
+    return os.getenv("HVAC_USE_SIMULATION", "0").strip() in ("1", "true", "TRUE")
+
 
 class SimulationService:
     """Manages the continuous simulation runtime, mode switches, approvals, and telemetry history."""
@@ -45,6 +51,8 @@ class SimulationService:
             db.close()
 
     def _init_history(self):
+        if not _simulation_enabled():
+            return
         try:
             result = self.orchestrator.run_supervisory_cycle(elapsed_minutes=0)
             self._record_history(result)
@@ -114,5 +122,28 @@ class SimulationService:
     def reject_action(self, action_id: str, reason: str = "Operator rejected") -> Dict[str, Any]:
         return self.orchestrator.reject_action(action_id, reason)
 
-sim_service = SimulationService()
+
+_sim_service: Optional[SimulationService] = None
+
+
+def get_simulation_service() -> SimulationService:
+    global _sim_service
+    if _sim_service is None:
+        _sim_service = SimulationService()
+    return _sim_service
+
+
+def reset_simulation_service() -> None:
+    global _sim_service
+    _sim_service = None
+
+
+class _LazySimulationService:
+    """Defer orchestrator startup until simulation is actually used."""
+
+    def __getattr__(self, name: str):
+        return getattr(get_simulation_service(), name)
+
+
+sim_service = _LazySimulationService()
 sim_manager = sim_service

@@ -64,7 +64,7 @@ export function AssetRail({
               q === 'GOOD' ? 'text-emerald-600' : q === 'STALE' ? 'text-amber-600' : q === 'BAD' ? 'text-pink-600' : 'text-slate-500';
             return (
               <div key={name} className="flex justify-between gap-2">
-                <span className="text-slate-400 truncate">{name}</span>
+                <span className="text-slate-600 truncate">{name}</span>
                 <span className={color}>{shown}</span>
               </div>
             );
@@ -72,7 +72,7 @@ export function AssetRail({
         )}
       </div>
       <div>
-        <div className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-400 mb-2">Applicable O’s</div>
+        <div className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-600 mb-2">Applicable O’s</div>
         <div className="flex flex-wrap gap-1.5">
           {applicable.length === 0 ? (
             <span className="text-[11px] text-slate-500">None for this equipment class</span>

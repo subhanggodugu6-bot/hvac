@@ -72,7 +72,7 @@ export function OMDashboardCharts({ data }: { data: OmDashboardData | null }) {
         <div key={p.title} className="kpi-tile">
           <div className="text-[11px] uppercase tracking-wider text-slate-500 mb-2">{p.title}</div>
           {p.data.length === 0 ? (
-            <div className="text-xs font-mono text-amber-300/90">NO DATA</div>
+            <div className="text-xs font-mono text-amber-800/90">NO DATA</div>
           ) : (
             <EngineeringChart height={180}>
               <BarChart data={p.data}>

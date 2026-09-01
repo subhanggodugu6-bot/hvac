@@ -25,7 +25,7 @@ export function O15VerificationCard({ command }: { command?: O15Command }) {
       </div>
       <StatusBadge tone={toneForStatus(verify)}>{verify}</StatusBadge>
       {verify === 'ROLLBACK REQUIRED' && (
-        <div className="text-[11px] font-mono text-slate-400">
+        <div className="text-[11px] font-mono text-slate-600">
           Previous {fmtDash(command?.old_value)} · Applied {fmtDash(command?.new_value)} · Rollback {fmtDash(command?.old_value)}
         </div>
       )}
@@ -59,7 +59,7 @@ export function O15RollbackStatus({ command }: { command?: O15Command }) {
       </h2>
       <div className="text-xs font-mono text-slate-700">{rb}</div>
       {command?.rollback_at && (
-        <div className="text-[11px] font-mono text-slate-400">
+        <div className="text-[11px] font-mono text-slate-600">
           Reason {fmtDash(command.reason)} · Timestamp {fmtDash(command.rollback_at)} · Previous {fmtDash(command.old_value)} · Restored {fmtDash(command.old_value)}
         </div>
       )}

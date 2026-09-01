@@ -7,6 +7,7 @@ import { Activity, LayoutDashboard, Server, ShieldCheck, Zap } from 'lucide-reac
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { EmptyState } from '@/components/hvac/EmptyState';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { AlertRail, AssetRail, AssetRailEmpty, KpiRow, PlantCanvas, SystemsHub } from '@/components/hvac/bms-home';
 import { hvacFetch } from '@/lib/api/client';
 import { PLATFORM_POLL_MS } from '@/lib/hvac/poll';
@@ -91,7 +92,7 @@ export default function FleetOverviewPage() {
       <PageHeader
         icon={LayoutDashboard}
         title="Building operations"
-        subtitle={`${data?.building?.name || DEFAULT_FACILITY_CONFIG.name} · OEH / AIRAH O1–O20 Table 1`}
+        subtitle={`${data?.building?.name || DEFAULT_FACILITY_CONFIG.name} · Plant canvas, energy, and the full O1–O20 register. Module pipeline and cards live on Systems Intelligence.`}
         badge={tel}
         actions={
           <div className="flex flex-wrap gap-2">
@@ -171,7 +172,7 @@ export default function FleetOverviewPage() {
           <section className="card-static p-5">
             <div className="flex items-center justify-between gap-2">
               <div className="text-[13px] font-semibold text-slate-800">Energy</div>
-              <span className="text-[10px] font-mono text-slate-400">GUIDE_POTENTIAL is not plotted here</span>
+              <span className="text-[10px] font-mono text-slate-600">GUIDE_POTENTIAL is not plotted here</span>
             </div>
             <EnergySparkline points={energy} unit={data?.energy?.unit} />
           </section>
@@ -192,7 +193,7 @@ export default function FleetOverviewPage() {
           <div className="text-[13px] font-semibold text-slate-800">Opportunities O1–O20</div>
           <span className="text-[11px] text-slate-600">{allOpps.length} modules</span>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto eng-scroll">
           <table className="bms-table">
             <thead>
               <tr>
@@ -206,11 +207,12 @@ export default function FleetOverviewPage() {
             </thead>
             <tbody>
               {allOpps.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="text-slate-500 text-[13px] py-6">
-                    No O1–O20 opportunities returned. Connect plant data via Gateway or retry dashboard home.
-                  </td>
-                </tr>
+                <TableEmptyState
+                  colSpan={6}
+                  title="NO OPPORTUNITIES"
+                  detail="Connect plant data via Gateway or retry dashboard home."
+                  onRetry={() => void home.refetch()}
+                />
               ) : (
                 allOpps.map((o) => {
                   const def = getOpportunity(o.id);

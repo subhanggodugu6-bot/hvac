@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { ActionRecord, SupervisoryCycleResponse } from '@/lib/types';
-import { Cpu } from 'lucide-react';
+import { PanelSectionHeader } from '@/components/ui/PanelSectionHeader';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 
 interface AgentDecisionPanelProps {
   data?: SupervisoryCycleResponse;
@@ -14,31 +15,22 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
     actions && actions.length > 0
       ? actions
       : data?.candidate_actions && data.candidate_actions.length > 0
-      ? data.candidate_actions
-      : [];
+        ? data.candidate_actions
+        : [];
 
   return (
     <div className="glass-card overflow-hidden">
-      <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-sky-50 border border-sky-200 text-sky-700">
-            <Cpu className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
-              Supervisory Agent Decisions & Control Actions
-            </h3>
-            <p className="text-xs text-slate-600 font-sans mt-0.5">
-              Candidate actions from the latest engine cycle
-            </p>
-          </div>
-        </div>
-        <span className="text-xs font-mono font-medium px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
-          {decisionItems.length} Coordinated Actions
-        </span>
-      </div>
+      <PanelSectionHeader
+        title="Supervisory agent decisions"
+        subtitle="Candidate actions from the latest engine cycle"
+        aside={
+          <span className="text-xs font-mono font-medium px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
+            {decisionItems.length} coordinated actions
+          </span>
+        }
+      />
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto eng-scroll">
         <table className="bms-table">
           <thead>
             <tr>
@@ -54,11 +46,11 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
           </thead>
           <tbody className="font-mono text-xs">
             {decisionItems.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="text-slate-500 py-4">
-                  AWAITING TELEMETRY — no candidate actions in the latest cycle.
-                </td>
-              </tr>
+              <TableEmptyState
+                colSpan={8}
+                title="AWAITING TELEMETRY"
+                detail="No candidate actions in the latest supervisory cycle."
+              />
             ) : (
               decisionItems.map((act: any, i: number) => {
                 const prevVal = act.previous_value ?? act.current_value;
@@ -73,7 +65,7 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
                       </span>
                     </td>
                     <td className="text-slate-900 font-semibold">{act.point_id}</td>
-                    <td className="text-slate-400">{prevVal == null ? '—' : String(prevVal)}</td>
+                    <td className="text-slate-600">{prevVal == null ? '—' : String(prevVal)}</td>
                     <td className="text-sky-800 font-bold">{propVal == null ? '—' : String(propVal)}</td>
                     <td className="font-sans text-slate-700 text-xs max-w-sm">{act.reason}</td>
                     <td className="text-slate-800 font-semibold">

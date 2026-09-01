@@ -25,7 +25,7 @@ export function TrainingAwarenessDashboard() {
   const dashData = dash.data;
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
         {opp.isFetching && !opp.data ? (
           <div className="col-span-12 text-[11px] font-mono text-slate-500">Loading O18 telemetry…</div>
@@ -34,7 +34,7 @@ export function TrainingAwarenessDashboard() {
         {opp.isError ? (
           <div className="col-span-12 kpi-tile space-y-3" role="alert">
             <div className="text-sm font-semibold text-slate-900">Unable to load O18 training and awareness</div>
-            <p className="text-xs text-slate-400">{o18ErrorMessage(opp.error instanceof ApiError ? opp.error : opp.error)}</p>
+            <p className="text-xs text-slate-600">{o18ErrorMessage(opp.error instanceof ApiError ? opp.error : opp.error)}</p>
             <button type="button" className="btn-primary focus-visible:ring-2 focus-visible:ring-cyan-400" onClick={() => opp.refetch()}>
               Retry
             </button>

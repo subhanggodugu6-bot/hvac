@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { opportunitiesForSection } from '@/lib/hvac/opportunityConfig';
-import { StatusBadge } from '@/components/hvac/StatusBadge';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 
 export const Sidebar: React.FC = () => {
@@ -90,9 +89,11 @@ export const Sidebar: React.FC = () => {
     label,
     active,
   }) => (
-    <Link href={href} className={subItem(active)} title={label}>
+    <Link href={href} className={subItem(active)} title={label || id}>
       <span className={`font-mono w-8 shrink-0 ${active ? 'text-violet-200' : 'text-slate-500'}`}>{id}</span>
-      <span className="leading-snug truncate">{label}</span>
+      <span className="leading-snug truncate" title={label}>
+        {label}
+      </span>
     </Link>
   );
 
@@ -109,7 +110,7 @@ export const Sidebar: React.FC = () => {
         <div className="text-[10px] text-slate-400 mt-1.5 font-medium tracking-wide">OEH · O1–O20</div>
       </div>
       <nav className="px-2.5 pb-3 space-y-0.5 flex-1 min-h-0 overflow-y-auto overscroll-contain">
-        <div className="px-3 pt-2 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-600 uppercase">Platform</div>
+        <div className="px-3 pt-3 pb-1 text-[10px] font-bold tracking-[0.12em] text-slate-500 uppercase">Platform</div>
         <Link href="/overview" className={navItem(isActive('/overview') || isActive('/'))}>
           Dashboard
         </Link>
@@ -125,7 +126,7 @@ export const Sidebar: React.FC = () => {
         <Link href="/ml" className={navItem(isActive('/ml') || pathname.startsWith('/ml'))}>
           ML Registry
         </Link>
-        <div className="px-3 pt-4 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-600 uppercase">Opportunities</div>
+        <div className="px-3 pt-4 pb-1 text-[10px] font-bold tracking-[0.12em] text-slate-500 uppercase">Opportunities</div>
         <Group
           title="Scheduling"
           expanded={open.scheduling}
@@ -232,13 +233,27 @@ export const Sidebar: React.FC = () => {
           ))}
         </Group>
       </nav>
-      <div className="shrink-0 border-t border-white/[0.06] px-3 py-3 flex flex-wrap items-center gap-1.5">
-        <StatusBadge tone={bmsStatus === 'CONNECTED' ? 'live' : 'muted'} pulse={false}>
-          BMS {bmsStatus}
-        </StatusBadge>
-        <StatusBadge tone={telemetryLabel === 'LIVE' ? 'live' : 'warn'} pulse={false}>
-          TEL {telemetryLabel}
-        </StatusBadge>
+      <div className="sidebar-footer shrink-0 border-t border-white/[0.06] px-4 py-3">
+        <div className="flex items-center justify-between gap-2 text-[10px] font-medium text-slate-500">
+          <span className="flex items-center gap-1.5 min-w-0">
+            <span
+              className={`h-1.5 w-1.5 rounded-full shrink-0 ${
+                bmsStatus === 'CONNECTED' ? 'bg-emerald-400' : 'bg-rose-400'
+              }`}
+              aria-hidden
+            />
+            <span className="truncate">{bmsStatus === 'CONNECTED' ? 'BMS connected' : 'BMS offline'}</span>
+          </span>
+          <span className="flex items-center gap-1.5 shrink-0">
+            <span
+              className={`h-1.5 w-1.5 rounded-full shrink-0 ${
+                telemetryLabel === 'LIVE' ? 'bg-emerald-400' : 'bg-amber-400'
+              }`}
+              aria-hidden
+            />
+            <span>{telemetryLabel === 'LIVE' ? 'Live tel' : 'Sim tel'}</span>
+          </span>
+        </div>
       </div>
     </aside>
   );

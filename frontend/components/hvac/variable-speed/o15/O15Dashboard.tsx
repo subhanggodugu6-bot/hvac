@@ -55,7 +55,7 @@ export function O15Dashboard() {
   const awaiting = !dash.data && (dash.isPending || dash.isFetching);
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
         {awaiting ? (
           <div className="col-span-12 text-[11px] font-mono text-slate-500">Loading O15 telemetry…</div>
@@ -64,7 +64,7 @@ export function O15Dashboard() {
         {actionErr && (
           <div className="col-span-12 kpi-tile" role="alert">
             <div className="text-sm font-semibold text-slate-900">Unable to complete O15 command</div>
-            <p className="text-xs text-slate-400 mt-1">{actionErr}</p>
+            <p className="text-xs text-slate-600 mt-1">{actionErr}</p>
             <button type="button" className="mt-2 px-3 py-1.5 border border-slate-200 text-xs" onClick={() => setActionErr(null)}>
               Dismiss
             </button>
@@ -75,7 +75,7 @@ export function O15Dashboard() {
           {dash.isError && (
             <div className="col-span-12 kpi-tile space-y-3" role="alert">
               <div className="text-sm font-semibold text-slate-900">Unable to load O15 data</div>
-              <p className="text-xs text-slate-400">{operatorErrorMessage(dash.error instanceof ApiError ? dash.error : dash.error)}</p>
+              <p className="text-xs text-slate-600">{operatorErrorMessage(dash.error instanceof ApiError ? dash.error : dash.error)}</p>
               <button type="button" className="btn-primary focus-visible:ring-2 focus-visible:ring-cyan-400" onClick={() => dash.refetch()}>
                 Retry
               </button>

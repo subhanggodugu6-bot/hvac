@@ -422,6 +422,34 @@ class ConnectionManager:
             db.close()
 
 
+def auto_connect_if_configured() -> Optional[Dict[str, Any]]:
+    """Reconnect lab/production BACnet on API startup when env and plant mode allow."""
+    if is_simulation_mode():
+        return None
+    try:
+        from backend.services.platform_ops_service import get_plant_mode
+
+        mode = (get_plant_mode() or "").upper()
+    except Exception:
+        mode = ""
+    if mode not in ("LIVE_BMS", "LIVE") and not lab_mode_enabled():
+        return None
+    host = (os.getenv("HVAC_BACNET_HOST") or "").strip()
+    if not host and lab_mode_enabled():
+        host = "127.0.0.1"
+    if not host:
+        return None
+    try:
+        port = int(os.getenv("HVAC_BACNET_PORT") or "47808")
+    except (TypeError, ValueError):
+        port = 47808
+    mgr = get_connection_manager()
+    if mgr.is_production_connected():
+        return {"status": "ALREADY_CONNECTED", "connected": True}
+    protocol = (os.getenv("HVAC_BMS_PROTOCOL") or "bacnet").strip().lower()
+    return mgr.connect(protocol, host, port)
+
+
 def get_connection_manager() -> ConnectionManager:
     global _MANAGER
     if _MANAGER is None:

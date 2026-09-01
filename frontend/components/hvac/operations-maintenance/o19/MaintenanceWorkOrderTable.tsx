@@ -1,6 +1,7 @@
 'use client';
 
 import { EngineeringTable } from '@/components/hvac/EngineeringTable';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { useO19Mutations } from '@/hooks/useO19';
 import type { OmOpportunity } from '@/lib/hvac/omTypes';
@@ -44,11 +45,7 @@ export function MaintenanceWorkOrderTable({
         </thead>
         <tbody>
           {!orders || orders.length === 0 ? (
-            <tr>
-              <td colSpan={9} className="text-amber-300">
-                NO DATA AVAILABLE
-              </td>
-            </tr>
+            <TableEmptyState colSpan={9} detail="No maintenance work orders were returned." />
           ) : (
             orders.map((o) => {
               const st = (o.status || '').toUpperCase();

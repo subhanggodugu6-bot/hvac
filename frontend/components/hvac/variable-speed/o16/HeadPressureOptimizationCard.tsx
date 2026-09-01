@@ -69,11 +69,11 @@ export function HeadPressureOptimizationCard({ data }: { data: O16Dashboard }) {
             {recPct != null && <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-emerald-400" style={{ left: `calc(${recPct}% - 5px)` }} />}
           </div>
         </div>
-        <div className="text-[11px] font-mono text-slate-400">
+        <div className="text-[11px] font-mono text-slate-600">
           Safe range {fmtDash(min)} — {fmtDash(max)}
         </div>
       </div>
-      <div className="text-xs text-slate-400 leading-relaxed">
+      <div className="text-xs text-slate-600 leading-relaxed">
         <div className="text-[11px] uppercase text-slate-500 mb-1">Optimization objective</div>
         Minimize total compressor + condenser water pumping energy while maintaining compressor operating envelope, condenser
         approach, condenser water temperature, minimum condensing pressure, and equipment safety limits.

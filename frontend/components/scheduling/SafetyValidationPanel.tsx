@@ -3,7 +3,8 @@
 import React from 'react';
 import { SupervisoryCycleResponse } from '@/lib/types';
 import { useSupervisoryStore } from '@/lib/store';
-import { ShieldCheck, Sliders } from 'lucide-react';
+import { PanelSectionHeader } from '@/components/ui/PanelSectionHeader';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 
 interface SafetyValidationPanelProps {
   data?: SupervisoryCycleResponse;
@@ -46,33 +47,17 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
 
   return (
     <div className="glass-card overflow-hidden">
-      {/* Header */}
-      <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700">
-            <ShieldCheck className="w-4 h-4" />
-          </div>
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
-              Safety Validation Guardrails
-            </h3>
-            <p className="text-xs text-slate-600 font-sans mt-0.5">
-              Deterministic pre-execution verification gates (Fail-safe auto-reversion active)
-            </p>
-          </div>
-        </div>
+      <PanelSectionHeader
+        title="Safety validation guardrails"
+        subtitle="Deterministic pre-execution verification gates (fail-safe auto-reversion active)"
+        aside={
+          <button onClick={() => setIsLimitsModalOpen(true)} className="btn-secondary">
+            Configure limits
+          </button>
+        }
+      />
 
-        <button
-          onClick={() => setIsLimitsModalOpen(true)}
-          className="btn-secondary"
-        >
-          <Sliders className="w-3.5 h-3.5 text-sky-700" />
-          <span>Configure Limits</span>
-        </button>
-      </div>
-
-      {/* Table */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto eng-scroll">
         <table className="bms-table">
           <thead>
             <tr>
@@ -83,26 +68,30 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
             </tr>
           </thead>
           <tbody className="font-mono text-xs">
-            {checks.map((c, i) => (
-              <tr key={i}>
-                <td className="font-sans font-medium text-slate-800">{c.name}</td>
-                <td>
-                  <span
-                    className={`inline-block text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
-                      c.status === 'PASS'
-                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
-                        : c.status === 'WARNING'
-                        ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                        : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                    }`}
-                  >
-                    {c.status}
-                  </span>
-                </td>
-                <td className="text-slate-800">{c.value ?? 'AWAITING TELEMETRY'}</td>
-                <td className="text-slate-400">{c.limit}</td>
-              </tr>
-            ))}
+            {checks.length === 0 ? (
+              <TableEmptyState colSpan={4} title="NO GUARDRAILS" detail="Safety validation checks are not available yet." />
+            ) : (
+              checks.map((c, i) => (
+                <tr key={i}>
+                  <td className="font-sans font-medium text-slate-800">{c.name}</td>
+                  <td>
+                    <span
+                      className={`inline-block text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
+                        c.status === 'PASS'
+                          ? 'pill-pass'
+                          : c.status === 'WARNING'
+                            ? 'pill-muted border-amber-300 text-amber-800'
+                            : 'pill-fail'
+                      }`}
+                    >
+                      {c.status}
+                    </span>
+                  </td>
+                  <td className="text-slate-800">{c.value ?? 'AWAITING TELEMETRY'}</td>
+                  <td className="text-slate-600">{c.limit}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

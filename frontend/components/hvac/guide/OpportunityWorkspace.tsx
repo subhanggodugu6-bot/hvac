@@ -21,7 +21,7 @@ export function OpportunityWorkspace({
   mlConfidence,
   actions,
   children,
-  className = 'space-y-6 pb-12',
+  className = 'page-shell',
 }: {
   def: OpportunityDef;
   live?: string | null;

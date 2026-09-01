@@ -33,7 +33,7 @@ function PressureTooltip({
   const p = payload[0]?.payload;
   return (
     <div className="bg-white border border-slate-200 px-2.5 py-2 text-[11px] font-mono">
-      <div className="text-slate-400 mb-1">{label}</div>
+      <div className="text-slate-600 mb-1">{label}</div>
       <div>Actual {fmtDash(p?.head_pressure)}</div>
       <div>Target {fmtDash(recommended)}</div>
       <div>Outdoor/Wet bulb {fmtDash(wetBulb)}</div>
@@ -72,7 +72,7 @@ export function HeadPressureTrendChart({
               key={String(h)}
               type="button"
               className={`px-2 py-1 text-[11px] font-mono border focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                hours === h ? 'border-cyan-400 text-cyan-800' : 'border-slate-200 text-slate-400'
+                hours === h ? 'border-cyan-400 text-cyan-800' : 'border-slate-200 text-slate-600'
               }`}
               onClick={() => onHours(Number(h))}
             >
@@ -81,7 +81,7 @@ export function HeadPressureTrendChart({
           ))}
         </div>
       </div>
-      {sim && <div className="text-[11px] font-semibold text-amber-300">SIMULATED TELEMETRY — historian excludes simulation snapshots</div>}
+      {sim && <div className="text-[11px] font-semibold text-amber-800">SIMULATED TELEMETRY — historian excludes simulation snapshots</div>}
       {!points.length ? (
         <EmptyState title="No telemetry available" detail="Persisted O16 snapshots are empty. No series is fabricated." />
       ) : (

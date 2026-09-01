@@ -1,6 +1,7 @@
 'use client';
 
 import { EngineeringTable } from '@/components/hvac/EngineeringTable';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import type { OmOpportunity } from '@/lib/hvac/omTypes';
 import { formatDash, formatKw, formatNumber } from '@/lib/hvac/formatters';
@@ -106,11 +107,7 @@ export function DiagnosticIndicatorsTable({ data }: { data: OmOpportunity }) {
         </thead>
         <tbody>
           {rows.length === 0 ? (
-            <tr>
-              <td colSpan={8} className="text-amber-300">
-                NO DATA AVAILABLE
-              </td>
-            </tr>
+            <TableEmptyState colSpan={8} detail="No diagnostic indicator rows were returned." />
           ) : (
             rows.map((r) => (
               <tr key={r.indicator}>

@@ -75,14 +75,14 @@ export function EngineeringRecommendation({ data, onError }: { data: O16Dashboar
               <div className="text-lg text-cyan-800">{fmtDash(recommended)}</div>
             </div>
           </div>
-          <div className="text-xs text-slate-400">
+          <div className="text-xs text-slate-600">
             Expected impact: compressor / pump energy {energy == null ? '—' : `${fmtUnit(energy, 'kW')} (PREDICTED)`}
           </div>
           <div>
             <div className="text-[11px] uppercase text-slate-500 mb-1">Conditions</div>
             <ul className="space-y-1 text-xs font-mono">
               {checks.map((c) => (
-                <li key={c.check_name} className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-300'}>
+                <li key={c.check_name} className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-800'}>
                   {c.result === 'PASS' ? 'PASS' : 'FAIL'} {c.check_name}
                   {c.result !== 'PASS' && c.reason ? ` — ${c.reason}` : ''}
                 </li>
@@ -90,7 +90,7 @@ export function EngineeringRecommendation({ data, onError }: { data: O16Dashboar
             </ul>
           </div>
           {block && (
-            <div className="text-xs font-semibold text-amber-300" role="status">
+            <div className="text-xs font-semibold text-amber-800" role="status">
               Dispatch disabled — {block}
             </div>
           )}

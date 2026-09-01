@@ -14,7 +14,7 @@ export function O15DecisionPanel({ data }: { data: O15Dashboard }) {
       </h2>
       <StatusBadge tone={toneForStatus(decision)}>{decision}</StatusBadge>
       <p className="text-xs text-slate-700 leading-relaxed">{data.reason || '—'}</p>
-      <div className="text-[11px] font-mono text-slate-400 space-y-0.5">
+      <div className="text-[11px] font-mono text-slate-600 space-y-0.5">
         <div>Confidence {conf}</div>
         <div>Engine O15</div>
         <div>Engine Version {fmtDash(data.engine_version)}</div>

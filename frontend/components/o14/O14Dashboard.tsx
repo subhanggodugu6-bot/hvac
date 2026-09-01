@@ -56,7 +56,7 @@ export function O14SystemState({ current, pumps }: { current: any; pumps: any[] 
   return (
     <div className="kpi-tile space-y-3">
       <div className="text-[11px] uppercase tracking-wider text-slate-500">Current system state</div>
-      <div className="text-xs font-mono text-slate-400">Secondary CHW system → Pumps → Distribution → Loads / AHUs / FCUs</div>
+      <div className="text-xs font-mono text-slate-600">Secondary CHW system → Pumps → Distribution → Loads / AHUs / FCUs</div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
         {[
           ['Index DP', current?.index_dp, current?.dp_unit],
@@ -80,7 +80,7 @@ export function O14SystemState({ current, pumps }: { current: any; pumps: any[] 
       {pumps?.length ? (
         <div className="text-[11px] text-slate-500">{pumps.length} secondary CHW pump record(s) from equipment registry.</div>
       ) : (
-        <div className="text-[11px] text-amber-300">No secondary CHW pump entities in the database.</div>
+        <div className="text-[11px] text-amber-800">No secondary CHW pump entities in the database.</div>
       )}
     </div>
   );
@@ -147,7 +147,7 @@ export function O14OptimizationRecommendation({ data }: { data: any }) {
       </div>
       <div>
         <div className="text-[11px] uppercase text-slate-500 mb-1">Why this recommendation?</div>
-        <ul className="text-xs text-slate-400 space-y-1 list-disc pl-4">
+        <ul className="text-xs text-slate-600 space-y-1 list-disc pl-4">
           <li>Current operating condition: {na(why.current_operating_condition)}</li>
           <li>Detected demand: {na(why.detected_demand)}</li>
           <li>Control relationship: {na(why.control_relationship)}</li>
@@ -173,8 +173,8 @@ export function O14SafetyPanel({ safety }: { safety: any }) {
         {checks.length ? (
           checks.map((c: any) => (
             <div key={c.check_name} className="flex justify-between text-xs font-mono border-b border-slate-200 py-1">
-              <span className="text-slate-400">{c.check_name}</span>
-              <span className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-300'}>{c.result} · {c.reason}</span>
+              <span className="text-slate-600">{c.check_name}</span>
+              <span className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-800'}>{c.result} · {c.reason}</span>
             </div>
           ))
         ) : (
@@ -243,7 +243,7 @@ export function O14CommandPanel({ data, onError }: { data: any; onError: (m: str
   return (
     <div className="kpi-tile space-y-3">
       <h3 className="text-sm font-semibold text-slate-900">Control panel</h3>
-      <div className="text-xs font-mono text-slate-400">Mode {na(mode)} · SAFE_MODE {data?.safe_mode ? 'ON' : 'OFF'}</div>
+      <div className="text-xs font-mono text-slate-600">Mode {na(mode)} · SAFE_MODE {data?.safe_mode ? 'ON' : 'OFF'}</div>
       <div className="text-xs text-slate-700">
         Current {cs?.dp_setpoint == null ? 'Unavailable' : fmtNum(cs.dp_setpoint)} → Proposed {os?.recommended_dp_setpoint == null ? 'Unavailable' : fmtNum(os.recommended_dp_setpoint)}
       </div>
@@ -305,8 +305,8 @@ export function O14CommandPanel({ data, onError }: { data: any; onError: (m: str
 export function O14CommandHistory({ commands }: { commands: any[] }) {
   if (!commands?.length) return <EmptyState title="No commands" detail="Command rows are persisted control_commands for O14 only." />;
   return (
-    <div className="overflow-x-auto kpi-tile">
-      <table className="w-full text-xs font-mono">
+    <div className="overflow-x-auto kpi-tile eng-scroll">
+      <table className="bms-table text-xs font-mono min-w-[36rem]">
         <thead>
           <tr className="text-slate-500 text-left">
             <th className="py-1">command_id</th>
@@ -373,7 +373,7 @@ export function O14Dashboard() {
 
   return (
     <OpportunityWorkspace
-      className="space-y-6 max-w-7xl mx-auto pb-16"
+      className="page-shell max-w-7xl mx-auto"
       def={def}
       live={liveBadge}
       model={header.control_mode}
@@ -414,7 +414,7 @@ export function O14Dashboard() {
             {[1, 6, 24, 168, 720].map((h) => (
               <button
                 key={h}
-                className={`px-2 py-1 border text-[11px] ${hours === h ? 'border-cyan-400 text-cyan-800' : 'border-slate-200 text-slate-400'}`}
+                className={`px-2 py-1 border text-[11px] ${hours === h ? 'border-cyan-400 text-cyan-800' : 'border-slate-200 text-slate-600'}`}
                 onClick={() => setHours(h)}
               >
                 {h === 168 ? '7d' : h === 720 ? '30d' : `${h}h`}

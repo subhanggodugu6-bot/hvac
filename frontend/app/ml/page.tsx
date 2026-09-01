@@ -357,7 +357,7 @@ export default function MlRegistryPage() {
   ];
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <PageHeader
         icon={Brain}
         title="HVAC ML Registry & Model Health"
@@ -371,7 +371,7 @@ export default function MlRegistryPage() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">Online RLS learning</div>
-            <p className="text-[12px] text-slate-400 mt-1">
+            <p className="text-[12px] text-slate-600 mt-1">
               Stage C continuous adaptation (zone thermal + HVAC power). Read-only — never writes setpoints.
             </p>
           </div>
@@ -382,7 +382,7 @@ export default function MlRegistryPage() {
         {(rls.data?.models || []).length === 0 && !rls.isLoading ? (
           <EmptyState title="No RLS updates yet" detail="Models warm up after normalized GOOD samples arrive (poll or job worker tick)." />
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto eng-scroll">
             <table className="bms-table">
               <thead className="text-slate-500 text-left">
                 <tr className="border-b border-slate-200">
@@ -427,7 +427,7 @@ export default function MlRegistryPage() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">LSTM forecast</div>
-            <p className="text-[12px] text-slate-400 mt-1">
+            <p className="text-[12px] text-slate-600 mt-1">
               Stage D multi-horizon advisory forecast (15–60 min). MODEL PREDICTION only — never LIVE BMS write.
             </p>
           </div>
@@ -513,7 +513,7 @@ export default function MlRegistryPage() {
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">
               NB2 Optimizer (Safe RL)
             </div>
-            <p className="text-[12px] text-slate-400 mt-1">
+            <p className="text-[12px] text-slate-600 mt-1">
               Stage E constrained recommend from RLS + LSTM + limits. RECOMMENDATION ONLY — plant does not move.
             </p>
           </div>
@@ -627,7 +627,7 @@ export default function MlRegistryPage() {
               </div>
             </div>
             {showRejected && (safeRlStatus.data.last_decision.rejected_actions || []).length > 0 ? (
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto eng-scroll">
                 <table className="bms-table">
                   <thead className="text-slate-500 text-left">
                     <tr className="border-b border-slate-200">
@@ -666,7 +666,7 @@ export default function MlRegistryPage() {
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">
               Rule Engine
             </div>
-            <p className="text-[12px] text-slate-400 mt-1">
+            <p className="text-[12px] text-slate-600 mt-1">
               Stage F checklist (R01–R10). No BMS write without APPROVED — writes still off until Stage G.
             </p>
           </div>
@@ -701,7 +701,7 @@ export default function MlRegistryPage() {
               <span className="text-slate-500">Code:</span> {rulesResult.code}{' '}
               <span className="text-slate-500">·</span> {rulesResult.reason}
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto eng-scroll">
               <table className="bms-table">
                 <thead className="text-slate-500 text-left">
                   <tr className="border-b border-slate-200">
@@ -759,7 +759,7 @@ export default function MlRegistryPage() {
 
       {rows.some((r) => r.missing_dataset) ? (
         <section className="glass-card p-4 space-y-2">
-          <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-300">MISSING DATASETS</div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-800">MISSING DATASETS</div>
           <ul className="text-[12px] space-y-1 text-slate-700">
             {rows
               .filter((r) => r.missing_dataset)
@@ -812,13 +812,13 @@ export default function MlRegistryPage() {
                 <td className="p-2 text-cyan-800">{r.opportunity_id}</td>
                 <td className="p-2 text-slate-700">{r.agent_id || '—'}</td>
                 <td className="p-2 text-slate-700">{r.dataset_id || '—'}</td>
-                <td className="p-2 text-slate-400">
+                <td className="p-2 text-slate-600">
                   {r.dataset_quality?.missing_pct == null ? '—' : `miss ${r.dataset_quality.missing_pct}%`}
                 </td>
-                <td className="p-2 text-slate-400 max-w-[9rem] truncate" title={JSON.stringify(r.feature_map || {})}>
+                <td className="p-2 text-slate-600 max-w-[9rem] truncate" title={JSON.stringify(r.feature_map || {})}>
                   {r.feature_map && Object.keys(r.feature_map).length ? Object.keys(r.feature_map).join(', ') : '—'}
                 </td>
-                <td className="p-2 text-slate-400 max-w-[10rem] truncate">{r.target || '—'}</td>
+                <td className="p-2 text-slate-600 max-w-[10rem] truncate">{r.target || '—'}</td>
                 <td className="p-2 text-slate-700">{r.model_id || '—'}</td>
                 <td className="p-2 text-slate-700">{r.model_version || '—'}</td>
                 <td className="p-2">
@@ -826,14 +826,14 @@ export default function MlRegistryPage() {
                     {r.status}
                   </StatusBadge>
                 </td>
-                <td className="p-2 text-slate-400">{r.validation_status || '—'}</td>
-                <td className="p-2 text-slate-400">{fmtMetrics(r.metrics?.validation)}</td>
-                <td className="p-2 text-slate-400">{r.last_trained || '—'}</td>
-                <td className="p-2 text-slate-400">{r.prediction_availability || '—'}</td>
+                <td className="p-2 text-slate-600">{r.validation_status || '—'}</td>
+                <td className="p-2 text-slate-600">{fmtMetrics(r.metrics?.validation)}</td>
+                <td className="p-2 text-slate-600">{r.last_trained || '—'}</td>
+                <td className="p-2 text-slate-600">{r.prediction_availability || '—'}</td>
                 <td className="p-2 text-violet-700">
                   {r.provenance === 'LIVE' || r.provenance === 'LIVE_BMS' ? 'TRAINING DATA' : r.provenance}
                 </td>
-                <td className="p-2 text-amber-300 max-w-[14rem] truncate" title={r.missing_dataset || ''}>
+                <td className="p-2 text-amber-800 max-w-[14rem] truncate" title={r.missing_dataset || ''}>
                   {r.missing_dataset || '—'}
                 </td>
               </tr>
@@ -912,7 +912,7 @@ export default function MlRegistryPage() {
             </div>
             <div className="md:col-span-2">
               <dt className="text-slate-500">Notes</dt>
-              <dd className="text-slate-400">{detail.notes || '—'}</dd>
+              <dd className="text-slate-600">{detail.notes || '—'}</dd>
             </div>
             <div className="md:col-span-2">
               <dt className="text-slate-500">Missing dataset</dt>

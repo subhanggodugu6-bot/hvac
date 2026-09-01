@@ -73,7 +73,7 @@ export function O10Modes({ data }: { data: VentilationOpportunity }) {
           </StatusBadge>
         ))}
       </div>
-      <p className="text-xs text-slate-400">{formatDash(data.recommendation?.rationale)}</p>
+      <p className="text-xs text-slate-600">{formatDash(data.recommendation?.rationale)}</p>
     </section>
   );
 }
@@ -174,7 +174,7 @@ export function O10Equipment() {
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-1">
         {EQUIPMENT.map((name) => (
           <li key={name} className="flex justify-between gap-2 text-[11px] font-mono">
-            <span className="text-slate-400">{name}</span>
+            <span className="text-slate-600">{name}</span>
             <StatusBadge tone="muted">UNKNOWN</StatusBadge>
           </li>
         ))}
@@ -289,7 +289,7 @@ export function O10DataQuality({ data }: { data: VentilationOpportunity }) {
           <dd>{formatDash(data.telemetry?.lastUpdated)}</dd>
         </div>
       </dl>
-      {prov === 'SIMULATED' ? <p className="text-[11px] font-semibold text-amber-300">SIMULATED — never LIVE.</p> : null}
+      {prov === 'SIMULATED' ? <p className="text-[11px] font-semibold text-amber-800">SIMULATED — never LIVE.</p> : null}
     </section>
   );
 }
@@ -300,7 +300,7 @@ export function O10GuideReference() {
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Guide reference</h2>
       <p className="text-[11px] text-cyan-800 font-mono">{O10_GUIDE.source}</p>
       <p className="text-sm text-slate-700">Outdoor air can be used directly for space cooling when conditions are favorable.</p>
-      <ul className="text-[12px] font-mono text-slate-400 space-y-1">
+      <ul className="text-[12px] font-mono text-slate-600 space-y-1">
         <li>Temperature {O10_GUIDE.outdoorTempC}</li>
         <li>Enthalpy {O10_GUIDE.outdoorEnthalpyKjkg}</li>
         <li>Dew point {O10_GUIDE.dewPointC}</li>

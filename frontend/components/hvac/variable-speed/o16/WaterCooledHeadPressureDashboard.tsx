@@ -60,7 +60,7 @@ export function WaterCooledHeadPressureDashboard() {
   const awaiting = !dash.data && (dash.isPending || dash.isFetching);
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
         {awaiting ? (
           <div className="col-span-12 text-[11px] font-mono text-slate-500">Loading O16 telemetry…</div>
@@ -69,7 +69,7 @@ export function WaterCooledHeadPressureDashboard() {
         {actionErr && (
           <div className="col-span-12 kpi-tile" role="alert">
             <div className="text-sm font-semibold text-slate-900">Unable to complete O16 command</div>
-            <p className="text-xs text-slate-400 mt-1">{actionErr}</p>
+            <p className="text-xs text-slate-600 mt-1">{actionErr}</p>
             <button type="button" className="mt-2 px-3 py-1.5 border border-slate-200 text-xs" onClick={() => setActionErr(null)}>
               Dismiss
             </button>
@@ -90,7 +90,7 @@ export function WaterCooledHeadPressureDashboard() {
           {dash.isError && (
             <div className="col-span-12 kpi-tile space-y-3" role="alert">
               <div className="text-sm font-semibold text-slate-900">Unable to load O16 data</div>
-              <p className="text-xs text-slate-400">{o16Error(dash.error instanceof ApiError ? dash.error : dash.error)}</p>
+              <p className="text-xs text-slate-600">{o16Error(dash.error instanceof ApiError ? dash.error : dash.error)}</p>
               <button type="button" className="btn-primary focus-visible:ring-2 focus-visible:ring-cyan-400" onClick={() => dash.refetch()}>
                 Retry
               </button>
@@ -106,7 +106,7 @@ export function WaterCooledHeadPressureDashboard() {
           )}
           {ui === 'STALE' && (
             <div className="col-span-12 kpi-tile min-h-0 border-amber-500/30" role="status">
-              <div className="text-[11px] font-semibold tracking-wider text-amber-300">STALE TELEMETRY</div>
+              <div className="text-[11px] font-semibold tracking-wider text-amber-800">STALE TELEMETRY</div>
               <div className="text-[11px] text-slate-600 mt-1">Optimization is held until a fresh production sample arrives.</div>
             </div>
           )}

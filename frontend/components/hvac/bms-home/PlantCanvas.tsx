@@ -41,7 +41,7 @@ export function PlantCanvas({
       <div className="space-y-4">
         {groups.map((g) => (
           <div key={g.key}>
-            <div className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-400 mb-2">{g.title}</div>
+            <div className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-600 mb-2">{g.title}</div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {g.rows.map((row) => {
                 const tone = (row.tone || 'unmapped') as PlantTone;
@@ -62,7 +62,7 @@ export function PlantCanvas({
                       <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${TONE_DOT[tone]}`} />
                       <span className="font-mono text-[12px] text-slate-800 truncate">{row.equipment_id}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400">{n} pts</span>
+                    <span className="text-[10px] font-mono text-slate-600">{n} pts</span>
                   </button>
                 );
               })}

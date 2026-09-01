@@ -55,12 +55,12 @@ export function SetpointReasonPanel({ data }: { data: O16Dashboard }) {
           </div>
           <div>
             <dt className="text-slate-500">Optimization objective</dt>
-            <dd className="text-slate-400 mt-1 leading-relaxed">
+            <dd className="text-slate-600 mt-1 leading-relaxed">
               {data.why?.control_relationship ||
                 'Minimum combined compressor + condenser-water-system energy, subject to configured envelopes.'}
             </dd>
           </div>
-          <div className="pt-2 text-slate-400">Decision confidence {confidencePct(data.confidence ?? rec.confidence)}</div>
+          <div className="pt-2 text-slate-600">Decision confidence {confidencePct(data.confidence ?? rec.confidence)}</div>
         </dl>
       )}
     </section>

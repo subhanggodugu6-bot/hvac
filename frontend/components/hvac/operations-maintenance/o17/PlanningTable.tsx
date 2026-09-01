@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { EngineeringTable } from '@/components/hvac/EngineeringTable';
+import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import type { OmDashboardData, OmOpportunity, TelemetryValue } from '@/lib/hvac/omTypes';
 import { formatDash, formatKw, formatNumber } from '@/lib/hvac/formatters';
@@ -186,11 +187,7 @@ export function PlanningTable({ data, dash }: { data: OmOpportunity; dash?: OmDa
         </thead>
         <tbody>
           {visible.length === 0 ? (
-            <tr>
-              <td colSpan={8} className="text-amber-300">
-                NO DATA AVAILABLE
-              </td>
-            </tr>
+            <TableEmptyState colSpan={8} detail="No planning rows match the selected filter." />
           ) : (
             visible.map((r) => (
               <tr key={r.item}>
