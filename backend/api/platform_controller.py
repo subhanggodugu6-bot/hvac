@@ -257,14 +257,17 @@ async def safe_rl_decision_detail(decision_id: str):
 
 
 @router.get("/ai/pipeline/status")
-async def pipeline_status():
+async def pipeline_status(zone_id: str = Query(default="ZONE-01")):
     from backend.ai.pipeline.orchestrator import auto_dispatch_enabled
+    from backend.ai.pipeline.stage_summary import pipeline_stages_summary
     from backend.workers.ai_pipeline_worker import get_worker
     from backend.workers.watchdog import ai_watchdog_status
 
     worker = get_worker()
+    stages = pipeline_stages_summary(zone_id)
     return {
-        "pipeline": "RLS→LSTM→SafeRL→Rules→BMS",
+        "pipeline": "RLS → LSTM → Safe RL → Rule Engine → BMS Control",
+        "stages": stages,
         "use_ai_pipeline": __import__("os").getenv("HVAC_USE_AI_PIPELINE", "1"),
         "auto_dispatch": auto_dispatch_enabled(),
         "worker": worker.get_status() if worker else None,

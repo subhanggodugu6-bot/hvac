@@ -6,9 +6,11 @@ import { Activity, Play } from 'lucide-react';
 import { apiJson } from '@/lib/api/client';
 import { StatusBadge } from '@/components/hvac/StatusBadge';
 import { EmptyState } from '@/components/hvac/EmptyState';
+import { Nb2PipelineStrip, type PipelineStage } from '@/components/hvac/Nb2PipelineStrip';
 
 type PipelineStatus = {
   pipeline: string;
+  stages?: PipelineStage[];
   use_ai_pipeline?: string;
   auto_dispatch?: boolean;
   worker?: {
@@ -62,28 +64,13 @@ export function PipelineStatusCard({ compact = false }: { compact?: boolean }) {
   const watchdogs = data?.ai_watchdogs || {};
 
   if (compact) {
-    const running = worker?.worker_running;
-    const wrote = worker?.last_result?.wrote_setpoints;
-    return (
-      <div className="flex flex-wrap items-center gap-2">
-        <StatusBadge tone={running ? 'live' : 'muted'} pulse={running}>
-          NB2 {running ? 'RUNNING' : 'OFF'}
-        </StatusBadge>
-        {data?.auto_dispatch ? (
-          <StatusBadge tone="warn" pulse={false}>AUTO DISPATCH</StatusBadge>
-        ) : null}
-        {wrote ? (
-          <StatusBadge tone="live" pulse={false}>LAST CYCLE WROTE</StatusBadge>
-        ) : null}
-        <span className="text-[11px] text-slate-500 font-mono">
-          cycle {worker?.cycle_count ?? 0}
-        </span>
-      </div>
-    );
+    return <Nb2PipelineStrip compact />;
   }
 
   return (
-    <section className="glass-card p-4 space-y-3 border border-violet-200/60">
+    <div className="space-y-3">
+      <Nb2PipelineStrip showRun />
+      <section className="glass-card p-4 space-y-3 border border-violet-200/60">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-violet-800">
@@ -91,7 +78,7 @@ export function PipelineStatusCard({ compact = false }: { compact?: boolean }) {
             NB2 pipeline
           </div>
           <p className="text-[12px] text-slate-500 mt-1">
-            {data?.pipeline || 'RLS→LSTM→SafeRL→Rules→BMS'} — orchestrated closed loop. LLM narrative layer is separate (not required for optimize).
+            {data?.pipeline || 'RLS → LSTM → Safe RL → Rule Engine → BMS Control'} — run a full cycle or open ML Registry for detail.
           </p>
         </div>
         <div className="flex flex-wrap gap-2 items-center">
@@ -157,6 +144,7 @@ export function PipelineStatusCard({ compact = false }: { compact?: boolean }) {
           </div>
         </>
       )}
-    </section>
+      </section>
+    </div>
   );
 }

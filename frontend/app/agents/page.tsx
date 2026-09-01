@@ -17,7 +17,7 @@ import {
   moduleControlLabel,
   type AgentModuleCardData,
 } from '@/components/hvac/bms-home';
-import { PipelineStatusCard } from '@/components/hvac/PipelineStatusCard';
+import { Nb2PipelineStrip } from '@/components/hvac/Nb2PipelineStrip';
 import { mergeDashboardChapters, type DashboardHome } from '@/lib/hvac/dashboardHome';
 import { getOpportunity } from '@/lib/hvac/opportunityConfig';
 
@@ -101,7 +101,7 @@ export default function AgentsPage() {
         }
       />
 
-      <PipelineStatusCard compact />
+      <Nb2PipelineStrip showRun />
 
       <section className="card-static p-5 space-y-4">
         <div className="section-heading">
