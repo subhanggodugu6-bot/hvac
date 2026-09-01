@@ -34,6 +34,29 @@ LIVE_SECONDS = int(os.environ.get("OM_LIVE_SECONDS", "90"))
 ALLOW_DEMO = os.environ.get("OM_ALLOW_DEMO", "1") != "0"
 META = {row[0]: (row[3], row[4], row[1]) for row in CATALOG if row[0] in OFFICIAL_OM_IDS}
 
+
+def _om_sim_enabled() -> bool:
+    """Dataset/sim/demo paths should always hydrate O17–O20 telemetry."""
+    if ALLOW_DEMO:
+        return True
+    if os.getenv("HVAC_USE_SIMULATION", "0").strip().lower() in ("1", "true", "yes"):
+        return True
+    try:
+        from backend.bms.connection_manager import is_simulation_mode
+
+        if is_simulation_mode():
+            return True
+    except Exception:
+        pass
+    try:
+        from backend.services.platform_ops_service import PLANT_DATASET, get_plant_mode
+
+        if get_plant_mode() == PLANT_DATASET:
+            return True
+    except Exception:
+        pass
+    return False
+
 O20_SIM_PAYLOAD = {
     "controller_id": "NCE-01",
     "software_version": "v4.8.2",
@@ -90,21 +113,23 @@ def _tel_ui(state: Optional[str]) -> str:
 
 
 def _ensure_om_catalog(db) -> None:
-    if db.query(OmOpportunityDB).filter_by(id="O17").first():
-        return
+    changed = False
     for oid, num, _sec, name, desc in CATALOG:
         if oid not in OFFICIAL_OM_IDS:
             continue
         row = db.query(OmOpportunityDB).filter_by(id=oid).first()
         if not row:
             db.add(OmOpportunityDB(id=oid, opportunity_number=num, name=name, description=desc, enabled=True))
+            changed = True
         else:
             row.name = name
             row.description = desc
-    try:
-        db.commit()
-    except Exception:
-        db.rollback()
+            changed = True
+    if changed:
+        try:
+            db.commit()
+        except Exception:
+            db.rollback()
 
 
 def _ensure_om_side_tables(db) -> None:
@@ -192,7 +217,7 @@ def _om_payload_for(oid: str, hvac_kw: Optional[float], oat: Optional[float], oc
 
 def refresh_om_sim_telemetry(db=None) -> int:
     """Keep O17–O20 snapshots fresh in dataset/sim mode (Render + local demo)."""
-    if not ALLOW_DEMO and os.getenv("HVAC_USE_SIMULATION", "0") not in ("1", "true", "TRUE"):
+    if not _om_sim_enabled():
         return 0
     close = False
     if db is None:
@@ -202,7 +227,11 @@ def refresh_om_sim_telemetry(db=None) -> int:
         from backend.services.canonical_telemetry_service import latest_points
 
         _ensure_om_catalog(db)
-        _ensure_om_side_tables(db)
+        try:
+            _ensure_om_side_tables(db)
+            db.commit()
+        except Exception:
+            db.rollback()
         pts = latest_points(limit=400)
         by_id = {p.get("point_id"): p for p in pts}
 
@@ -261,7 +290,12 @@ def refresh_om_sim_telemetry(db=None) -> int:
         return n
     except Exception:
         db.rollback()
-        return 0
+        try:
+            ensure_om_demo(db=db, force=True)
+            return len(OFFICIAL_OM_IDS)
+        except Exception:
+            db.rollback()
+            return 0
     finally:
         if close:
             db.close()
@@ -282,24 +316,47 @@ def ensure_om_demo(db=None, force: bool = False) -> None:
             return
         ts = _now()
         for oid in OFFICIAL_OM_IDS:
-            db.add(
-                OmTelemetryDB(
-                    opportunity_id=oid,
-                    timestamp=ts,
-                    source="DEMO",
-                    quality="GOOD",
-                    electrical_power_kw=512.0 if oid == "O17" else None,
-                    hvac_power_kw=428.5 if oid == "O17" else None,
-                    daily_energy_kwh=5120.0 if oid == "O17" else None,
-                    occupancy=68.0 if oid == "O17" else None,
-                    outdoor_temp_c=28.1 if oid == "O17" else None,
-                    payload_json=json.dumps({"baseline_kw": 462.0, "peak_demand_kw": 540.0, "target_kw": 410.0}) if oid == "O17"
-                    else json.dumps({"manual_override_count": 3, "affected_users": 14, "energy_impact_kwh_day": 8.4}) if oid == "O18"
-                    else json.dumps({"filter_dp_rise_pct": 34.0, "fan_power_kw": 14.1, "equipment_health_pct": 87.0, "equipment_id": "AHU-02"})
-                    if oid == "O19"
-                    else json.dumps(O20_SIM_PAYLOAD),
-                )
+            payload = (
+                json.dumps({"baseline_kw": 462.0, "peak_demand_kw": 540.0, "target_kw": 410.0})
+                if oid == "O17"
+                else json.dumps({"manual_override_count": 3, "affected_users": 14, "energy_impact_kwh_day": 8.4})
+                if oid == "O18"
+                else json.dumps({"filter_dp_rise_pct": 34.0, "fan_power_kw": 14.1, "equipment_health_pct": 87.0, "equipment_id": "AHU-02"})
+                if oid == "O19"
+                else json.dumps(O20_SIM_PAYLOAD)
             )
+            row = (
+                db.query(OmTelemetryDB)
+                .filter(OmTelemetryDB.opportunity_id == oid)
+                .order_by(OmTelemetryDB.id.desc())
+                .first()
+            )
+            if row:
+                row.timestamp = ts
+                row.source = "DEMO"
+                row.quality = "GOOD"
+                row.payload_json = payload
+                if oid == "O17":
+                    row.electrical_power_kw = 512.0
+                    row.hvac_power_kw = 428.5
+                    row.daily_energy_kwh = 5120.0
+                    row.occupancy = 68.0
+                    row.outdoor_temp_c = 28.1
+            else:
+                db.add(
+                    OmTelemetryDB(
+                        opportunity_id=oid,
+                        timestamp=ts,
+                        source="DEMO",
+                        quality="GOOD",
+                        electrical_power_kw=512.0 if oid == "O17" else None,
+                        hvac_power_kw=428.5 if oid == "O17" else None,
+                        daily_energy_kwh=5120.0 if oid == "O17" else None,
+                        occupancy=68.0 if oid == "O17" else None,
+                        outdoor_temp_c=28.1 if oid == "O17" else None,
+                        payload_json=payload,
+                    )
+                )
         _ensure_om_side_tables(db)
         db.commit()
     except Exception:
@@ -493,7 +550,7 @@ def evaluate_opportunity(oid: str, persist: bool = True) -> Dict[str, Any]:
     db = SessionLocal()
     try:
         _ensure_om_catalog(db)
-        if ALLOW_DEMO:
+        if _om_sim_enabled():
             ensure_om_demo(db)
             refresh_om_sim_telemetry(db)
         row = (

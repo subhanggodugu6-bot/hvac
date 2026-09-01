@@ -719,20 +719,28 @@ def ventilation_historian(oid: str, hours: int = 24) -> List[Dict[str, Any]]:
             .limit(max(hours * 8, 48))
             .all()
         )
-        return [
-            {
-                "time": r.timestamp.strftime("%H:%M") if r.timestamp and hasattr(r.timestamp, "strftime") else str(r.timestamp),
-                "timestamp": r.timestamp.isoformat() if r.timestamp else None,
-                "outdoor_temp_c": r.outdoor_temp_c,
-                "return_temp_c": r.return_temp_c,
-                "outdoor_enthalpy_kjkg": r.outdoor_enthalpy_kjkg,
-                "return_enthalpy_kjkg": r.return_enthalpy_kjkg,
-                "damper_percent": r.damper_percent,
-                "chiller_power_kw": r.chiller_power_kw,
-                "fan_power_kw": r.fan_power_kw,
-            }
-            for r in rows
-        ]
+        out: List[Dict[str, Any]] = []
+        for r in rows:
+            oa_h = r.outdoor_enthalpy_kjkg
+            ra_h = r.return_enthalpy_kjkg
+            if oa_h is None and r.outdoor_temp_c is not None and r.outdoor_rh_percent is not None:
+                oa_h = moist_enthalpy_kjkg(r.outdoor_temp_c, r.outdoor_rh_percent)
+            if ra_h is None and r.return_temp_c is not None and r.return_rh_percent is not None:
+                ra_h = moist_enthalpy_kjkg(r.return_temp_c, r.return_rh_percent)
+            out.append(
+                {
+                    "time": r.timestamp.strftime("%H:%M") if r.timestamp and hasattr(r.timestamp, "strftime") else str(r.timestamp),
+                    "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+                    "outdoor_temp_c": r.outdoor_temp_c,
+                    "return_temp_c": r.return_temp_c,
+                    "outdoor_enthalpy_kjkg": oa_h,
+                    "return_enthalpy_kjkg": ra_h,
+                    "damper_percent": r.damper_percent,
+                    "chiller_power_kw": r.chiller_power_kw,
+                    "fan_power_kw": r.fan_power_kw,
+                }
+            )
+        return out
     finally:
         db.close()
 

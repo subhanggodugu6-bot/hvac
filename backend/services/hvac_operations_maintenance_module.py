@@ -428,5 +428,15 @@ def get_opportunities() -> Dict[str, Any]:
 
 
 def get_dashboard() -> Dict[str, Any]:
-    refresh_om_sim_telemetry()
+    from backend.services.operations_maintenance_opportunity_service import (
+        _om_sim_enabled,
+        ensure_om_demo,
+        refresh_om_sim_telemetry,
+    )
+
+    if _om_sim_enabled():
+        ensure_om_demo()
+        if refresh_om_sim_telemetry() == 0:
+            ensure_om_demo(force=True)
+            refresh_om_sim_telemetry()
     return get_opportunities()
