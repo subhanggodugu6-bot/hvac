@@ -1,6 +1,34 @@
 export type OperationsOpportunityId = 'O17' | 'O18' | 'O19' | 'O20';
 export type TelemetryValue = number | null;
 
+export interface OmSeriesPoint {
+  label?: string;
+  time?: string;
+  baseline?: number;
+  actual?: number;
+  target?: number;
+  health?: number;
+  filterDpRise?: number;
+  fanKw?: number;
+  overrides?: number;
+  drift?: number;
+  stale?: number;
+  failed?: number;
+}
+
+export interface OmControlPoint {
+  point?: string;
+  equipment?: string;
+  pointType?: string;
+  currentValue?: string | number;
+  referenceValue?: string | number;
+  quality?: string;
+  override?: boolean;
+  drift?: boolean;
+  lastSeen?: string;
+  status?: string;
+}
+
 export interface OmOpportunity {
   id: OperationsOpportunityId | string;
   opportunityId?: string;
@@ -94,6 +122,12 @@ export interface OmOpportunity {
   priority?: string | null;
   metrics?: Record<string, unknown> | null;
   charts?: Record<string, TelemetryValue> | null;
+  series?: {
+    energyPlanning?: Record<string, OmSeriesPoint[]>;
+    maintenanceTrend?: Record<string, OmSeriesPoint[]>;
+    controlHealth?: Record<string, OmSeriesPoint[]>;
+  } | null;
+  controlPoints?: OmControlPoint[] | null;
   metadata?: { agent?: string | null; dataQuality?: string | null; opportunityId?: string | null } | null;
   audit?: { timestamp?: string | null; event_type?: string | null; message?: string | null; actor?: string | null; confidence?: number | null }[];
   timestamp?: string | null;

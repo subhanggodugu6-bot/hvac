@@ -161,7 +161,7 @@ export const Sidebar: React.FC = () => {
             active={isActive('/agents/plant-control/duct-static-pressure')}
           />
           <div>
-            <Link href="/agents/plant-control/temperature-reset" className={subItem(false)}>
+            <Link href="/agents/plant-control/temperature-reset" className={subItem(onTempReset)}>
               <span className="font-mono w-8 shrink-0 text-slate-600">O6–8</span>
               <span className="leading-snug truncate">Temperature Reset</span>
             </Link>

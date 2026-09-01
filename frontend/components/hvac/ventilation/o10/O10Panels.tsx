@@ -125,6 +125,10 @@ export function O10ControlParams({ data }: { data: VentilationOpportunity }) {
 }
 
 export function O10Energy({ data }: { data: VentilationOpportunity }) {
+  const measured = data.energy?.measuredImpactKw ?? data.mv?.measuredImpactKw;
+  const verified = data.energy?.verifiedImpactKw ?? data.mv?.verifiedImpactKw;
+  const mvStatus = data.mv?.status;
+
   return (
     <section className="col-span-12 kpi-tile space-y-3" aria-label="Energy impact">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Energy impact</h2>
@@ -134,8 +138,8 @@ export function O10Energy({ data }: { data: VentilationOpportunity }) {
           ['Fan Energy', formatKw(data.energy?.currentKw)],
           ['Cooling Load', formatKw(o10Num(data, 'free_cooling_kw'))],
           ['Estimated Impact', formatKw(data.energy?.instantaneousKw ?? data.energy?.savingKw)],
-          ['Measured Impact', 'NO DATA AVAILABLE'],
-          ['Verified Impact', 'NO DATA AVAILABLE'],
+          ['Measured Impact', measured != null ? formatKw(measured) : 'NO DATA AVAILABLE'],
+          ['Verified Impact', verified != null ? formatKw(verified) : 'NO DATA AVAILABLE'],
         ].map(([k, v]) => (
           <article key={k} className="border border-slate-200 px-3 py-2">
             <div className="text-[10px] uppercase text-slate-500">{k}</div>
@@ -146,7 +150,7 @@ export function O10Energy({ data }: { data: VentilationOpportunity }) {
       <div className="border border-cyan-500/20 px-3 py-2">
         <div className="text-[10px] uppercase text-cyan-800">Guide reported potential</div>
         <p className="text-sm text-slate-800 mt-1">{O10_GUIDE.compressorPotential}</p>
-        <p className="text-[11px] text-slate-500 mt-1">Not actual site performance. Measured site impact is shown only when the backend computes and verifies it.</p>
+        <p className="text-[11px] text-slate-500 mt-1">Not actual site performance. Measured and verified values come from the economizer M&amp;V pipeline{mvStatus ? ` (${mvStatus})` : ''}.</p>
       </div>
     </section>
   );

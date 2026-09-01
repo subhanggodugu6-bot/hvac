@@ -41,11 +41,27 @@ function SnapshotTooltip({ active, payload, label }: TipProps) {
   );
 }
 
+function TrendTooltip({ active, payload, label }: TipProps) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="bg-white border border-slate-200 px-2.5 py-2 text-[11px] font-mono">
+      <div className="text-slate-600 mb-1">{label}</div>
+      {payload.map((p) => (
+        <div key={p.name} className="text-slate-800">
+          {p.name}: {p.value == null ? '—' : p.value}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export function EnergyPlanningChart({ data, dash }: { data: OmOpportunity; dash?: OmDashboardData }) {
   const [range, setRange] = useState<Range>('24H');
   const current = o17CurrentKw(data, dash);
   const baseline = o17BaselineKw(data, dash);
   const target = o17TargetKw(data, dash);
+  const trend = data.series?.energyPlanning?.[range] ?? [];
+  const hasTrend = trend.length > 0;
   const snapshot = useMemo(
     () => [
       { name: 'Baseline', value: baseline },
@@ -61,7 +77,7 @@ export function EnergyPlanningChart({ data, dash }: { data: OmOpportunity; dash?
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
         <div>
           <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Energy planning overview</h2>
-          <p className="text-[11px] text-slate-500 mt-1">Snapshot comparison from the O&amp;M API. Historian series are not available on this contract.</p>
+          <p className="text-[11px] text-slate-500 mt-1">Baseline, actual, and target kW from O&amp;M telemetry.</p>
         </div>
         <div className="flex gap-1" role="group" aria-label="Time range">
           {(['24H', '7D', '30D', '90D'] as const).map((r) => (
@@ -80,10 +96,22 @@ export function EnergyPlanningChart({ data, dash }: { data: OmOpportunity; dash?
         </div>
       </div>
       <div className="min-h-[220px]">
-        <EmptyState
-          title="NO DATA AVAILABLE"
-          detail={`${range} energy historian series are not provided by GET /api/hvac/operations-maintenance/O17. Values are not fabricated.`}
-        />
+        {hasTrend ? (
+          <EngineeringChart height={220}>
+            <AreaChart data={trend}>
+              <CartesianGrid stroke={CHART_COLORS.grid} vertical={false} />
+              <XAxis dataKey="label" stroke={CHART_COLORS.axis} tick={{ fontSize: 10 }} />
+              <YAxis stroke={CHART_COLORS.axis} tick={{ fontSize: 10 }} width={42} />
+              <Tooltip content={<TrendTooltip />} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <Area type="monotone" dataKey="baseline" name="Baseline kW" stroke={CHART_COLORS.baseline} fill={CHART_COLORS.baseline} fillOpacity={0.08} />
+              <Area type="monotone" dataKey="actual" name="Actual kW" stroke={CHART_COLORS.current} fill={CHART_COLORS.current} fillOpacity={0.12} />
+              <Line type="monotone" dataKey="target" name="Target kW" stroke={CHART_COLORS.optimized} dot={false} />
+            </AreaChart>
+          </EngineeringChart>
+        ) : (
+          <EmptyState title="NO DATA AVAILABLE" detail={`${range} energy series unavailable.`} />
+        )}
       </div>
       <div className="mt-4 grid grid-cols-1 xl:grid-cols-2 gap-3">
         <div>
@@ -102,24 +130,6 @@ export function EnergyPlanningChart({ data, dash }: { data: OmOpportunity; dash?
                 <Bar dataKey="Actual" fill={CHART_COLORS.current} radius={[2, 2, 0, 0]} />
                 <Bar dataKey="Target" fill={CHART_COLORS.optimized} radius={[2, 2, 0, 0]} />
               </BarChart>
-            </EngineeringChart>
-          )}
-        </div>
-        <div>
-          <h3 className="text-[11px] uppercase tracking-wider text-slate-500 mb-2">Baseline / actual / target</h3>
-          {!hasSnapshot ? (
-            <EmptyState title="NO DATA AVAILABLE" detail="Comparison series cannot be drawn without kW values." />
-          ) : (
-            <EngineeringChart height={220}>
-              <AreaChart data={snapshot}>
-                <CartesianGrid stroke={CHART_COLORS.grid} />
-                <XAxis dataKey="name" stroke={CHART_COLORS.axis} tick={{ fontSize: 10 }} />
-                <YAxis stroke={CHART_COLORS.axis} tick={{ fontSize: 10 }} width={42} />
-                <Tooltip content={<SnapshotTooltip />} />
-                <Legend wrapperStyle={{ fontSize: 11 }} />
-                <Area type="monotone" dataKey="value" name="kW" stroke={CHART_COLORS.current} fill={CHART_COLORS.current} fillOpacity={0.15} />
-                <Line type="monotone" dataKey="value" name="Trace" stroke={CHART_COLORS.optimized} dot strokeWidth={2} />
-              </AreaChart>
             </EngineeringChart>
           )}
         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { EmptyState } from '@/components/hvac/EmptyState';
 import {
   Bar,
@@ -9,6 +9,8 @@ import {
   CHART_COLORS,
   EngineeringChart,
   Legend,
+  Line,
+  LineChart,
   Tooltip,
   XAxis,
   YAxis,
@@ -44,10 +46,15 @@ export function MaintenanceTrendChart({ data }: { data: OmOpportunity }) {
   const health = o19Health(data);
   const dp = metricNum(data.metrics, 'filter_dp_rise_pct');
   const fan = metricNum(data.metrics, 'fan_power_kw');
-  const snapshot: Array<Record<string, number | string>> = [{ name: 'Snapshot' }];
-  if (health != null) snapshot[0].Health = health;
-  if (dp != null) snapshot[0].FilterDpRise = dp;
-  if (fan != null) snapshot[0].FanKw = fan;
+  const trend = data.series?.maintenanceTrend?.[range] ?? [];
+  const hasTrend = trend.length > 0;
+  const snapshot = useMemo(() => {
+    const row: Record<string, number | string> = { name: 'Snapshot' };
+    if (health != null) row.Health = health;
+    if (dp != null) row.FilterDpRise = dp;
+    if (fan != null) row.FanKw = fan;
+    return [row];
+  }, [health, dp, fan]);
   const has = health != null || dp != null || fan != null;
 
   return (
@@ -55,7 +62,7 @@ export function MaintenanceTrendChart({ data }: { data: OmOpportunity }) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
         <div>
           <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Condition / indicator / events</h2>
-          <p className="text-[11px] text-slate-500 mt-1">Historian trends are not on this contract. Snapshot values only.</p>
+          <p className="text-[11px] text-slate-500 mt-1">Equipment health and filter/fan indicators over time.</p>
         </div>
         <div className="flex gap-1" role="group" aria-label="Time range">
           {(['24H', '7D', '30D', '90D'] as const).map((r) => (
@@ -73,7 +80,22 @@ export function MaintenanceTrendChart({ data }: { data: OmOpportunity }) {
           ))}
         </div>
       </div>
-      <EmptyState title="NO DATA AVAILABLE" detail={`${range} equipment-condition, indicator, cycling, and sensor-behavior series are not provided by GET /api/hvac/operations-maintenance/O19.`} />
+      {hasTrend ? (
+        <EngineeringChart height={220}>
+          <LineChart data={trend}>
+            <CartesianGrid stroke={CHART_COLORS.grid} vertical={false} />
+            <XAxis dataKey="label" stroke={CHART_COLORS.axis} tick={{ fontSize: 10 }} />
+            <YAxis stroke={CHART_COLORS.axis} tick={{ fontSize: 10 }} width={36} />
+            <Tooltip content={<Tip />} />
+            <Legend wrapperStyle={{ fontSize: 11 }} />
+            {health != null ? <Line type="monotone" dataKey="health" name="Health %" stroke={CHART_COLORS.current} dot={false} /> : null}
+            {dp != null ? <Line type="monotone" dataKey="filterDpRise" name="Filter ΔP rise %" stroke={CHART_COLORS.optimized} dot={false} /> : null}
+            {fan != null ? <Line type="monotone" dataKey="fanKw" name="Fan kW" stroke={CHART_COLORS.baseline} dot={false} /> : null}
+          </LineChart>
+        </EngineeringChart>
+      ) : (
+        <EmptyState title="NO DATA AVAILABLE" detail={`${range} maintenance trend series unavailable.`} />
+      )}
       {has ? (
         <EngineeringChart height={200}>
           <BarChart data={snapshot}>

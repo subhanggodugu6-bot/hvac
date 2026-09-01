@@ -34,7 +34,17 @@ export function TrainingEvidence({ data }: { data: OmOpportunity }) {
           <dd className="mt-0.5 font-mono">{o18SecondsAgo(data.timestamp || data.telemetry?.lastUpdated)}</dd>
         </div>
       </dl>
-      {!evidence.length && !programs ? (
+      {programs && programs.length > 0 ? (
+        <ul className="space-y-1.5 text-[11px] font-mono border-t border-slate-200 pt-3">
+          {programs.map((p) => (
+            <li key={p.id || p.topic} className="flex justify-between gap-2">
+              <span className="text-slate-700">{p.programName || p.topic || p.id}</span>
+              <span className="text-slate-500">{formatDash(p.status)}{p.required ? ' · required' : ''}</span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {!evidence.length && !programs?.length && !gaps?.length ? (
         <EmptyState title="NO DATA AVAILABLE" detail="No training evidence payload was returned." />
       ) : null}
     </section>

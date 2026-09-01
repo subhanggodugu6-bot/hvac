@@ -427,6 +427,17 @@ def _normalize(oid: str, ev: Dict[str, Any], tel_meta: Dict[str, Any], tel: Dict
         body.update(extras)
         body["current_state"].update(extras)
         body["historian"] = ventilation_historian("O10", hours=24)
+        from backend.services.om_detail_service import o10_mv_impact
+
+        mv = o10_mv_impact(
+            ev.get("instantaneous_kw"),
+            tel.get("chiller_power_kw"),
+            tel.get("fan_power_kw"),
+        )
+        if mv:
+            body.setdefault("energy", {})
+            body["energy"].update(mv)
+            body["mv"] = mv
         body["diagnostics"] = _o10_diagnostics(ev, tel, tel_meta)
     if oid == "O11":
         body["current_state"] = {

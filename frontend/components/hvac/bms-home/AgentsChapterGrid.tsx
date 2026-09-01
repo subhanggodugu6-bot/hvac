@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { HUB_RAIL, type DashboardChapter } from '@/lib/hvac/dashboardHome';
+import { getOpportunity } from '@/lib/hvac/opportunityConfig';
 
 function countPill(label: string, value: number, tone: 'live' | 'sim' | 'await') {
   const styles =
@@ -47,14 +48,21 @@ export function AgentsChapterGrid({ chapters }: { chapters: DashboardChapter[] }
                 {countPill('AWAIT', ch.counts.awaiting, 'await')}
               </div>
               <div className="flex flex-wrap gap-1 pt-1">
-                {ch.opportunities.slice(0, 5).map((o) => (
-                  <span
-                    key={o.id}
-                    className="text-[9px] font-mono px-1.5 py-0.5 rounded-md border border-slate-200 bg-white text-slate-600"
-                  >
-                    {o.id}
-                  </span>
-                ))}
+                {ch.opportunities.slice(0, 5).map((o) => {
+                  const href = o.href || getOpportunity(o.id)?.route;
+                  const chip = (
+                    <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-md border border-slate-200 bg-white text-slate-600 hover:border-violet-300 hover:text-violet-800">
+                      {o.id}
+                    </span>
+                  );
+                  return href ? (
+                    <Link key={o.id} href={href} onClick={(e) => e.stopPropagation()} className="inline-flex">
+                      {chip}
+                    </Link>
+                  ) : (
+                    <span key={o.id}>{chip}</span>
+                  );
+                })}
               </div>
             </div>
           </Link>

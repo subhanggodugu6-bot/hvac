@@ -18,21 +18,19 @@ export function MlSectionStrip({ opportunityIds }: { opportunityIds: string[] })
         {opportunityIds.map((oid) => {
           const row = byId.get(oid);
           const status =
-            oid === 'O10'
-              ? 'MODEL NOT TRAINABLE'
-              : !q.data && q.isError
-                ? 'DATA SOURCE ERROR'
-                : !row
-                  ? q.isLoading
-                    ? '…'
+            !q.data && q.isError
+              ? 'DATA SOURCE ERROR'
+              : !row
+                ? q.isLoading
+                  ? '…'
+                  : 'MODEL NOT AVAILABLE'
+                : row.status === 'MODEL_READY' || row.status === 'REGISTERED'
+                  ? row.model_id
+                    ? 'MODEL PREDICTION'
                     : 'MODEL NOT AVAILABLE'
-                  : row.status === 'MODEL_READY' || row.status === 'REGISTERED'
-                    ? row.model_id
-                      ? 'MODEL PREDICTION'
-                      : 'MODEL NOT AVAILABLE'
-                    : row.status === 'MODEL_NOT_TRAINABLE'
-                      ? 'MODEL NOT TRAINABLE'
-                      : row.status;
+                  : row.status === 'MODEL_NOT_TRAINABLE'
+                    ? 'MODEL NOT TRAINABLE'
+                    : row.status;
           return (
             <div key={oid} className="flex justify-between gap-2 border border-slate-200 px-2 py-1.5">
               <span className="text-cyan-800">{oid}</span>

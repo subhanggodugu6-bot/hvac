@@ -133,7 +133,7 @@ export default function VentilationAirflowDashboardPage() {
       ]}
       cards={[cardFields('O10'), cardFields('O11'), cardFields('O12'), cardFields('O13')]}
     >
-      <MlSectionStrip opportunityIds={['O11', 'O12', 'O13']} />
+      <MlSectionStrip opportunityIds={['O10', 'O11', 'O12', 'O13']} />
       <div className="flex flex-wrap gap-2 text-[11px] font-mono -mt-2">
         <StatusBadge tone={toneForStatus(mod?.bms?.status)}>BMS {formatDash(mod?.bms?.status)}</StatusBadge>
         <StatusBadge tone={toneForStatus(tel?.state)}>TEL {formatDash(tel?.state)}</StatusBadge>

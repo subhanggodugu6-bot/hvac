@@ -9,7 +9,7 @@ import { DEFAULT_FACILITY_CONFIG } from '@/lib/facilityConfig';
 import { hvacFetch, apiJson, API_BASE } from '@/lib/api/client';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 import type { TelemetryFrame } from '@/lib/hvac/telemetrySocket';
-import { OPPORTUNITIES } from '@/lib/hvac/opportunityConfig';
+import { fleetOpportunityCards } from '@/lib/hvac/opportunityConfig';
 
 function num(value: unknown): number | null {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
@@ -237,7 +237,7 @@ export const Header: React.FC = () => {
   const searchHits = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (q.length < 1) return [];
-    return OPPORTUNITIES.filter(
+    return fleetOpportunityCards().filter(
       (o) =>
         o.id.toLowerCase().includes(q) ||
         o.title.toLowerCase().includes(q) ||

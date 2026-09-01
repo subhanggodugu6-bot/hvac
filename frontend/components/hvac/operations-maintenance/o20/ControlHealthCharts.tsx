@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { EmptyState } from '@/components/hvac/EmptyState';
 import {
   Bar,
@@ -9,6 +9,8 @@ import {
   CHART_COLORS,
   EngineeringChart,
   Legend,
+  Line,
+  LineChart,
   Tooltip,
   XAxis,
   YAxis,
@@ -41,12 +43,17 @@ function Tip({ active, payload, label }: TipProps) {
 export function ControlHealthCharts({ data }: { data: OmOpportunity }) {
   const [range, setRange] = useState<Range>('24H');
   const c = o20Counts(data);
-  const row: Record<string, number | string> = { name: 'Snapshot' };
-  if (c.healthPct != null) row.Health = c.healthPct;
-  if (c.overrides != null) row.Overrides = c.overrides;
-  if (c.drift != null) row.Drift = c.drift;
-  if (c.stale != null) row.Stale = c.stale;
-  if (c.failed != null) row.Failed = c.failed;
+  const trend = data.series?.controlHealth?.[range] ?? [];
+  const hasTrend = trend.length > 0;
+  const row = useMemo(() => {
+    const snap: Record<string, number | string> = { name: 'Snapshot' };
+    if (c.healthPct != null) snap.Health = c.healthPct;
+    if (c.overrides != null) snap.Overrides = c.overrides;
+    if (c.drift != null) snap.Drift = c.drift;
+    if (c.stale != null) snap.Stale = c.stale;
+    if (c.failed != null) snap.Failed = c.failed;
+    return snap;
+  }, [c]);
   const has = Object.keys(row).length > 1;
 
   return (
@@ -54,7 +61,7 @@ export function ControlHealthCharts({ data }: { data: OmOpportunity }) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
         <div>
           <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Control health charts</h2>
-          <p className="text-[11px] text-slate-500 mt-1">Time-series historian values are not on this contract.</p>
+          <p className="text-[11px] text-slate-500 mt-1">Health, overrides, drift, stale, and failed point counts.</p>
         </div>
         <div className="flex gap-1" role="group" aria-label="Time range">
           {(['24H', '7D', '30D', '90D'] as const).map((r) => (
@@ -70,7 +77,24 @@ export function ControlHealthCharts({ data }: { data: OmOpportunity }) {
           ))}
         </div>
       </div>
-      <EmptyState title="NO DATA AVAILABLE" detail={`${range} control-health, override, drift, stale, and failed series are not provided by GET /api/hvac/operations-maintenance/O20.`} />
+      {hasTrend ? (
+        <EngineeringChart height={220}>
+          <LineChart data={trend}>
+            <CartesianGrid stroke={CHART_COLORS.grid} vertical={false} />
+            <XAxis dataKey="label" stroke={CHART_COLORS.axis} tick={{ fontSize: 10 }} />
+            <YAxis stroke={CHART_COLORS.axis} tick={{ fontSize: 10 }} width={36} />
+            <Tooltip content={<Tip />} />
+            <Legend wrapperStyle={{ fontSize: 11 }} />
+            {c.healthPct != null ? <Line type="monotone" dataKey="health" name="Health %" stroke={CHART_COLORS.current} dot={false} /> : null}
+            {c.overrides != null ? <Line type="monotone" dataKey="overrides" name="Overrides" stroke={CHART_COLORS.optimized} dot={false} /> : null}
+            {c.drift != null ? <Line type="monotone" dataKey="drift" name="Drift" stroke={CHART_COLORS.baseline} dot={false} /> : null}
+            {c.stale != null ? <Line type="monotone" dataKey="stale" name="Stale" stroke="#94a3b8" dot={false} /> : null}
+            {c.failed != null ? <Line type="monotone" dataKey="failed" name="Failed" stroke="#f43f5e" dot={false} /> : null}
+          </LineChart>
+        </EngineeringChart>
+      ) : (
+        <EmptyState title="NO DATA AVAILABLE" detail={`${range} control-health series unavailable.`} />
+      )}
       {has ? (
         <EngineeringChart height={200}>
           <BarChart data={[row]}>

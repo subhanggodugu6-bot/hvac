@@ -18,6 +18,10 @@ export interface VentilationEnergy {
   instantaneousKw?: TelemetryValue;
   savingKw?: TelemetryValue;
   dailyKwh?: TelemetryValue;
+  measuredImpactKw?: TelemetryValue;
+  verifiedImpactKw?: TelemetryValue;
+  measuredDailyKwh?: TelemetryValue;
+  verifiedDailyKwh?: TelemetryValue;
 }
 
 export interface VentilationOpportunity {
@@ -44,6 +48,14 @@ export interface VentilationOpportunity {
     co2Ppm?: TelemetryValue;
   } | null;
   energy?: VentilationEnergy | null;
+  mv?: {
+    measuredImpactKw?: TelemetryValue;
+    verifiedImpactKw?: TelemetryValue;
+    measuredDailyKwh?: TelemetryValue;
+    verifiedDailyKwh?: TelemetryValue;
+    status?: string | null;
+    method?: string | null;
+  } | null;
   delta?: { airflowCfm?: TelemetryValue; reductionCfm?: TelemetryValue; reductionPct?: TelemetryValue } | null;
   confidence?: TelemetryValue;
   safety?: { status?: string | null; passed?: boolean | null } | null;

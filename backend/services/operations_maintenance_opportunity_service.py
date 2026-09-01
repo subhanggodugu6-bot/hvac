@@ -606,6 +606,11 @@ def evaluate_opportunity(oid: str, persist: bool = True) -> Dict[str, Any]:
             "telemetry": tel_meta,
             **ev,
         }
+        if oid == "O18":
+            out["programs"] = snap.get("programs") or []
+            out["completions"] = snap.get("completions") or []
+        elif oid == "O19":
+            out["findings"] = snap.get("findings") or []
         if persist:
             _persist(db, oid, ev, tel_meta)
         return out

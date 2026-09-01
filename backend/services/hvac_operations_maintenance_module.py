@@ -257,6 +257,14 @@ def _as_module_opportunity(raw: Dict[str, Any]) -> Dict[str, Any]:
         body["audit"] = list_audit(str(oid), 10)
     except Exception:
         body["audit"] = []
+    try:
+        from backend.services.om_detail_service import attach_control_points, attach_om_series
+
+        attach_om_series(body, str(oid))
+        if str(oid) == "O20":
+            attach_control_points(body)
+    except Exception:
+        pass
     return body
 
 
