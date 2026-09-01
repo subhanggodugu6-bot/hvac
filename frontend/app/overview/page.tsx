@@ -205,8 +205,8 @@ export default function FleetOverviewPage() {
 
       {home.isError && !data ? (
         <EmptyState
-          title="DATA SOURCE ERROR"
-          detail="Dashboard home could not be loaded. Check Gateway connectivity and retry."
+          title="API UNREACHABLE"
+          detail="The Render backend (hvac-api-elin.onrender.com) did not respond. Wait 1–2 minutes for cold start, then retry. On Vercel, set NEXT_PUBLIC_WS_ORIGIN=https://hvac-api-elin.onrender.com and HVAC_API_ORIGIN to the same URL."
           href="/platform/bms"
           actionLabel="Open Gateway"
           onRetry={() => void home.refetch()}

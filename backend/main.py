@@ -1,5 +1,6 @@
 import os
 import sys
+import threading
 from contextlib import asynccontextmanager
 
 _ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -75,11 +76,16 @@ def _error_body(code: str, message: str, status_code: int, details=None) -> dict
     return body
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+def _startup_boot() -> None:
+    """Heavy init off the ASGI bind path so /healthz responds while Render warms up."""
+    try:
+        init_db()
+    except Exception as exc:
+        log_event("ERROR", "startup", "INIT_DB_FAILED", extra={"error": str(exc)})
     if os.getenv("HVAC_START_CONTROL_WORKER", "1") in ("1", "true", "TRUE"):
         try:
             from backend.workers.control_worker import start
+
             start()
         except Exception:
             pass
@@ -96,13 +102,14 @@ async def lifespan(app: FastAPI):
     except Exception:
         pass
     try:
-        from backend.bms.telemetry_reader import start_reader, stop_reader
+        from backend.bms.telemetry_reader import start_reader
+
         start_reader()
     except Exception:
         pass
     try:
-        from backend.bms.simulation_telemetry import start_simulation_telemetry, stop_simulation_telemetry
-        # A short feed interval starves a small instance, so it is tunable.
+        from backend.bms.simulation_telemetry import start_simulation_telemetry
+
         start_simulation_telemetry(
             interval=float(os.getenv("HVAC_SIM_FEED_SECONDS", "20")),
             force=os.getenv("HVAC_USE_SIMULATION", "0") in ("1", "true", "TRUE"),
@@ -134,7 +141,24 @@ async def lifespan(app: FastAPI):
         bootstrap_pipeline(delay_seconds=float(os.getenv("HVAC_PIPELINE_BOOTSTRAP_DELAY", "25")))
     except Exception:
         pass
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    threading.Thread(target=_startup_boot, name="hvac-startup", daemon=True).start()
     yield
+    try:
+        from backend.bms.telemetry_reader import stop_reader
+
+        stop_reader()
+    except Exception:
+        pass
+    try:
+        from backend.bms.simulation_telemetry import stop_simulation_telemetry
+
+        stop_simulation_telemetry()
+    except Exception:
+        pass
 
 
 app = FastAPI(
