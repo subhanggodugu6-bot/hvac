@@ -9,8 +9,23 @@ _HEARTBEAT_PATH = os.getenv(
     "HVAC_WATCHDOG_FILE",
     os.path.join(os.path.dirname(__file__), "..", "..", "database", "worker_heartbeat.txt"),
 )
-STALE_S = float(os.getenv("HVAC_WATCHDOG_STALE_SECONDS", "30"))
+STALE_S = float(os.getenv("HVAC_WATCHDOG_STALE_SECONDS", "0")) or None
 AI_STALE_S = float(os.getenv("HVAC_AI_WATCHDOG_STALE_SECONDS", "600"))
+
+
+def _pipeline_interval_seconds() -> float:
+    try:
+        return max(5.0, float(os.getenv("HVAC_AI_PIPELINE_INTERVAL_SECONDS", "60")))
+    except (TypeError, ValueError):
+        return 60.0
+
+
+def _control_stale_seconds() -> float:
+    """Control/ai_pipeline beat once per pipeline cycle — stale must exceed interval."""
+    if STALE_S is not None and STALE_S > 0:
+        return STALE_S
+    interval = _pipeline_interval_seconds()
+    return max(90.0, interval * 2.0 + 15.0)
 
 _SERVICES = ("control", "ai_pipeline", "rls", "lstm", "safe_rl", "rules")
 _beats: Dict[str, Dict[str, Any]] = {s: {"ts": None, "note": "not-started"} for s in _SERVICES}
@@ -55,7 +70,8 @@ def _age_seconds(ts: Optional[str]) -> Optional[float]:
 def watchdog_status() -> Dict[str, Any]:
     ts = _last.get("ts") or (_beats.get("control") or {}).get("ts")
     age = _age_seconds(ts)
-    alive = bool(age is not None and age <= STALE_S)
+    stale_limit = _control_stale_seconds()
+    alive = bool(age is not None and age <= stale_limit)
     return {
         "alive": alive,
         "ageSeconds": age,
@@ -71,7 +87,7 @@ def ai_watchdog_status() -> Dict[str, Any]:
     for svc in _SERVICES:
         slot = _beats.get(svc) or {}
         age = _age_seconds(slot.get("ts"))
-        stale_limit = STALE_S if svc in ("control", "ai_pipeline") else AI_STALE_S
+        stale_limit = _control_stale_seconds() if svc in ("control", "ai_pipeline") else AI_STALE_S
         ok = bool(age is not None and age <= stale_limit)
         out[svc] = {
             "ok": ok,

@@ -17,6 +17,7 @@ export type PipelineStage = {
   href?: string;
   data_ok?: boolean;
   missing?: string[];
+  advisory?: string[];
   metrics?: Record<string, unknown>;
 };
 
@@ -26,6 +27,9 @@ type PipelineHealth = {
   all_ok?: boolean;
   gap_count?: number;
   missing_items?: string[];
+  advisory_count?: number;
+  advisory_items?: string[];
+  demo_mode?: boolean;
 };
 
 type PipelineStatusPayload = {
@@ -83,7 +87,8 @@ function watchdogTone(status?: string, ok?: boolean): 'live' | 'warn' | 'danger'
 
 function StageCard({ stage, index }: { stage: PipelineStage; index: number }) {
   const shell = TONE_STYLES[stage.tone || 'muted'] || TONE_STYLES.muted;
-  const hasGaps = stage.data_ok === false || (stage.missing?.length ?? 0) > 0;
+  const hasGaps = (stage.missing?.length ?? 0) > 0;
+  const hasAdvisory = (stage.advisory?.length ?? 0) > 0;
   const step = STAGE_NUM[stage.id] ?? index + 1;
 
   const body = (
@@ -114,6 +119,10 @@ function StageCard({ stage, index }: { stage: PipelineStage; index: number }) {
           <StatusBadge tone="live" pulse={false}>
             DATA OK
           </StatusBadge>
+        ) : hasAdvisory ? (
+          <StatusBadge tone="muted" pulse={false}>
+            ADVISORY
+          </StatusBadge>
         ) : null}
       </div>
       {stage.detail ? (
@@ -129,6 +138,15 @@ function StageCard({ stage, index }: { stage: PipelineStage; index: number }) {
           {(stage.missing.length ?? 0) > 2 ? (
             <li className="text-[8px] text-amber-700">+{stage.missing.length - 2} more</li>
           ) : null}
+        </ul>
+      ) : null}
+      {!stage.missing?.length && stage.advisory?.length ? (
+        <ul className="mt-1.5 space-y-0.5">
+          {stage.advisory.slice(0, 2).map((a) => (
+            <li key={a} className="text-[8px] text-slate-500 leading-tight line-clamp-2">
+              · {a}
+            </li>
+          ))}
         </ul>
       ) : null}
     </div>
@@ -157,37 +175,60 @@ function HealthBanner({ health, loading }: { health?: PipelineHealth; loading?: 
   const ready = health.ready_stages ?? 0;
   const total = health.total_stages ?? 5;
   const gaps = health.gap_count ?? 0;
+  const advisories = health.advisory_count ?? 0;
   const allOk = health.all_ok;
 
   return (
-    <div
-      className={`rounded-lg border px-3 py-2.5 ${
-        allOk ? 'border-emerald-200 bg-emerald-50/60' : 'border-amber-200 bg-amber-50/60'
-      }`}
-    >
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          {allOk ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-          ) : (
-            <AlertTriangle className="w-4 h-4 text-amber-600" />
-          )}
-          <span className="text-[12px] font-semibold text-slate-800">
-            {allOk ? 'All pipeline stages have required data' : `${gaps} data gap${gaps === 1 ? '' : 's'} detected`}
+    <div className="space-y-2">
+      <div
+        className={`rounded-lg border px-3 py-2.5 ${
+          allOk ? 'border-emerald-200 bg-emerald-50/60' : gaps > 0 ? 'border-amber-200 bg-amber-50/60' : 'border-slate-200 bg-slate-50/60'
+        }`}
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            {allOk ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            ) : gaps > 0 ? (
+              <AlertTriangle className="w-4 h-4 text-amber-600" />
+            ) : (
+              <CheckCircle2 className="w-4 h-4 text-slate-500" />
+            )}
+            <span className="text-[12px] font-semibold text-slate-800">
+              {allOk
+                ? 'All pipeline stages have required data'
+                : gaps > 0
+                  ? `${gaps} data gap${gaps === 1 ? '' : 's'} detected`
+                  : `${ready}/${total} stages OK${health.demo_mode ? ' (demo mode)' : ''}`}
+            </span>
+          </div>
+          <span className="text-[11px] font-mono text-slate-600">
+            {ready}/{total} stages OK
           </span>
         </div>
-        <span className="text-[11px] font-mono text-slate-600">
-          {ready}/{total} stages OK
-        </span>
+        {gaps > 0 && (health.missing_items?.length ?? 0) > 0 ? (
+          <ul className="mt-2 space-y-0.5 max-h-24 overflow-y-auto eng-scroll">
+            {(health.missing_items || []).map((item) => (
+              <li key={item} className="text-[10px] text-amber-900 leading-snug">
+                · {item}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
-      {!allOk && (health.missing_items?.length ?? 0) > 0 ? (
-        <ul className="mt-2 space-y-0.5 max-h-24 overflow-y-auto eng-scroll">
-          {(health.missing_items || []).map((item) => (
-            <li key={item} className="text-[10px] text-amber-900 leading-snug">
-              · {item}
-            </li>
-          ))}
-        </ul>
+      {advisories > 0 && (health.advisory_items?.length ?? 0) > 0 ? (
+        <div className="rounded-lg border border-slate-200 bg-slate-50/80 px-3 py-2">
+          <div className="text-[11px] font-semibold text-slate-600">
+            Demo advisories ({advisories}) — expected, not blocking
+          </div>
+          <ul className="mt-1.5 space-y-0.5 max-h-20 overflow-y-auto eng-scroll">
+            {(health.advisory_items || []).map((item) => (
+              <li key={item} className="text-[10px] text-slate-500 leading-snug">
+                · {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
     </div>
   );
