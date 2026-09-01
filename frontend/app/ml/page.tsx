@@ -321,7 +321,7 @@ export default function MlRegistryPage() {
       <section className="glass-card p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">Online RLS learning</div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">Online RLS learning</div>
             <p className="text-[12px] text-slate-400 mt-1">
               Stage C continuous adaptation (zone thermal + HVAC power). Read-only — never writes setpoints.
             </p>
@@ -336,7 +336,7 @@ export default function MlRegistryPage() {
           <div className="overflow-x-auto">
             <table className="bms-table">
               <thead className="text-slate-500 text-left">
-                <tr className="border-b border-white/10">
+                <tr className="border-b border-slate-200">
                   <th className="p-2">Model</th>
                   <th className="p-2">Mode</th>
                   <th className="p-2">Status</th>
@@ -349,8 +349,8 @@ export default function MlRegistryPage() {
               </thead>
               <tbody>
                 {(rls.data?.models || []).map((m) => (
-                  <tr key={`${m.source_mode}-${m.zone_id}-${m.model_key}`} className="border-b border-white/5">
-                    <td className="p-2 font-mono text-cyan-300">{m.model_key}</td>
+                  <tr key={`${m.source_mode}-${m.zone_id}-${m.model_key}`} className="border-b border-slate-200">
+                    <td className="p-2 font-mono text-cyan-800">{m.model_key}</td>
                     <td className="p-2 text-[12px]">{m.source_mode}</td>
                     <td className="p-2">
                       <StatusBadge tone={m.status === 'READY' ? 'live' : 'warn'} pulse={false}>
@@ -377,7 +377,7 @@ export default function MlRegistryPage() {
       <section className="glass-card p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">LSTM forecast</div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">LSTM forecast</div>
             <p className="text-[12px] text-slate-400 mt-1">
               Stage D multi-horizon advisory forecast (15–60 min). MODEL PREDICTION only — never LIVE BMS write.
             </p>
@@ -461,7 +461,7 @@ export default function MlRegistryPage() {
       <section className="glass-card p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">
               NB2 Optimizer (Safe RL)
             </div>
             <p className="text-[12px] text-slate-400 mt-1">
@@ -521,7 +521,7 @@ export default function MlRegistryPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               <div>
                 <div className="text-slate-500">Chosen action</div>
-                <div className="text-slate-200 font-mono">
+                <div className="text-slate-800 font-mono">
                   {safeRlStatus.data.last_decision.chosen_action?.action_id || '—'}{' '}
                   {safeRlStatus.data.last_decision.chosen_action?.mapped_opportunity
                     ? `→ ${safeRlStatus.data.last_decision.chosen_action.mapped_opportunity}`
@@ -530,7 +530,7 @@ export default function MlRegistryPage() {
               </div>
               <div>
                 <div className="text-slate-500">Score / confidence</div>
-                <div className="text-slate-200">
+                <div className="text-slate-800">
                   {safeRlStatus.data.last_decision.score == null
                     ? '—'
                     : safeRlStatus.data.last_decision.score.toFixed(3)}{' '}
@@ -542,7 +542,7 @@ export default function MlRegistryPage() {
               </div>
               <div>
                 <div className="text-slate-500">Mapped commands</div>
-                <div className="text-slate-200 font-mono">
+                <div className="text-slate-800 font-mono">
                   {(safeRlStatus.data.last_decision.mapped_commands || [])
                     .map((c) => `${c.opportunity}:${c.command_id?.slice(0, 8)}`)
                     .join(' · ') || '— (hold or blocked)'}
@@ -553,7 +553,7 @@ export default function MlRegistryPage() {
               <div className="overflow-x-auto">
                 <table className="bms-table">
                   <thead className="text-slate-500 text-left">
-                    <tr className="border-b border-white/10">
+                    <tr className="border-b border-slate-200">
                       <th className="p-2">Action</th>
                       <th className="p-2">Reason</th>
                       <th className="p-2">Score</th>
@@ -561,8 +561,8 @@ export default function MlRegistryPage() {
                   </thead>
                   <tbody>
                     {(safeRlStatus.data.last_decision.rejected_actions || []).map((r) => (
-                      <tr key={r.action_id} className="border-b border-white/5">
-                        <td className="p-2 font-mono text-cyan-300">{r.action_id}</td>
+                      <tr key={r.action_id} className="border-b border-slate-200">
+                        <td className="p-2 font-mono text-cyan-800">{r.action_id}</td>
                         <td className="p-2">{r.reason}</td>
                         <td className="p-2">{r.score == null ? '—' : r.score.toFixed(2)}</td>
                       </tr>
@@ -586,7 +586,7 @@ export default function MlRegistryPage() {
       <section className="glass-card p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-300">
+            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">
               Rule Engine
             </div>
             <p className="text-[12px] text-slate-400 mt-1">
@@ -620,14 +620,14 @@ export default function MlRegistryPage() {
 
         {rulesResult ? (
           <div className="space-y-2 text-[12px]">
-            <div className="text-slate-300">
+            <div className="text-slate-700">
               <span className="text-slate-500">Code:</span> {rulesResult.code}{' '}
               <span className="text-slate-500">·</span> {rulesResult.reason}
             </div>
             <div className="overflow-x-auto">
               <table className="bms-table">
                 <thead className="text-slate-500 text-left">
-                  <tr className="border-b border-white/10">
+                  <tr className="border-b border-slate-200">
                     <th className="p-2">Check</th>
                     <th className="p-2">Result</th>
                     <th className="p-2">Reason</th>
@@ -635,14 +635,14 @@ export default function MlRegistryPage() {
                 </thead>
                 <tbody>
                   {(rulesResult.checks || []).map((c) => (
-                    <tr key={c.check_name} className="border-b border-white/5">
-                      <td className="p-2 font-mono text-cyan-300">{c.check_name}</td>
+                    <tr key={c.check_name} className="border-b border-slate-200">
+                      <td className="p-2 font-mono text-cyan-800">{c.check_name}</td>
                       <td className="p-2">
                         <StatusBadge tone={c.result === 'PASS' ? 'live' : 'danger'} pulse={false}>
                           {c.result}
                         </StatusBadge>
                       </td>
-                      <td className="p-2 text-slate-300">{c.reason}</td>
+                      <td className="p-2 text-slate-700">{c.reason}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -683,7 +683,7 @@ export default function MlRegistryPage() {
       {rows.some((r) => r.missing_dataset) ? (
         <section className="glass-card p-4 space-y-2">
           <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-amber-300">MISSING DATASETS</div>
-          <ul className="text-[12px] space-y-1 text-slate-300">
+          <ul className="text-[12px] space-y-1 text-slate-700">
             {rows
               .filter((r) => r.missing_dataset)
               .map((r) => (
@@ -705,7 +705,7 @@ export default function MlRegistryPage() {
       <div className="overflow-x-auto glass-card">
         <table className="bms-table">
           <thead className="text-slate-500 text-left">
-            <tr className="border-b border-white/10">
+            <tr className="border-b border-slate-200">
               <th className="p-2">Opportunity</th>
               <th className="p-2">Agent</th>
               <th className="p-2">Dataset</th>
@@ -728,13 +728,13 @@ export default function MlRegistryPage() {
               <tr
                 key={r.opportunity_id}
                 onClick={() => setSelected(r.opportunity_id)}
-                className={`border-b border-white/[0.04] cursor-pointer ${
+                className={`border-b border-slate-200 cursor-pointer ${
                   selected === r.opportunity_id ? 'bg-cyan-500/[0.08]' : 'hover:bg-white/[0.03]'
                 }`}
               >
                 <td className="p-2 text-cyan-400">{r.opportunity_id}</td>
-                <td className="p-2 text-slate-300">{r.agent_id || '—'}</td>
-                <td className="p-2 text-slate-300">{r.dataset_id || '—'}</td>
+                <td className="p-2 text-slate-700">{r.agent_id || '—'}</td>
+                <td className="p-2 text-slate-700">{r.dataset_id || '—'}</td>
                 <td className="p-2 text-slate-400">
                   {r.dataset_quality?.missing_pct == null ? '—' : `miss ${r.dataset_quality.missing_pct}%`}
                 </td>
@@ -742,8 +742,8 @@ export default function MlRegistryPage() {
                   {r.feature_map && Object.keys(r.feature_map).length ? Object.keys(r.feature_map).join(', ') : '—'}
                 </td>
                 <td className="p-2 text-slate-400 max-w-[10rem] truncate">{r.target || '—'}</td>
-                <td className="p-2 text-slate-300">{r.model_id || '—'}</td>
-                <td className="p-2 text-slate-300">{r.model_version || '—'}</td>
+                <td className="p-2 text-slate-700">{r.model_id || '—'}</td>
+                <td className="p-2 text-slate-700">{r.model_version || '—'}</td>
                 <td className="p-2">
                   <StatusBadge tone={r.status === 'MODEL_READY' ? 'live' : 'muted'} pulse={false}>
                     {r.status}
@@ -753,7 +753,7 @@ export default function MlRegistryPage() {
                 <td className="p-2 text-slate-400">{fmtMetrics(r.metrics?.validation)}</td>
                 <td className="p-2 text-slate-400">{r.last_trained || '—'}</td>
                 <td className="p-2 text-slate-400">{r.prediction_availability || '—'}</td>
-                <td className="p-2 text-violet-300">
+                <td className="p-2 text-violet-700">
                   {r.provenance === 'LIVE' || r.provenance === 'LIVE_BMS' ? 'TRAINING DATA' : r.provenance}
                 </td>
                 <td className="p-2 text-amber-300 max-w-[14rem] truncate" title={r.missing_dataset || ''}>
@@ -777,21 +777,21 @@ export default function MlRegistryPage() {
 
       {detail ? (
         <section className="glass-card p-4 space-y-3">
-          <div className="text-[10px] font-mono tracking-[0.18em] text-violet-300">OPPORTUNITY DETAIL · {detail.opportunity_id}</div>
+          <div className="text-[10px] font-mono tracking-[0.18em] text-violet-700">OPPORTUNITY DETAIL · {detail.opportunity_id}</div>
           <dl className="grid grid-cols-1 md:grid-cols-2 gap-3 text-[12px]">
             <div>
               <dt className="text-slate-500">Dataset provenance</dt>
-              <dd className="text-slate-200">
+              <dd className="text-slate-800">
                 TRAINING_DATASET · {detail.dataset_id || '—'} · {detail.dataset_status || '—'}
               </dd>
             </div>
             <div>
               <dt className="text-slate-500">Target</dt>
-              <dd className="text-slate-200">{detail.target || 'MODEL NOT TRAINABLE'}</dd>
+              <dd className="text-slate-800">{detail.target || 'MODEL NOT TRAINABLE'}</dd>
             </div>
             <div className="md:col-span-2">
               <dt className="text-slate-500">Feature map</dt>
-              <dd className="text-slate-300 font-mono text-[11px]">
+              <dd className="text-slate-700 font-mono text-[11px]">
                 {detail.feature_map && Object.keys(detail.feature_map).length
                   ? JSON.stringify(detail.feature_map)
                   : '—'}
@@ -799,21 +799,21 @@ export default function MlRegistryPage() {
             </div>
             <div>
               <dt className="text-slate-500">Training run</dt>
-              <dd className="text-slate-200">
+              <dd className="text-slate-800">
                 {detail.training_run?.status || '—'} {detail.training_run?.algorithm ? `· ${detail.training_run.algorithm}` : ''}
               </dd>
             </div>
             <div>
               <dt className="text-slate-500">Validation</dt>
-              <dd className="text-slate-200">{detail.validation_status} · {fmtMetrics(detail.metrics?.validation)}</dd>
+              <dd className="text-slate-800">{detail.validation_status} · {fmtMetrics(detail.metrics?.validation)}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Prediction status</dt>
-              <dd className="text-slate-200">{detail.prediction_availability}</dd>
+              <dd className="text-slate-800">{detail.prediction_availability}</dd>
             </div>
             <div>
               <dt className="text-slate-500">Last prediction</dt>
-              <dd className="text-slate-200">
+              <dd className="text-slate-800">
                 {detail.last_prediction
                   ? `${
                       detail.last_prediction.provenance === 'LIVE' || detail.last_prediction.provenance === 'LIVE_BMS'
@@ -825,11 +825,11 @@ export default function MlRegistryPage() {
             </div>
             <div>
               <dt className="text-slate-500">ML provenance</dt>
-              <dd className="text-slate-200">TRAINING DATA · never LIVE BMS</dd>
+              <dd className="text-slate-800">TRAINING DATA · never LIVE BMS</dd>
             </div>
             <div className="md:col-span-2">
               <dt className="text-slate-500">Model metrics</dt>
-              <dd className="text-slate-300 font-mono text-[11px]">
+              <dd className="text-slate-700 font-mono text-[11px]">
                 val {fmtMetrics(detail.metrics?.validation)} · test {fmtMetrics(detail.metrics?.test)}
               </dd>
             </div>
@@ -839,7 +839,7 @@ export default function MlRegistryPage() {
             </div>
             <div className="md:col-span-2">
               <dt className="text-slate-500">Missing dataset</dt>
-              <dd className="text-amber-200">{detail.missing_dataset || '—'}</dd>
+              <dd className="text-amber-800">{detail.missing_dataset || '—'}</dd>
             </div>
           </dl>
           <p className="text-[11px] text-slate-500">

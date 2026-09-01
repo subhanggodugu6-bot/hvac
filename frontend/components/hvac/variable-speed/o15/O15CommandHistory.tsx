@@ -26,7 +26,7 @@ function verifyLabel(c: O15Command): string {
 export function O15CommandHistory({ commands }: { commands: O15Command[] }) {
   return (
     <section className="kpi-tile col-span-12" aria-labelledby="o15-cmd-hist">
-      <h2 id="o15-cmd-hist" className="text-sm font-semibold text-white mb-2">
+      <h2 id="o15-cmd-hist" className="text-sm font-semibold text-slate-900 mb-2">
         Command History
       </h2>
       {!commands?.length ? (

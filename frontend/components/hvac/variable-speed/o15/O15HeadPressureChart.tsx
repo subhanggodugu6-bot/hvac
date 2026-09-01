@@ -41,7 +41,7 @@ function PressureTooltip({
   if (!active || !payload?.length) return null;
   const p = payload[0]?.payload;
   return (
-    <div className="bg-[#0c1220] border border-white/[0.08] px-2.5 py-2 text-[11px] font-mono">
+    <div className="bg-white border border-slate-200 px-2.5 py-2 text-[11px] font-mono">
       <div className="text-slate-400 mb-1">{label}</div>
       <div>Current pressure: {fmtDash(p?.head_pressure)}</div>
       <div>Target: {fmtDash(p?.head_pressure_setpoint)}</div>
@@ -66,7 +66,7 @@ export function O15HeadPressureChart({
   return (
     <section className="kpi-tile space-y-3" aria-labelledby="o15-hp-trend">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 id="o15-hp-trend" className="text-sm font-semibold text-white">
+        <h2 id="o15-hp-trend" className="text-sm font-semibold text-slate-900">
           Head Pressure Trend
         </h2>
         <div className="flex gap-1" role="tablist" aria-label="Trend window">
@@ -80,7 +80,7 @@ export function O15HeadPressureChart({
               key={String(h)}
               type="button"
               className={`px-2 py-1 text-[11px] font-mono border focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                hours === h ? 'border-cyan-400 text-cyan-300' : 'border-white/10 text-slate-400'
+                hours === h ? 'border-cyan-400 text-cyan-800' : 'border-slate-200 text-slate-400'
               }`}
               onClick={() => onHours(Number(h))}
             >

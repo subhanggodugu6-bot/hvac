@@ -120,7 +120,7 @@ export default function MasterAHUSATPage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <div className="glass-card p-4 flex flex-col justify-between">
           <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Current SAT</span>
-          <div className="my-1 text-base font-bold font-mono text-white">{kpis.current_sat || 'NO DATA'}</div>
+          <div className="my-1 text-base font-bold font-mono text-slate-900">{kpis.current_sat || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">AHU-01 Sensor</span>
         </div>
 
@@ -177,11 +177,11 @@ export default function MasterAHUSATPage() {
       {/* 2. GUIDELINE 36 DEMAND RANKING & ZONE MATRIX */}
       {/* ========================================================================= */}
       <div className="glass-card overflow-hidden">
-        <div className="p-5 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-cyan-400" />
             <div>
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Guideline 36 Demand Ranking & Rogue Zone Isolation
               </h3>
               <p className="text-xs text-slate-400 font-sans mt-0.5">
@@ -222,27 +222,27 @@ export default function MasterAHUSATPage() {
                     key={z.zone_id}
                     className={
                       isBasis
-                        ? 'bg-cyan-950/30 font-semibold'
+                        ? 'bg-cyan-50 font-semibold'
                         : isExcluded
                         ? 'bg-rose-950/20 opacity-80'
                         : ''
                     }
                   >
-                    <td className="text-white font-bold">{z.zone_id}</td>
-                    <td className="font-sans text-slate-200">{z.name}</td>
-                    <td className="text-slate-100">{z.temperature}°C</td>
+                    <td className="text-slate-900 font-bold">{z.zone_id}</td>
+                    <td className="font-sans text-slate-800">{z.name}</td>
+                    <td className="text-slate-900">{z.temperature}°C</td>
                     <td className="text-slate-400">{z.setpoint}°C</td>
-                    <td className={z.temp_error > 0.5 ? 'text-amber-400 font-bold' : 'text-slate-300'}>
+                    <td className={z.temp_error > 0.5 ? 'text-amber-400 font-bold' : 'text-slate-700'}>
                       {z.temp_error >= 0 ? `+${z.temp_error}` : z.temp_error}°C
                     </td>
-                    <td className="text-slate-200">{z.airflow_demand_pct}%</td>
-                    <td className={z.cooling_demand_pct > 50.0 ? 'text-amber-400 font-bold' : 'text-slate-200'}>
+                    <td className="text-slate-800">{z.airflow_demand_pct}%</td>
+                    <td className={z.cooling_demand_pct > 50.0 ? 'text-amber-400 font-bold' : 'text-slate-800'}>
                       {z.cooling_demand_pct}%
                     </td>
-                    <td className="text-slate-300">{z.cooling_calls}</td>
-                    <td className="text-slate-300">{z.damper_position}%</td>
-                    <td className="text-slate-300">{z.cooling_valve}%</td>
-                    <td className="text-slate-300">{z.reheat_valve}%</td>
+                    <td className="text-slate-700">{z.cooling_calls}</td>
+                    <td className="text-slate-700">{z.damper_position}%</td>
+                    <td className="text-slate-700">{z.cooling_valve}%</td>
+                    <td className="text-slate-700">{z.reheat_valve}%</td>
                     <td>
                       <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                         {z.sensor_quality}
@@ -252,12 +252,12 @@ export default function MasterAHUSATPage() {
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
                           isBasis
-                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
+                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800'
                             : isExcluded
                             ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
                             : z.classification === 'HIGH DEMAND'
                             ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
-                            : 'bg-slate-800 border-white/10 text-slate-400'
+                            : 'bg-slate-200 border-slate-200 text-slate-400'
                         }`}
                       >
                         {z.classification}
@@ -288,10 +288,10 @@ export default function MasterAHUSATPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* 3. Master Demand Calculation Engine */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Master Demand Calculation Engine
               </h3>
             </div>
@@ -314,8 +314,8 @@ export default function MasterAHUSATPage() {
                   onClick={() => methodMutation.mutate(m.id)}
                   className={`py-2 px-2 text-xs font-mono rounded-lg border transition-all text-center ${
                     demand?.method === m.id
-                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold'
-                      : 'bg-slate-900/60 border-white/5 text-slate-400 hover:text-slate-200'
+                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800 font-bold'
+                      : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-800'
                   }`}
                 >
                   {m.label}
@@ -324,10 +324,10 @@ export default function MasterAHUSATPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5 p-3 rounded-lg bg-slate-900/60 border border-white/5 text-xs font-mono text-center">
+          <div className="grid grid-cols-3 gap-2.5 p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs font-mono text-center">
             <div>
               <span className="text-[10px] text-slate-500 block">TOTAL ZONES</span>
-              <span className="text-slate-200 font-bold">{demand?.total_zones_count != null ? `${demand.total_zones_count} Zones` : 'NO DATA'}</span>
+              <span className="text-slate-800 font-bold">{demand?.total_zones_count != null ? `${demand.total_zones_count} Zones` : 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">ELIGIBLE ZONES</span>
@@ -339,14 +339,14 @@ export default function MasterAHUSATPage() {
             </div>
           </div>
 
-          <div className="p-3 rounded-lg bg-slate-950/70 border border-white/5 space-y-1.5 text-xs font-mono">
+          <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-1.5 text-xs font-mono">
             <div className="flex items-center justify-between">
               <span className="text-slate-400 font-sans">Calculated Master Demand:</span>
               <span className="text-cyan-400 font-bold text-sm">{demand?.master_demand_pct != null ? `${demand.master_demand_pct}%` : 'NO DATA'}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-slate-400 font-sans">Reset Threshold:</span>
-              <span className="text-slate-300">{demand?.reset_threshold || 'NO DATA'}</span>
+              <span className="text-slate-700">{demand?.reset_threshold || 'NO DATA'}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-slate-400 font-sans">Supervisory Action:</span>
@@ -357,10 +357,10 @@ export default function MasterAHUSATPage() {
 
         {/* 4. Rogue / Process Zone Isolation */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-rose-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Rogue / Process Zone Isolation
               </h3>
             </div>
@@ -372,31 +372,31 @@ export default function MasterAHUSATPage() {
           {(exclusionsData || []).length === 0 ? (
             <div className="p-4 text-xs font-mono text-slate-500">NO DATA</div>
           ) : (exclusionsData || []).map((ex: any, i: number) => (
-            <div key={i} className="p-4 rounded-xl bg-slate-900/60 border border-rose-500/20 space-y-3">
+            <div key={i} className="p-4 rounded-xl bg-slate-50 border border-rose-500/20 space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-xs font-bold text-white font-mono">{ex.zone_id}</span>
-                  <span className="text-xs text-slate-300 font-sans ml-2 font-medium">{ex.name}</span>
+                  <span className="text-xs font-bold text-slate-900 font-mono">{ex.zone_id}</span>
+                  <span className="text-xs text-slate-700 font-sans ml-2 font-medium">{ex.name}</span>
                 </div>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/10 border border-rose-500/30 text-rose-400 font-mono">
                   {ex.status}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono py-2 border-y border-white/5">
+              <div className="grid grid-cols-2 gap-2 text-xs font-mono py-2 border-y border-slate-200">
                 <div>
                   <span className="text-[10px] text-slate-500 block font-sans">Cooling Demand</span>
                   <strong className="text-rose-400">{ex.cooling_demand}</strong>
                 </div>
                 <div>
                   <span className="text-[10px] text-slate-500 block font-sans">Zone Temp</span>
-                  <strong className="text-slate-200">{ex.temp}</strong>
+                  <strong className="text-slate-800">{ex.temp}</strong>
                 </div>
               </div>
 
               <div className="space-y-1 text-xs">
                 <div className="text-slate-400 font-sans">
-                  <strong className="text-slate-300">Exclusion Rationale:</strong> {ex.reason}
+                  <strong className="text-slate-700">Exclusion Rationale:</strong> {ex.reason}
                 </div>
                 <div className="text-slate-400 font-sans">
                   <strong className="text-emerald-400">Supervisory Impact:</strong> {ex.impact}
@@ -411,10 +411,10 @@ export default function MasterAHUSATPage() {
       {/* 5. SAT RESET CANDIDATE EVALUATION TABLE */}
       {/* ========================================================================= */}
       <div className="glass-card overflow-hidden">
-        <div className="p-5 border-b border-white/5 flex items-center justify-between">
+        <div className="p-5 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sliders className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-sm font-semibold text-white tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               SAT Reset Candidate Evaluation (12.0°C – 16.0°C)
             </h3>
           </div>
@@ -440,16 +440,16 @@ export default function MasterAHUSATPage() {
             </thead>
             <tbody className="font-mono text-xs">
               {(candidatesData || []).map((cand: any, i: number) => (
-                <tr key={i} className={cand.decision === 'SELECTED' ? 'bg-cyan-950/30' : ''}>
-                  <td className="font-bold text-cyan-300 text-sm">{cand.candidate_sat != null ? `${Number(cand.candidate_sat).toFixed(1)}°C` : 'NO DATA'}</td>
-                  <td className="text-slate-300">{cand.master_demand}</td>
-                  <td className="text-slate-200 font-sans">{cand.predicted_comfort}</td>
-                  <td className="text-slate-200">{cand.fan_power_kw} kW</td>
-                  <td className="text-slate-200">{cand.chiller_power_kw} kW</td>
-                  <td className="text-slate-200">{cand.reheat_power_kw} kW</td>
-                  <td className="text-slate-100 font-bold">{cand.total_hvac_power_kw} kW</td>
+                <tr key={i} className={cand.decision === 'SELECTED' ? 'bg-cyan-50' : ''}>
+                  <td className="font-bold text-cyan-800 text-sm">{cand.candidate_sat != null ? `${Number(cand.candidate_sat).toFixed(1)}°C` : 'NO DATA'}</td>
+                  <td className="text-slate-700">{cand.master_demand}</td>
+                  <td className="text-slate-800 font-sans">{cand.predicted_comfort}</td>
+                  <td className="text-slate-800">{cand.fan_power_kw} kW</td>
+                  <td className="text-slate-800">{cand.chiller_power_kw} kW</td>
+                  <td className="text-slate-800">{cand.reheat_power_kw} kW</td>
+                  <td className="text-slate-900 font-bold">{cand.total_hvac_power_kw} kW</td>
                   <td className="text-emerald-400 font-semibold">{cand.power_impact_kw}</td>
-                  <td className={cand.comfort_risk > 0.30 ? 'text-rose-400 font-bold' : 'text-slate-300'}>
+                  <td className={cand.comfort_risk > 0.30 ? 'text-rose-400 font-bold' : 'text-slate-700'}>
                     {cand.comfort_risk != null ? cand.comfort_risk.toFixed(2) : 'NO DATA'}
                   </td>
                   <td>
@@ -467,10 +467,10 @@ export default function MasterAHUSATPage() {
                     <span
                       className={`px-2.5 py-0.5 rounded text-[10px] font-bold border ${
                         cand.decision === 'SELECTED'
-                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800'
                           : cand.decision === 'REJECTED'
                           ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                          : 'bg-slate-800 border-white/10 text-slate-400'
+                          : 'bg-slate-200 border-slate-200 text-slate-400'
                       }`}
                     >
                       {cand.decision}
@@ -489,10 +489,10 @@ export default function MasterAHUSATPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* 6. SAT Optimization Decision */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Cpu className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O3 Supervisory Decision
               </h3>
             </div>
@@ -501,10 +501,10 @@ export default function MasterAHUSATPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 p-3 rounded-xl bg-slate-900/60 border border-white/5 font-mono text-center">
+          <div className="grid grid-cols-3 gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 font-mono text-center">
             <div>
               <span className="text-[10px] text-slate-500 block">CURRENT SAT</span>
-              <span className="text-sm font-bold text-slate-300">{decisionData?.current_sat != null ? `${decisionData.current_sat}°C` : 'NO DATA'}</span>
+              <span className="text-sm font-bold text-slate-700">{decisionData?.current_sat != null ? `${decisionData.current_sat}°C` : 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">OPTIMIZED SAT</span>
@@ -516,13 +516,13 @@ export default function MasterAHUSATPage() {
             </div>
           </div>
 
-          <div className="p-3 rounded-lg bg-slate-950/70 border border-white/5 space-y-2 text-xs">
+          <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-2 text-xs">
             <div className="text-slate-400 font-sans">
-              <strong className="text-slate-300 block mb-1">Engineering Rationale:</strong>
+              <strong className="text-slate-700 block mb-1">Engineering Rationale:</strong>
               &ldquo;{decisionData?.reason || 'NO DATA'}&rdquo;
             </div>
-            <div className="flex items-center justify-between pt-2 border-t border-white/5 font-mono text-[11px]">
-              <span className="text-slate-400">Model: <strong className="text-slate-200">{decisionData?.model_version || 'NO DATA'}</strong></span>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-[11px]">
+              <span className="text-slate-400">Model: <strong className="text-slate-800">{decisionData?.model_version || 'NO DATA'}</strong></span>
               <span className="text-slate-400">Confidence: <strong className="text-purple-400">{decisionData?.confidence != null ? `${decisionData.confidence}%` : 'NO DATA'}</strong></span>
               <span className="text-slate-400">Safety: <strong className="text-emerald-400">{decisionData?.safety || 'NO DATA'}</strong></span>
             </div>
@@ -542,10 +542,10 @@ export default function MasterAHUSATPage() {
 
         {/* 10. HVAC Power Trade-Off Model */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 HVAC Power Trade-Off Model
               </h3>
             </div>
@@ -553,28 +553,28 @@ export default function MasterAHUSATPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3 font-mono text-xs">
-            <div className="p-3 rounded-lg bg-slate-900/60 border border-white/5 space-y-1.5">
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
               <span className="text-[10px] text-slate-500 block font-sans">CURRENT</span>
-              <div className="flex justify-between"><span>Fan Power:</span><strong className="text-slate-300">{powerData?.current?.fan_kw != null ? `${powerData.current.fan_kw} kW` : 'NO DATA'}</strong></div>
-              <div className="flex justify-between"><span>Chiller Power:</span><strong className="text-slate-300">{powerData?.current?.chiller_kw != null ? `${powerData.current.chiller_kw} kW` : 'NO DATA'}</strong></div>
-              <div className="flex justify-between"><span>Reheat Power:</span><strong className="text-slate-300">{powerData?.current?.reheat_kw != null ? `${powerData.current.reheat_kw} kW` : 'NO DATA'}</strong></div>
-              <div className="flex justify-between pt-1 border-t border-white/5 font-bold"><span>Total:</span><span className="text-white">{powerData?.current?.total_kw != null ? `${powerData.current.total_kw} kW` : 'NO DATA'}</span></div>
+              <div className="flex justify-between"><span>Fan Power:</span><strong className="text-slate-700">{powerData?.current?.fan_kw != null ? `${powerData.current.fan_kw} kW` : 'NO DATA'}</strong></div>
+              <div className="flex justify-between"><span>Chiller Power:</span><strong className="text-slate-700">{powerData?.current?.chiller_kw != null ? `${powerData.current.chiller_kw} kW` : 'NO DATA'}</strong></div>
+              <div className="flex justify-between"><span>Reheat Power:</span><strong className="text-slate-700">{powerData?.current?.reheat_kw != null ? `${powerData.current.reheat_kw} kW` : 'NO DATA'}</strong></div>
+              <div className="flex justify-between pt-1 border-t border-slate-200 font-bold"><span>Total:</span><span className="text-slate-900">{powerData?.current?.total_kw != null ? `${powerData.current.total_kw} kW` : 'NO DATA'}</span></div>
             </div>
 
-            <div className="p-3 rounded-lg bg-slate-900/60 border border-white/5 space-y-1.5">
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
               <span className="text-[10px] text-cyan-400 block font-sans">OPTIMIZED</span>
-              <div className="flex justify-between"><span>Fan Power:</span><strong className="text-slate-200">{powerData?.optimized?.fan_kw != null ? `${powerData.optimized.fan_kw} kW` : 'NO DATA'}</strong></div>
+              <div className="flex justify-between"><span>Fan Power:</span><strong className="text-slate-800">{powerData?.optimized?.fan_kw != null ? `${powerData.optimized.fan_kw} kW` : 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Chiller Power:</span><strong className="text-emerald-400">{powerData?.optimized?.chiller_kw != null ? `${powerData.optimized.chiller_kw} kW` : 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Reheat Power:</span><strong className="text-emerald-400">{powerData?.optimized?.reheat_kw != null ? `${powerData.optimized.reheat_kw} kW` : 'NO DATA'}</strong></div>
-              <div className="flex justify-between pt-1 border-t border-white/5 font-bold"><span>Total:</span><span className="text-cyan-300">{powerData?.optimized?.total_kw != null ? `${powerData.optimized.total_kw} kW` : 'NO DATA'}</span></div>
+              <div className="flex justify-between pt-1 border-t border-slate-200 font-bold"><span>Total:</span><span className="text-cyan-800">{powerData?.optimized?.total_kw != null ? `${powerData.optimized.total_kw} kW` : 'NO DATA'}</span></div>
             </div>
           </div>
 
-          <div className="p-3 rounded-lg bg-slate-950/70 border border-white/5 space-y-1.5 text-xs font-mono">
+          <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-1.5 text-xs font-mono">
             <div className="flex justify-between text-[11px]"><span className="text-slate-400">Fan Delta:</span><span className="text-amber-400">{powerData?.delta?.fan || 'NO DATA'}</span></div>
             <div className="flex justify-between text-[11px]"><span className="text-slate-400">Chiller Delta:</span><span className="text-emerald-400">{powerData?.delta?.chiller || 'NO DATA'}</span></div>
             <div className="flex justify-between text-[11px]"><span className="text-slate-400">Reheat Delta:</span><span className="text-emerald-400">{powerData?.delta?.reheat || 'NO DATA'}</span></div>
-            <div className="flex justify-between text-xs font-bold pt-1 border-t border-white/5"><span className="text-slate-200">Net Power Impact:</span><span className="text-emerald-400">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Shed` : 'NO DATA'}</span></div>
+            <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200"><span className="text-slate-800">Net Power Impact:</span><span className="text-emerald-400">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Shed` : 'NO DATA'}</span></div>
           </div>
         </div>
       </div>
@@ -585,10 +585,10 @@ export default function MasterAHUSATPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* 8. Master SAT & Demand Response Trend */}
         <div className="glass-card p-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Master SAT & Demand Response
               </h3>
             </div>
@@ -599,8 +599,8 @@ export default function MasterAHUSATPage() {
                   onClick={() => setTimeRangeHours(hrs)}
                   className={`text-xs font-mono px-2 py-0.5 rounded border transition-all ${
                     timeRangeHours === hrs
-                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-semibold'
-                      : 'bg-slate-900/60 border-white/5 text-slate-400 hover:text-slate-200'
+                      ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800 font-semibold'
+                      : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-800'
                   }`}
                 >
                   {hrs}h
@@ -628,10 +628,10 @@ export default function MasterAHUSATPage() {
 
         {/* 9. Downstream Zone Response */}
         <div className="glass-card p-5">
-          <div className="flex items-center justify-between pb-4 border-b border-white/5">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200">
             <div className="flex items-center gap-2">
               <Gauge className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Downstream Zone Temperature Response
               </h3>
             </div>
@@ -661,10 +661,10 @@ export default function MasterAHUSATPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* 11. Comfort & Engineering Safety Validation */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Comfort & Engineering Safety Validation
               </h3>
             </div>
@@ -673,7 +673,7 @@ export default function MasterAHUSATPage() {
             </span>
           </div>
 
-          <div className="overflow-y-auto max-h-56 border border-white/5 rounded-lg">
+          <div className="overflow-y-auto max-h-56 border border-slate-200 rounded-lg">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -686,8 +686,8 @@ export default function MasterAHUSATPage() {
               <tbody className="font-mono text-[11px]">
                 {(safetyData?.checks || []).map((chk: any, i: number) => (
                   <tr key={i}>
-                    <td className="font-sans text-slate-200">{chk.name}</td>
-                    <td className="text-slate-300">{chk.value}</td>
+                    <td className="font-sans text-slate-800">{chk.name}</td>
+                    <td className="text-slate-700">{chk.value}</td>
                     <td className="text-slate-500">{chk.limit}</td>
                     <td>
                       <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
@@ -703,10 +703,10 @@ export default function MasterAHUSATPage() {
 
         {/* 12, 13 & 14. BMS Action, Verification & Rollback */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Building className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 BMS Control Action & Verification
               </h3>
             </div>
@@ -715,10 +715,10 @@ export default function MasterAHUSATPage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 font-mono text-xs text-center p-3 rounded-lg bg-slate-900/60 border border-white/5">
+          <div className="grid grid-cols-3 gap-2 font-mono text-xs text-center p-3 rounded-lg bg-slate-50 border border-slate-200">
             <div>
               <span className="text-[10px] text-slate-500 block">TARGET POINT</span>
-              <span className="text-white font-bold truncate block">{bmsActionData?.target_point || 'NO DATA'}</span>
+              <span className="text-slate-900 font-bold truncate block">{bmsActionData?.target_point || 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">PREVIOUS SAT</span>
@@ -731,9 +731,9 @@ export default function MasterAHUSATPage() {
           </div>
 
           {/* Verification Box */}
-          <div className="p-3.5 rounded-lg bg-slate-950/70 border border-white/5 space-y-2 text-xs">
+          <div className="p-3.5 rounded-lg bg-slate-100 border border-slate-200 space-y-2 text-xs">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-slate-200">Continuous M&V Verification:</span>
+              <span className="font-semibold text-slate-800">Continuous M&V Verification:</span>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                 {bmsActionData?.verification?.status || 'NO DATA'}
               </span>
@@ -762,10 +762,10 @@ export default function MasterAHUSATPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Optimization History */}
         <div className="glass-card overflow-hidden">
-          <div className="p-5 border-b border-white/5 flex items-center justify-between">
+          <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-slate-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O3 Optimization History
               </h3>
             </div>
@@ -791,11 +791,11 @@ export default function MasterAHUSATPage() {
                   <tr key={i}>
                     <td className="text-slate-400">{h.time}</td>
                     <td className="text-slate-400">{h.prev_sat}</td>
-                    <td className="text-cyan-300 font-bold">{h.new_sat}</td>
+                    <td className="text-cyan-800 font-bold">{h.new_sat}</td>
                     <td className="text-amber-400">{h.master_demand}</td>
-                    <td className="text-slate-300 font-sans">{h.calc_method}</td>
+                    <td className="text-slate-700 font-sans">{h.calc_method}</td>
                     <td className="text-emerald-400 font-semibold">{h.predicted_power}</td>
-                    <td className="text-sky-300">{h.bms}</td>
+                    <td className="text-sky-800">{h.bms}</td>
                     <td>
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                         {h.verification}
@@ -810,10 +810,10 @@ export default function MasterAHUSATPage() {
 
         {/* Live Agent Activity Stream */}
         <div className="glass-card overflow-hidden">
-          <div className="p-5 border-b border-white/5 flex items-center justify-between">
+          <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Live Agent Activity Stream
               </h3>
             </div>
@@ -836,8 +836,8 @@ export default function MasterAHUSATPage() {
                 {(activitiesData || []).slice(0, 8).map((act: any, i: number) => (
                   <tr key={i}>
                     <td className="text-slate-400">{act.time}</td>
-                    <td className="text-slate-100 font-sans font-medium">{act.event}</td>
-                    <td className="text-slate-300 font-sans text-xs">{act.detail}</td>
+                    <td className="text-slate-900 font-sans font-medium">{act.event}</td>
+                    <td className="text-slate-700 font-sans text-xs">{act.detail}</td>
                   </tr>
                 ))}
               </tbody>

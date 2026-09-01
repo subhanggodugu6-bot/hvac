@@ -42,11 +42,11 @@ export function MaintenanceEngineeringTable({ data, onSelect }: { data: OmOpport
       <div className="flex flex-col md:flex-row gap-2 md:items-end">
         <label className="text-[11px] text-slate-500 flex-1">
           Search
-          <input className="mt-1 w-full bg-[#090B12] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search equipment" />
+          <input className="mt-1 w-full bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search equipment" />
         </label>
         <label className="text-[11px] text-slate-500">
           Filter
-          <select className="mt-1 block bg-[#090B12] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" value={filter} onChange={(e) => setFilter(e.target.value)}>
+          <select className="mt-1 block bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400" value={filter} onChange={(e) => setFilter(e.target.value)}>
             {['ALL', ...Array.from(new Set(rows.map((r) => r.status)))].map((s) => (
               <option key={s} value={s}>
                 {s}

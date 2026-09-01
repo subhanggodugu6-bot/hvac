@@ -25,9 +25,9 @@ import { actionErrorText } from '@/lib/hvac/actionError';
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="flex justify-between gap-3 py-1.5 text-xs font-mono border-b border-white/[0.04]">
+    <div className="flex justify-between gap-3 py-1.5 text-xs font-mono border-b border-slate-200">
       <span className="text-slate-500">{label}</span>
-      <span className="text-slate-100 text-right">{value}</span>
+      <span className="text-slate-900 text-right">{value}</span>
     </div>
   );
 }
@@ -220,8 +220,8 @@ export function VentilationDetailView({ opportunityId }: { opportunityId: 'O10' 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="kpi-tile">
             <div className="text-[11px] uppercase tracking-wider text-slate-500">Recommendation</div>
-            <div className="text-lg font-mono text-cyan-300 mt-2">{formatDash(data?.recommendation?.action)}</div>
-            <p className="text-sm text-slate-300 mt-2">{formatDash(data?.recommendation?.rationale)}</p>
+            <div className="text-lg font-mono text-cyan-800 mt-2">{formatDash(data?.recommendation?.action)}</div>
+            <p className="text-sm text-slate-700 mt-2">{formatDash(data?.recommendation?.rationale)}</p>
             <div className="mt-3 space-y-0">
               <Row label="Current" value={fmtSet(data?.recommendation?.current)} />
               <Row label="Recommended" value={fmtSet(data?.recommendation?.recommended)} />
@@ -236,8 +236,8 @@ export function VentilationDetailView({ opportunityId }: { opportunityId: 'O10' 
             <div className="text-[11px] uppercase tracking-wider text-slate-500 flex items-center gap-2">
               <ShieldCheck className="w-3.5 h-3.5" /> Supervisory Decision
             </div>
-            <div className="text-lg font-mono text-emerald-300 mt-2">{formatDash(data?.supervisory?.decision)}</div>
-            <p className="text-sm text-slate-300 mt-2">{formatDash(data?.supervisory?.reason)}</p>
+            <div className="text-lg font-mono text-emerald-800 mt-2">{formatDash(data?.supervisory?.decision)}</div>
+            <p className="text-sm text-slate-700 mt-2">{formatDash(data?.supervisory?.reason)}</p>
             <div className="mt-3 space-y-0">
               <Row label={damperMode ? 'Current damper' : 'Current airflow'} value={fmtSet(data?.supervisory?.current)} />
               <Row label={damperMode ? 'Recommended damper' : 'Recommended airflow'} value={fmtSet(data?.supervisory?.recommended)} />
@@ -289,7 +289,7 @@ export function VentilationDetailView({ opportunityId }: { opportunityId: 'O10' 
               <StatusBadge tone={toneForStatus(data?.dispatch?.status)}>{formatDash(data?.dispatch?.status)}</StatusBadge>
             </div>
             {(actionError || data?.dispatch?.blockReason) && (
-              <div className="mt-3 text-xs text-rose-300 border border-rose-500/30 bg-rose-950/40 rounded-lg px-3 py-2">
+              <div className="mt-3 text-xs text-rose-800 border border-rose-500/30 bg-rose-950/40 rounded-lg px-3 py-2">
                 {actionError || `${data?.dispatch?.blockCode || 'DISPATCH_BLOCKED'}: ${data?.dispatch?.blockReason}`}
               </div>
             )}

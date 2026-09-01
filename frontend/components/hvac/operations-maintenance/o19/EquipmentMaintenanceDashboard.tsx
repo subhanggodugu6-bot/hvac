@@ -37,7 +37,7 @@ export function EquipmentMaintenanceDashboard() {
 
         {opp.isError ? (
           <div className="col-span-12 kpi-tile space-y-3" role="alert">
-            <div className="text-sm font-semibold text-white">Unable to load O19 energy efficiency maintenance</div>
+            <div className="text-sm font-semibold text-slate-900">Unable to load O19 energy efficiency maintenance</div>
             <p className="text-xs text-slate-400">{o19ErrorMessage(opp.error instanceof ApiError ? opp.error : opp.error)}</p>
             <button type="button" className="btn-primary focus-visible:ring-2 focus-visible:ring-cyan-400" onClick={() => opp.refetch()}>
               Retry

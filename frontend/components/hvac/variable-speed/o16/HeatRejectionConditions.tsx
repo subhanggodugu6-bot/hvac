@@ -7,7 +7,7 @@ export function HeatRejectionConditions({ data }: { data: O16Dashboard }) {
   const cs = data.current_state || {};
   return (
     <section className="kpi-tile space-y-3 col-span-12 lg:col-span-6" aria-labelledby="o16-heat">
-      <h2 id="o16-heat" className="text-sm font-semibold text-white">
+      <h2 id="o16-heat" className="text-sm font-semibold text-slate-900">
         Heat Rejection Conditions
       </h2>
       <div className="grid grid-cols-2 gap-2 text-xs font-mono">
@@ -19,7 +19,7 @@ export function HeatRejectionConditions({ data }: { data: O16Dashboard }) {
         <div>Condenser water return {fmtUnit(cs.clwt_c, '°C')}</div>
         <div>Plant load {fmtUnit(cs.load_pct, '%')}</div>
       </div>
-      <div className="text-[11px] font-mono text-slate-400 leading-6 border border-white/10 px-3 py-2">
+      <div className="text-[11px] font-mono text-slate-400 leading-6 border border-slate-200 px-3 py-2">
         Outdoor conditions
         <div className="text-cyan-500/70">↓</div>
         Cooling tower

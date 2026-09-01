@@ -115,9 +115,9 @@ export function O10ControlParams({ data }: { data: VentilationOpportunity }) {
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Control parameters</h2>
       <p className="text-[11px] text-slate-500">Values come from backend configuration. Editing is not enabled in this UI.</p>
       {rows.map(([k, v]) => (
-        <div key={k} className="flex justify-between gap-2 text-[11px] font-mono border-b border-white/[0.04] py-1">
+        <div key={k} className="flex justify-between gap-2 text-[11px] font-mono border-b border-slate-200 py-1">
           <span className="text-slate-500">{k}</span>
-          <span className="text-slate-200">{v}</span>
+          <span className="text-slate-800">{v}</span>
         </div>
       ))}
     </section>
@@ -137,15 +137,15 @@ export function O10Energy({ data }: { data: VentilationOpportunity }) {
           ['Measured Impact', 'NO DATA AVAILABLE'],
           ['Verified Impact', 'NO DATA AVAILABLE'],
         ].map(([k, v]) => (
-          <article key={k} className="border border-white/[0.08] px-3 py-2">
+          <article key={k} className="border border-slate-200 px-3 py-2">
             <div className="text-[10px] uppercase text-slate-500">{k}</div>
-            <div className="text-sm font-mono text-slate-100 mt-1">{v}</div>
+            <div className="text-sm font-mono text-slate-900 mt-1">{v}</div>
           </article>
         ))}
       </div>
       <div className="border border-cyan-500/20 px-3 py-2">
         <div className="text-[10px] uppercase text-cyan-400">Guide reported potential</div>
-        <p className="text-sm text-slate-200 mt-1">{O10_GUIDE.compressorPotential}</p>
+        <p className="text-sm text-slate-800 mt-1">{O10_GUIDE.compressorPotential}</p>
         <p className="text-[11px] text-slate-500 mt-1">Not actual site performance. Measured site impact is shown only when the backend computes and verifies it.</p>
       </div>
     </section>
@@ -206,7 +206,7 @@ export function O10Historian() {
       <div className="flex justify-between gap-2">
         <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Historian</h2>
         <div className="flex gap-1">{['24H', '7D', '30D', '90D'].map((r) => (
-          <span key={r} className="px-2 py-0.5 text-[10px] font-mono border border-white/10 text-slate-500">{r}</span>
+          <span key={r} className="px-2 py-0.5 text-[10px] font-mono border border-slate-200 text-slate-500">{r}</span>
         ))}</div>
       </div>
       <EmptyState title="NO HISTORIAN DATA AVAILABLE" detail="Time-series outdoor/return temperature, enthalpy, OA damper, and compressor power are not on GET /api/hvac/ventilation/O10." />
@@ -299,7 +299,7 @@ export function O10GuideReference() {
     <section className="col-span-12 xl:col-span-6 kpi-tile space-y-2" aria-label="Guide reference">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Guide reference</h2>
       <p className="text-[11px] text-cyan-400 font-mono">{O10_GUIDE.source}</p>
-      <p className="text-sm text-slate-300">Outdoor air can be used directly for space cooling when conditions are favorable.</p>
+      <p className="text-sm text-slate-700">Outdoor air can be used directly for space cooling when conditions are favorable.</p>
       <ul className="text-[12px] font-mono text-slate-400 space-y-1">
         <li>Temperature {O10_GUIDE.outdoorTempC}</li>
         <li>Enthalpy {O10_GUIDE.outdoorEnthalpyKjkg}</li>

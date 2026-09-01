@@ -40,7 +40,7 @@ export function TrainingAwarenessHeader({
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-cyan-400/80 mb-1.5">O18</div>
-          <h1 className="text-[1.7rem] font-semibold text-white tracking-tight leading-tight">{def.title}</h1>
+          <h1 className="text-[1.7rem] font-semibold text-slate-900 tracking-tight leading-tight">{def.title}</h1>
           <p className="text-[13px] text-slate-400 mt-1.5 max-w-3xl leading-relaxed">{description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5" aria-label="O18 system status">
             <StatusBadge tone={toneForStatus(o18Bms(dash, data))}>{`BMS ${o18Bms(dash, data)}`}</StatusBadge>
@@ -73,27 +73,27 @@ export function TrainingAwarenessHeader({
       <dl className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 text-[11px]">
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Training Status</dt>
-          <dd className="font-mono text-slate-200 mt-1">{formatDash(data.current?.operatorReadiness || data.status)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{formatDash(data.current?.operatorReadiness || data.status)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Completion</dt>
-          <dd className="font-mono text-slate-200 mt-1">{formatPercent(o18Coverage(data))}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{formatPercent(o18Coverage(data))}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Affected Users</dt>
-          <dd className="font-mono text-slate-200 mt-1">{formatDash(o18Affected(data))}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{formatDash(o18Affected(data))}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Training items</dt>
-          <dd className="font-mono text-slate-200 mt-1">{formatDash(data.current?.trainingItems)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{formatDash(data.current?.trainingItems)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Last Evaluation</dt>
-          <dd className="font-mono text-slate-200 mt-1">{o18SecondsAgo(ts)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{o18SecondsAgo(ts)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Recommendation Status</dt>
-          <dd className="font-mono text-slate-200 mt-1">{formatDash(data.recommendation?.action)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{formatDash(data.recommendation?.action)}</dd>
         </div>
       </dl>
     </header>

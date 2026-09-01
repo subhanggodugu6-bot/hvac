@@ -31,7 +31,7 @@ export function ControlChangeHistory({
   return (
     <section className="col-span-12 kpi-tile space-y-3" aria-label="Change management">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Software control change workflow</h2>
-      <p className="text-[11px] text-amber-200">Automatic software deployment is prohibited. Change requests enter REVIEW_REQUIRED supervisory process only.</p>
+      <p className="text-[11px] text-amber-800">Automatic software deployment is prohibited. Change requests enter REVIEW_REQUIRED supervisory process only.</p>
       <p className="text-[11px] font-mono text-slate-400">{block}</p>
       <form
         className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2"
@@ -49,19 +49,19 @@ export function ControlChangeHistory({
       >
         <label className="text-[11px] text-slate-500">
           Point
-          <input className="mt-1 w-full bg-[#090B12] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" value={point} onChange={(e) => setPoint(e.target.value)} />
+          <input className="mt-1 w-full bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400" value={point} onChange={(e) => setPoint(e.target.value)} />
         </label>
         <label className="text-[11px] text-slate-500">
           Old value
-          <input className="mt-1 w-full bg-[#090B12] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" value={oldValue} onChange={(e) => setOldValue(e.target.value)} />
+          <input className="mt-1 w-full bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400" value={oldValue} onChange={(e) => setOldValue(e.target.value)} />
         </label>
         <label className="text-[11px] text-slate-500">
           Proposed value
-          <input className="mt-1 w-full bg-[#090B12] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" value={proposed} onChange={(e) => setProposed(e.target.value)} />
+          <input className="mt-1 w-full bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400" value={proposed} onChange={(e) => setProposed(e.target.value)} />
         </label>
         <label className="text-[11px] text-slate-500 md:col-span-2 xl:col-span-1">
           Reason
-          <input className="mt-1 w-full bg-[#090B12] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" value={reason} onChange={(e) => setReason(e.target.value)} />
+          <input className="mt-1 w-full bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400" value={reason} onChange={(e) => setReason(e.target.value)} />
         </label>
         <div className="flex items-end">
           <button type="submit" className="btn-primary focus-visible:ring-2 focus-visible:ring-cyan-400 disabled:opacity-40" disabled={!allowed || changeRequest.isPending}>
@@ -70,7 +70,7 @@ export function ControlChangeHistory({
         </div>
       </form>
       {changeRequest.isError ? (
-        <p className="text-[11px] text-rose-300" role="alert">{o20ErrorMessage(changeRequest.error)}</p>
+        <p className="text-[11px] text-rose-800" role="alert">{o20ErrorMessage(changeRequest.error)}</p>
       ) : null}
       {events.length === 0 ? (
         <EmptyState title="NO DATA AVAILABLE" detail="No CHANGE_REQUEST audit rows have been returned yet." />

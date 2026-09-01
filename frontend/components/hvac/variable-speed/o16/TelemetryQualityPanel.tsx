@@ -20,7 +20,7 @@ export function TelemetryQualityPanel({ data, points }: { data: O16Dashboard; po
   const rows = points.filter((p) => p.point_id);
   return (
     <section className="kpi-tile col-span-12 lg:col-span-7" aria-labelledby="o16-telq">
-      <h2 id="o16-telq" className="text-sm font-semibold text-white mb-2">
+      <h2 id="o16-telq" className="text-sm font-semibold text-slate-900 mb-2">
         Telemetry Quality
       </h2>
       {sim && (

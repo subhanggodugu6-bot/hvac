@@ -18,7 +18,7 @@ export function O10Eligibility({ data, platform }: { data: VentilationOpportunit
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Economy cycle eligibility</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2">
         {rows.map((r) => (
-          <div key={r.id} className="border border-white/[0.08] px-3 py-2">
+          <div key={r.id} className="border border-slate-200 px-3 py-2">
             <div className="text-[10px] uppercase tracking-wider text-slate-500">{r.label}</div>
             <div className="mt-1">
               <StatusBadge tone={toneForStatus(r.value)}>{r.value}</StatusBadge>
@@ -30,9 +30,9 @@ export function O10Eligibility({ data, platform }: { data: VentilationOpportunit
         <div className="text-[11px] uppercase tracking-wider text-slate-500 mb-2">Document / configuration reference</div>
         <dl className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-2 text-[12px] font-mono">
           {limits.map((l, i) => (
-            <div key={i} className="border border-white/[0.06] px-3 py-2">
+            <div key={i} className="border border-slate-200 px-3 py-2">
               <dt className="text-slate-500">Guide {l.guide}</dt>
-              <dd className="text-slate-200 mt-1">Configured {l.configured}</dd>
+              <dd className="text-slate-800 mt-1">Configured {l.configured}</dd>
             </div>
           ))}
         </dl>

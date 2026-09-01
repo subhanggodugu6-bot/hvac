@@ -19,13 +19,13 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
 
   return (
     <div className="glass-card overflow-hidden">
-      <div className="p-4 sm:p-5 border-b border-white/5 flex items-center justify-between">
+      <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400">
+          <div className="p-2 rounded-lg bg-sky-50 border border-sky-200 text-sky-700">
             <Cpu className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Supervisory Agent Decisions & Control Actions
             </h3>
             <p className="text-xs text-slate-400 font-sans mt-0.5">
@@ -33,7 +33,7 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
             </p>
           </div>
         </div>
-        <span className="text-xs font-mono font-medium px-2.5 py-1 rounded-full bg-slate-800/80 border border-white/10 text-slate-300">
+        <span className="text-xs font-mono font-medium px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700">
           {decisionItems.length} Coordinated Actions
         </span>
       </div>
@@ -72,11 +72,11 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
                         {act.opportunity_code}
                       </span>
                     </td>
-                    <td className="text-slate-100 font-semibold">{act.point_id}</td>
+                    <td className="text-slate-900 font-semibold">{act.point_id}</td>
                     <td className="text-slate-400">{prevVal == null ? '—' : String(prevVal)}</td>
-                    <td className="text-sky-300 font-bold">{propVal == null ? '—' : String(propVal)}</td>
-                    <td className="font-sans text-slate-300 text-xs max-w-sm">{act.reason}</td>
-                    <td className="text-slate-200 font-semibold">
+                    <td className="text-sky-800 font-bold">{propVal == null ? '—' : String(propVal)}</td>
+                    <td className="font-sans text-slate-700 text-xs max-w-sm">{act.reason}</td>
+                    <td className="text-slate-800 font-semibold">
                       {conf == null ? '—' : `${Math.round(Number(conf) <= 1.5 ? Number(conf) * 100 : Number(conf))}%`}
                     </td>
                     <td>

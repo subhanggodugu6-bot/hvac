@@ -12,13 +12,13 @@ export const LiveControlLog: React.FC<LiveControlLogProps> = ({ activities }) =>
 
   return (
     <div className="glass-card overflow-hidden">
-      <div className="p-4 sm:p-5 border-b border-white/5 flex items-center justify-between">
+      <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400">
             <Activity className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Recent Agent Activity & Control Log
             </h3>
             <p className="text-xs text-slate-400 font-sans mt-0.5">
@@ -53,8 +53,8 @@ export const LiveControlLog: React.FC<LiveControlLogProps> = ({ activities }) =>
                       <span>{act.time || '—'}</span>
                     </span>
                   </td>
-                  <td className="text-slate-100 font-sans font-medium">{act.event}</td>
-                  <td className="text-slate-300 font-sans text-xs">{act.detail}</td>
+                  <td className="text-slate-900 font-sans font-medium">{act.event}</td>
+                  <td className="text-slate-700 font-sans text-xs">{act.detail}</td>
                 </tr>
               ))
             )}

@@ -14,11 +14,11 @@ export function EquipmentDataQuality({ data, dash }: { data: OmOpportunity; dash
       <dl className="grid grid-cols-2 gap-3 text-[12px]">
         <div>
           <dt className="text-slate-500">Source</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.telemetry?.source || data.source)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.telemetry?.source || data.source)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">BMS Status</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o19Bms(dash, data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o19Bms(dash, data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Telemetry Quality</dt>
@@ -28,23 +28,23 @@ export function EquipmentDataQuality({ data, dash }: { data: OmOpportunity; dash
         </div>
         <div>
           <dt className="text-slate-500">Last Seen</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o19SecondsAgo(data.telemetry?.lastUpdated || data.timestamp)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o19SecondsAgo(data.telemetry?.lastUpdated || data.timestamp)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Freshness</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o19Freshness(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o19Freshness(data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Data Coverage</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{coverage}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{coverage}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Age</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatAgeSeconds(data.telemetry?.ageSeconds)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatAgeSeconds(data.telemetry?.ageSeconds)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Classified telemetry</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o19TelemetryBadge(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o19TelemetryBadge(data)}</dd>
         </div>
       </dl>
       {isO19Simulation(data) ? <p className="text-[11px] font-semibold text-amber-300">SIMULATED — never LIVE.</p> : null}

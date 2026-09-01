@@ -15,10 +15,10 @@ export function O15VerificationCard({ command }: { command?: O15Command }) {
   const id = command?.command_id;
   return (
     <section className="kpi-tile space-y-2" aria-labelledby="o15-verify">
-      <h2 id="o15-verify" className="text-sm font-semibold text-white">
+      <h2 id="o15-verify" className="text-sm font-semibold text-slate-900">
         Verification
       </h2>
-      <div className="text-xs font-mono text-slate-300 space-y-1">
+      <div className="text-xs font-mono text-slate-700 space-y-1">
         <div>Command {fmtDash(command?.status)}</div>
         <div>Target {fmtDash(command?.new_value)}</div>
         <div>Actual —</div>
@@ -32,7 +32,7 @@ export function O15VerificationCard({ command }: { command?: O15Command }) {
       {id && (status === 'APPLIED' || status === 'VERIFYING') && (
         <button
           type="button"
-          className="px-3 py-1.5 border border-white/10 text-xs opacity-40"
+          className="px-3 py-1.5 border border-slate-200 text-xs opacity-40"
           disabled
           title="WRITE_DISABLED — read-only commissioning mode."
         >
@@ -54,10 +54,10 @@ export function O15RollbackStatus({ command }: { command?: O15Command }) {
   const showControl = Boolean(id && (rb === 'READY' || status === 'APPLIED' || status === 'FAILED'));
   return (
     <section className="kpi-tile space-y-2" aria-labelledby="o15-rb">
-      <h2 id="o15-rb" className="text-sm font-semibold text-white">
+      <h2 id="o15-rb" className="text-sm font-semibold text-slate-900">
         Rollback
       </h2>
-      <div className="text-xs font-mono text-slate-300">{rb}</div>
+      <div className="text-xs font-mono text-slate-700">{rb}</div>
       {command?.rollback_at && (
         <div className="text-[11px] font-mono text-slate-400">
           Reason {fmtDash(command.reason)} · Timestamp {fmtDash(command.rollback_at)} · Previous {fmtDash(command.old_value)} · Restored {fmtDash(command.old_value)}

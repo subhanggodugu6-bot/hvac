@@ -27,7 +27,7 @@ export function ControlHealthOverview({ data }: { data: OmOpportunity }) {
   return (
     <section className="kpi-tile space-y-3 h-full" aria-label="Control health overview">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Control health</h2>
-      <div className="text-2xl font-mono text-slate-100">{formatPercent(c.healthPct)}</div>
+      <div className="text-2xl font-mono text-slate-900">{formatPercent(c.healthPct)}</div>
       <p className="text-[11px] font-mono text-slate-500">Controller {formatDash(data.current?.controllerHealth)} · trend — (no historian)</p>
       {slices.length === 0 ? (
         <EmptyState title="NO DATA AVAILABLE" detail="Healthy / warning / drift / stale / failed counts were not returned." />

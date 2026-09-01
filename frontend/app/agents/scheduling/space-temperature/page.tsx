@@ -145,7 +145,7 @@ export default function SpaceTemperaturePage() {
 
         <div className="glass-card p-4 flex flex-col justify-between">
           <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Avg Temp Error</span>
-          <div className="my-1.5 text-base font-bold font-mono text-slate-200">{kpis.avg_temp_error || 'NO DATA'}</div>
+          <div className="my-1.5 text-base font-bold font-mono text-slate-800">{kpis.avg_temp_error || 'NO DATA'}</div>
           <span className="text-[10px] text-slate-400">±0.2°C Target</span>
         </div>
 
@@ -160,10 +160,10 @@ export default function SpaceTemperaturePage() {
       {/* 2. FACILITY ZONE THERMAL & SETPOINT MATRIX (8 VAV ZONES) */}
       {/* ========================================================================= */}
       <div className="glass-card p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/5 mb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200 mb-4">
           <div className="flex items-center gap-2">
             <Building className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-sm font-semibold text-white tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Facility Zone Thermal & Setpoint Matrix
             </h3>
           </div>
@@ -184,12 +184,12 @@ export default function SpaceTemperaturePage() {
                 onClick={() => setSelectedZoneId(z.zone_id)}
                 className={`p-4 rounded-xl border transition-all cursor-pointer font-mono space-y-2.5 text-left w-full ${
                   isSelected
-                    ? 'bg-cyan-950/40 border-cyan-400 shadow-lg shadow-cyan-950/50'
-                    : 'bg-slate-900/60 border-white/5 hover:border-cyan-500/30'
+                    ? 'bg-cyan-50 border-cyan-400 shadow-lg shadow-cyan-200'
+                    : 'bg-slate-50 border-slate-200 hover:border-cyan-500/30'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-white">{z.zone_id}</span>
+                  <span className="text-xs font-bold text-slate-900">{z.zone_id}</span>
                   {isOccupied ? (
                     <span className="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                       <UserCheck className="w-3 h-3" />
@@ -203,12 +203,12 @@ export default function SpaceTemperaturePage() {
                   )}
                 </div>
 
-                <div className="font-sans text-xs text-slate-300 font-medium truncate">{z.name}</div>
+                <div className="font-sans text-xs text-slate-700 font-medium truncate">{z.name}</div>
 
-                <div className="grid grid-cols-3 gap-2 text-xs py-2 border-y border-white/5">
+                <div className="grid grid-cols-3 gap-2 text-xs py-2 border-y border-slate-200">
                   <div>
                     <span className="text-[9px] text-slate-500 block">Actual</span>
-                    <strong className="text-slate-100">{z.actual_temperature}°C</strong>
+                    <strong className="text-slate-900">{z.actual_temperature}°C</strong>
                   </div>
                   <div>
                     <span className="text-[9px] text-slate-500 block">Current SP</span>
@@ -221,13 +221,13 @@ export default function SpaceTemperaturePage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-400">
-                  <div>Damper: <span className="text-slate-200">{z.damper_position}%</span></div>
-                  <div>Clg Valve: <span className="text-slate-200">{z.cooling_valve}%</span></div>
-                  <div>Reheat: <span className="text-slate-200">{z.reheat_valve}%</span></div>
-                  <div>Deadband: <span className="text-slate-200">{z.deadband != null ? `±${z.deadband / 2.0}°C` : 'NO DATA'}</span></div>
+                  <div>Damper: <span className="text-slate-800">{z.damper_position}%</span></div>
+                  <div>Clg Valve: <span className="text-slate-800">{z.cooling_valve}%</span></div>
+                  <div>Reheat: <span className="text-slate-800">{z.reheat_valve}%</span></div>
+                  <div>Deadband: <span className="text-slate-800">{z.deadband != null ? `±${z.deadband / 2.0}°C` : 'NO DATA'}</span></div>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] pt-2 border-t border-white/5">
+                <div className="flex items-center justify-between text-[11px] pt-2 border-t border-slate-200">
                   <span className="text-slate-400">Power Shed:</span>
                   <span className="text-emerald-400 font-semibold">{z.power_impact_kw != null ? `${z.power_impact_kw} kW` : 'NO DATA'}</span>
                 </div>
@@ -243,10 +243,10 @@ export default function SpaceTemperaturePage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* 3. Selected Zone Control Detail */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Sliders className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Selected Zone Control Detail
               </h3>
             </div>
@@ -254,47 +254,47 @@ export default function SpaceTemperaturePage() {
           </div>
 
           <div className="space-y-2.5 text-xs font-mono">
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Zone Name:</span>
-              <span className="text-slate-100 font-semibold font-sans">{activeZone?.name || 'NO DATA'}</span>
+              <span className="text-slate-900 font-semibold font-sans">{activeZone?.name || 'NO DATA'}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Actual Temperature:</span>
-              <span className="text-slate-100 font-bold">{activeZone?.actual_temperature}°C</span>
+              <span className="text-slate-900 font-bold">{activeZone?.actual_temperature}°C</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Current Setpoint:</span>
               <span className="text-slate-400">{activeZone?.current_setpoint}°C</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Optimized Setpoint:</span>
               <span className="text-cyan-400 font-bold">{activeZone?.optimized_setpoint}°C</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Temperature Error:</span>
               <span className="text-emerald-400 font-semibold">{activeZone?.temperature_error || 'NO DATA'}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Occupancy State:</span>
-              <span className="text-slate-200">{activeZone?.occupancy || 'NO DATA'}</span>
+              <span className="text-slate-800">{activeZone?.occupancy || 'NO DATA'}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Cooling / Heating Demand:</span>
-              <span className="text-slate-200">{activeZone?.cooling_demand}% / {activeZone?.heating_demand}%</span>
+              <span className="text-slate-800">{activeZone?.cooling_demand}% / {activeZone?.heating_demand}%</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">VAV Damper Position:</span>
-              <span className="text-slate-200">{activeZone?.damper_position}%</span>
+              <span className="text-slate-800">{activeZone?.damper_position}%</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Cooling / Reheat Valves:</span>
-              <span className="text-slate-200">{activeZone?.cooling_valve}% / {activeZone?.reheat_valve}%</span>
+              <span className="text-slate-800">{activeZone?.cooling_valve}% / {activeZone?.reheat_valve}%</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Airflow (CFM):</span>
-              <span className="text-slate-200">{activeZone?.airflow_cfm != null ? `${activeZone.airflow_cfm} CFM` : 'NO DATA'}</span>
+              <span className="text-slate-800">{activeZone?.airflow_cfm != null ? `${activeZone.airflow_cfm} CFM` : 'NO DATA'}</span>
             </div>
-            <div className="flex items-center justify-between py-1 border-b border-white/5">
+            <div className="flex items-center justify-between py-1 border-b border-slate-200">
               <span className="text-slate-400 font-sans">Sensor Quality:</span>
               <span className="text-emerald-400 font-semibold">{activeZone?.sensor_quality || 'NO DATA'}</span>
             </div>
@@ -307,10 +307,10 @@ export default function SpaceTemperaturePage() {
 
         {/* 4. Dynamic Control Band Visualization */}
         <div className="glass-card p-5 lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Gauge className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Dynamic Control Band & Temperature Bounds
               </h3>
             </div>
@@ -318,11 +318,11 @@ export default function SpaceTemperaturePage() {
           </div>
 
           {cb ? (
-          <div className="p-4 rounded-xl bg-slate-900/60 border border-white/5 space-y-6">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-6">
             {/* Visual Bar Indicator */}
             <div className="relative pt-6 pb-2">
               {/* Range Scale */}
-              <div className="h-8 rounded-lg bg-gradient-to-r from-blue-900/40 via-emerald-950/40 to-rose-900/40 border border-white/10 flex relative overflow-hidden">
+              <div className="h-8 rounded-lg bg-gradient-to-r from-blue-900/40 via-emerald-950/40 to-rose-900/40 border border-slate-200 flex relative overflow-hidden">
                 <div className="h-full bg-blue-500/20 border-r border-blue-500/40" style={{ width: '25%' }} title="Heating Band"></div>
                 <div className="h-full bg-emerald-500/20 border-r border-emerald-500/40" style={{ width: '50%' }} title="Deadband"></div>
                 <div className="h-full bg-rose-500/20" style={{ width: '25%' }} title="Cooling Band"></div>
@@ -340,10 +340,10 @@ export default function SpaceTemperaturePage() {
             </div>
 
             {/* Current Metrics Box */}
-            <div className="grid grid-cols-3 gap-3 p-3 rounded-lg bg-slate-950/70 border border-white/5 text-xs font-mono text-center">
+            <div className="grid grid-cols-3 gap-3 p-3 rounded-lg bg-slate-100 border border-slate-200 text-xs font-mono text-center">
               <div>
                 <span className="text-slate-500 block text-[10px]">CURRENT TEMPERATURE</span>
-                <span className="text-base font-bold text-white">{cb.current_temperature}°C</span>
+                <span className="text-base font-bold text-slate-900">{cb.current_temperature}°C</span>
               </div>
               <div>
                 <span className="text-slate-500 block text-[10px]">CURRENT SETPOINT</span>
@@ -365,11 +365,11 @@ export default function SpaceTemperaturePage() {
       {/* 5. TEMPERATURE & SETPOINT TREND (LIVE TIME-SERIES) */}
       {/* ========================================================================= */}
       <div className="glass-card p-5">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-cyan-400" />
             <div>
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Temperature & Setpoint Response — {selectedZoneId}
               </h3>
               <p className="text-xs text-slate-400 font-sans mt-0.5">
@@ -385,8 +385,8 @@ export default function SpaceTemperaturePage() {
                 onClick={() => setTimeRangeHours(hrs)}
                 className={`text-xs font-mono px-2.5 py-1 rounded border transition-all ${
                   timeRangeHours === hrs
-                    ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 font-semibold'
-                    : 'bg-slate-900/60 border-white/5 text-slate-400 hover:text-slate-200'
+                    ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800 font-semibold'
+                    : 'bg-slate-50 border-slate-200 text-slate-400 hover:text-slate-800'
                 }`}
               >
                 {hrs}h
@@ -416,10 +416,10 @@ export default function SpaceTemperaturePage() {
       {/* 6. CANDIDATE SETPOINT EVALUATION */}
       {/* ========================================================================= */}
       <div className="glass-card overflow-hidden">
-        <div className="p-5 border-b border-white/5 flex items-center justify-between">
+        <div className="p-5 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Layers className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-sm font-semibold text-white tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Candidate Setpoint Evaluation — {selectedZoneId}
             </h3>
           </div>
@@ -444,16 +444,16 @@ export default function SpaceTemperaturePage() {
             </thead>
             <tbody className="font-mono text-xs">
               {(activeZone?.candidates || []).map((cand: any, i: number) => (
-                <tr key={i} className={cand.decision === 'SELECTED' ? 'bg-cyan-950/20' : ''}>
-                  <td className="font-sans font-semibold text-slate-200">{cand.candidate_id}</td>
-                  <td className="text-cyan-300 font-bold">{cand.setpoint}°C</td>
-                  <td className="text-slate-300">±{cand.deadband / 2.0}°C</td>
-                  <td className="text-slate-200">{cand.predicted_energy_kw} kW</td>
-                  <td className={cand.comfort_risk > 0.30 ? 'text-rose-400 font-bold' : 'text-slate-300'}>
+                <tr key={i} className={cand.decision === 'SELECTED' ? 'bg-cyan-50' : ''}>
+                  <td className="font-sans font-semibold text-slate-800">{cand.candidate_id}</td>
+                  <td className="text-cyan-800 font-bold">{cand.setpoint}°C</td>
+                  <td className="text-slate-700">±{cand.deadband / 2.0}°C</td>
+                  <td className="text-slate-800">{cand.predicted_energy_kw} kW</td>
+                  <td className={cand.comfort_risk > 0.30 ? 'text-rose-400 font-bold' : 'text-slate-700'}>
                     {cand.comfort_risk != null ? cand.comfort_risk.toFixed(2) : 'NO DATA'}
                   </td>
-                  <td className="text-slate-300">{cand.temp_stability}</td>
-                  <td className="text-slate-300">{cand.equipment_cycling}</td>
+                  <td className="text-slate-700">{cand.temp_stability}</td>
+                  <td className="text-slate-700">{cand.equipment_cycling}</td>
                   <td className="text-emerald-400 font-semibold">{cand.power_impact}</td>
                   <td>
                     <span
@@ -470,10 +470,10 @@ export default function SpaceTemperaturePage() {
                     <span
                       className={`px-2.5 py-0.5 rounded text-[10px] font-bold border ${
                         cand.decision === 'SELECTED'
-                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
+                          ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800'
                           : cand.decision === 'REJECTED'
                           ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                          : 'bg-slate-800 border-white/10 text-slate-400'
+                          : 'bg-slate-200 border-slate-200 text-slate-400'
                       }`}
                     >
                       {cand.decision}
@@ -492,10 +492,10 @@ export default function SpaceTemperaturePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* 7. O2 Supervisory Decision */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Cpu className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O2 Supervisory Decision — {selectedZoneId}
               </h3>
             </div>
@@ -504,10 +504,10 @@ export default function SpaceTemperaturePage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 p-3 rounded-xl bg-slate-900/60 border border-white/5 font-mono text-center">
+          <div className="grid grid-cols-3 gap-3 p-3 rounded-xl bg-slate-50 border border-slate-200 font-mono text-center">
             <div>
               <span className="text-[10px] text-slate-500 block">CURRENT SP</span>
-              <span className="text-sm font-bold text-slate-300">{decisionData?.current_setpoint != null ? `${decisionData.current_setpoint}°C` : 'NO DATA'}</span>
+              <span className="text-sm font-bold text-slate-700">{decisionData?.current_setpoint != null ? `${decisionData.current_setpoint}°C` : 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">RECOMMENDED SP</span>
@@ -519,13 +519,13 @@ export default function SpaceTemperaturePage() {
             </div>
           </div>
 
-          <div className="p-3 rounded-lg bg-slate-950/70 border border-white/5 space-y-2 text-xs">
+          <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-2 text-xs">
             <div className="text-slate-400 font-sans">
-              <strong className="text-slate-300 block mb-1">Engineering Rationale:</strong>
+              <strong className="text-slate-700 block mb-1">Engineering Rationale:</strong>
               &ldquo;{decisionData?.reason || 'NO DATA'}&rdquo;
             </div>
-            <div className="flex items-center justify-between pt-2 border-t border-white/5 font-mono text-[11px]">
-              <span className="text-slate-400">Model: <strong className="text-slate-200">{decisionData?.model_version || 'NO DATA'}</strong></span>
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-[11px]">
+              <span className="text-slate-400">Model: <strong className="text-slate-800">{decisionData?.model_version || 'NO DATA'}</strong></span>
               <span className="text-slate-400">Confidence: <strong className="text-purple-400">{decisionData?.confidence != null ? `${decisionData.confidence}%` : 'NO DATA'}</strong></span>
               <span className="text-slate-400">Safety: <strong className="text-emerald-400">{decisionData?.safety || 'NO DATA'}</strong></span>
             </div>
@@ -545,10 +545,10 @@ export default function SpaceTemperaturePage() {
 
         {/* 8. Comfort & Safety Validation */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Comfort & Safety Validation — {selectedZoneId}
               </h3>
             </div>
@@ -558,14 +558,14 @@ export default function SpaceTemperaturePage() {
           </div>
 
           {/* Comfort Risk Filter Banner */}
-          <div className="p-3 rounded-lg bg-slate-900/60 border border-white/5 grid grid-cols-4 gap-2 text-xs font-mono text-center">
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 grid grid-cols-4 gap-2 text-xs font-mono text-center">
             <div>
               <span className="text-[10px] text-slate-500 block">COMFORT MIN/MAX</span>
-              <span className="text-slate-200 font-bold">{safetyData?.comfort_min != null && safetyData?.comfort_max != null ? `${safetyData.comfort_min}°C – ${safetyData.comfort_max}°C` : 'NO DATA'}</span>
+              <span className="text-slate-800 font-bold">{safetyData?.comfort_min != null && safetyData?.comfort_max != null ? `${safetyData.comfort_min}°C – ${safetyData.comfort_max}°C` : 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">RISK THRESHOLD</span>
-              <span className="text-slate-300">{safetyData?.risk_threshold ?? 'NO DATA'}</span>
+              <span className="text-slate-700">{safetyData?.risk_threshold ?? 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">CANDIDATE RISK</span>
@@ -578,7 +578,7 @@ export default function SpaceTemperaturePage() {
           </div>
 
           {/* 9 Safety Checks Table */}
-          <div className="overflow-y-auto max-h-48 border border-white/5 rounded-lg">
+          <div className="overflow-y-auto max-h-48 border border-slate-200 rounded-lg">
             <table className="bms-table">
               <thead>
                 <tr>
@@ -591,8 +591,8 @@ export default function SpaceTemperaturePage() {
               <tbody className="font-mono text-[11px]">
                 {(safetyData?.checks || []).map((chk: any, i: number) => (
                   <tr key={i}>
-                    <td className="font-sans text-slate-200">{chk.name}</td>
-                    <td className="text-slate-300">{chk.value}</td>
+                    <td className="font-sans text-slate-800">{chk.name}</td>
+                    <td className="text-slate-700">{chk.value}</td>
                     <td className="text-slate-500">{chk.limit}</td>
                     <td>
                       <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
@@ -613,10 +613,10 @@ export default function SpaceTemperaturePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* 9. Energy Impact */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Zap className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Energy Impact & Realization Tiers
               </h3>
             </div>
@@ -624,19 +624,19 @@ export default function SpaceTemperaturePage() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-center">
-            <div className="p-3 rounded-lg bg-slate-900/60 border border-white/5">
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">BASELINE POWER</span>
-              <span className="text-sm font-bold text-slate-300">{energyData?.baseline_terminal_power_kw != null ? `${energyData.baseline_terminal_power_kw} kW` : 'NO DATA'}</span>
+              <span className="text-sm font-bold text-slate-700">{energyData?.baseline_terminal_power_kw != null ? `${energyData.baseline_terminal_power_kw} kW` : 'NO DATA'}</span>
             </div>
-            <div className="p-3 rounded-lg bg-slate-900/60 border border-white/5">
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">OPTIMIZED POWER</span>
-              <span className="text-sm font-bold text-slate-100">{energyData?.optimized_terminal_power_kw != null ? `${energyData.optimized_terminal_power_kw} kW` : 'NO DATA'}</span>
+              <span className="text-sm font-bold text-slate-900">{energyData?.optimized_terminal_power_kw != null ? `${energyData.optimized_terminal_power_kw} kW` : 'NO DATA'}</span>
             </div>
-            <div className="p-3 rounded-lg bg-slate-900/60 border border-white/5">
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">PREDICTED SHED</span>
               <span className="text-sm font-bold text-sky-400">{energyData?.predicted_power_reduction_kw != null ? `${energyData.predicted_power_reduction_kw} kW` : 'NO DATA'}</span>
             </div>
-            <div className="p-3 rounded-lg bg-slate-900/60 border border-white/5">
+            <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">VERIFIED SHED</span>
               <span className="text-sm font-bold text-emerald-400">{energyData?.verified_power_reduction_kw != null ? `${energyData.verified_power_reduction_kw} kW` : 'NO DATA'}</span>
             </div>
@@ -644,9 +644,9 @@ export default function SpaceTemperaturePage() {
 
           <div className="space-y-2 text-xs font-mono">
             {(energyData?.tiers || []).map((t: any, i: number) => (
-              <div key={i} className="p-2.5 rounded-lg bg-slate-950/70 border border-white/5 flex items-center justify-between">
+              <div key={i} className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
                 <div>
-                  <span className="font-bold text-slate-200 block">{t.name}</span>
+                  <span className="font-bold text-slate-800 block">{t.name}</span>
                   <span className="text-[11px] text-slate-400 font-sans">{t.desc}</span>
                 </div>
                 <span className="text-emerald-400 font-bold text-sm">{t.value}</span>
@@ -657,10 +657,10 @@ export default function SpaceTemperaturePage() {
 
         {/* 10. BMS Action & Verification */}
         <div className="glass-card p-5 space-y-4">
-          <div className="flex items-center justify-between border-b border-white/5 pb-3">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
               <Building className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 BMS Control Action & Verification — {selectedZoneId}
               </h3>
             </div>
@@ -669,10 +669,10 @@ export default function SpaceTemperaturePage() {
             </span>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 font-mono text-xs text-center p-3 rounded-lg bg-slate-900/60 border border-white/5">
+          <div className="grid grid-cols-3 gap-2 font-mono text-xs text-center p-3 rounded-lg bg-slate-50 border border-slate-200">
             <div>
               <span className="text-[10px] text-slate-500 block">TARGET POINT</span>
-              <span className="text-white font-bold">{bmsActionData?.target_point || `${selectedZoneId}.Zone_Setpoint`}</span>
+              <span className="text-slate-900 font-bold">{bmsActionData?.target_point || `${selectedZoneId}.Zone_Setpoint`}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">PREVIOUS VALUE</span>
@@ -685,9 +685,9 @@ export default function SpaceTemperaturePage() {
           </div>
 
           {/* Verification Box */}
-          <div className="p-3.5 rounded-lg bg-slate-950/70 border border-white/5 space-y-2 text-xs">
+          <div className="p-3.5 rounded-lg bg-slate-100 border border-slate-200 space-y-2 text-xs">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-slate-200">Continuous M&V Verification:</span>
+              <span className="font-semibold text-slate-800">Continuous M&V Verification:</span>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                 {bmsActionData?.verification?.status || 'NO DATA'}
               </span>
@@ -716,10 +716,10 @@ export default function SpaceTemperaturePage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* 11. O2 Optimization History */}
         <div className="glass-card overflow-hidden">
-          <div className="p-5 border-b border-white/5 flex items-center justify-between">
+          <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-slate-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O2 Optimization History
               </h3>
             </div>
@@ -744,12 +744,12 @@ export default function SpaceTemperaturePage() {
                 {(historyData || []).map((h: any, i: number) => (
                   <tr key={i}>
                     <td className="text-slate-400">{h.time}</td>
-                    <td className="text-white font-bold">{h.zone_id}</td>
+                    <td className="text-slate-900 font-bold">{h.zone_id}</td>
                     <td className="text-slate-400">{h.prev_sp}</td>
-                    <td className="text-cyan-300 font-bold">{h.new_sp}</td>
-                    <td className="text-slate-300">{h.deadband}</td>
+                    <td className="text-cyan-800 font-bold">{h.new_sp}</td>
+                    <td className="text-slate-700">{h.deadband}</td>
                     <td className="text-emerald-400 font-semibold">{h.power_impact}</td>
-                    <td className="text-sky-300">{h.bms}</td>
+                    <td className="text-sky-800">{h.bms}</td>
                     <td>
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                         {h.verification}
@@ -764,10 +764,10 @@ export default function SpaceTemperaturePage() {
 
         {/* 12. Live Agent Activity */}
         <div className="glass-card overflow-hidden">
-          <div className="p-5 border-b border-white/5 flex items-center justify-between">
+          <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Activity className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-sm font-semibold text-white tracking-tight">
+              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Live Agent Activity Stream
               </h3>
             </div>
@@ -790,8 +790,8 @@ export default function SpaceTemperaturePage() {
                 {(activitiesData || []).slice(0, 8).map((act: any, i: number) => (
                   <tr key={i}>
                     <td className="text-slate-400">{act.time}</td>
-                    <td className="text-slate-100 font-sans font-medium">{act.event}</td>
-                    <td className="text-slate-300 font-sans text-xs">{act.detail}</td>
+                    <td className="text-slate-900 font-sans font-medium">{act.event}</td>
+                    <td className="text-slate-700 font-sans text-xs">{act.detail}</td>
                   </tr>
                 ))}
               </tbody>

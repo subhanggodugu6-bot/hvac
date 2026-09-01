@@ -20,35 +20,35 @@ export function PlanningDecisionPanel({ data }: { data: OmOpportunity }) {
       <dl className="space-y-2 text-[12px]">
         <div>
           <dt className="text-slate-500">Decision</dt>
-          <dd className="font-mono text-slate-100 mt-0.5">{decision}</dd>
+          <dd className="font-mono text-slate-900 mt-0.5">{decision}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Reason</dt>
-          <dd className="text-slate-300 mt-0.5">{formatDash(data.supervisory?.reason)}</dd>
+          <dd className="text-slate-700 mt-0.5">{formatDash(data.supervisory?.reason)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Confidence</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17ConfidencePct(data.supervisory?.confidence ?? data.confidence)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17ConfidencePct(data.supervisory?.confidence ?? data.confidence)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Safety status</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17Safety(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17Safety(data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Data quality</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17QualityLabel(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17QualityLabel(data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Telemetry freshness</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17Freshness(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17Freshness(data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Current state</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.supervisory?.currentState)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.supervisory?.currentState)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Recommended state</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.supervisory?.recommendedState)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.supervisory?.recommendedState)}</dd>
         </div>
       </dl>
       <p className="text-[11px] text-slate-500 leading-relaxed">

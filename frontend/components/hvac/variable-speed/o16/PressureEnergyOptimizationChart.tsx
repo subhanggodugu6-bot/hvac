@@ -28,7 +28,7 @@ export function PressureEnergyOptimizationChart({ data, points }: { data: O16Das
   const sim = isSimulation(data);
   return (
     <section className="kpi-tile space-y-2 col-span-12" aria-labelledby="o16-hp-e">
-      <h2 id="o16-hp-e" className="text-sm font-semibold text-white">
+      <h2 id="o16-hp-e" className="text-sm font-semibold text-slate-900">
         Head Pressure vs Energy
       </h2>
       <p className="text-[11px] text-slate-500">

@@ -33,7 +33,7 @@ function Card({
     <article className="kpi-tile min-h-[118px]" aria-label={label}>
       <div className="text-[11px] uppercase font-semibold text-slate-500 tracking-wider">{label}</div>
       <div className="mt-2 flex items-baseline gap-2">
-        <span className="text-lg font-bold font-mono text-slate-100 tracking-tight">{value}</span>
+        <span className="text-lg font-bold font-mono text-slate-900 tracking-tight">{value}</span>
         <span className="text-[11px] font-mono text-slate-500">{unit}</span>
       </div>
       <div className="mt-2 grid grid-cols-3 gap-1 text-[10px] font-mono text-slate-500">

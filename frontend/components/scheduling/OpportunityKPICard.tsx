@@ -95,7 +95,7 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
   return (
     <Link href={href} className="glass-card flex h-full min-h-[280px] flex-col p-4 group">
       <div className="flex items-start justify-between gap-2">
-        <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md border border-cyan-400/25 bg-cyan-500/10 text-cyan-300 tracking-wide">
+        <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md border border-cyan-400/25 bg-cyan-500/10 text-cyan-800 tracking-wide">
           {id || code}
         </span>
         <StatusBadge tone={toneForStatus(statusText)} pulse={false}>
@@ -106,7 +106,7 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
         {opportunity.name}
       </h3>
 
-      <div className="mt-4 border-t border-white/[0.06] pt-3">
+      <div className="mt-4 border-t border-slate-200 pt-3">
         <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
           {opportunity.primaryMetric?.label || 'Primary'}
         </div>
@@ -122,7 +122,7 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
         ) : null}
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-x-2 gap-y-3 border-t border-white/[0.06] pt-3">
+      <div className="mt-4 grid grid-cols-3 gap-x-2 gap-y-3 border-t border-slate-200 pt-3">
         {secondaries.map((m) => {
           const v = fmt(m);
           const energy = /energy/i.test(m.label);
@@ -133,7 +133,7 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
               </div>
               <div
                 className={`mt-0.5 truncate font-mono text-xs font-semibold ${
-                  v.missing ? 'text-slate-500' : energy ? 'text-cyan-200' : 'text-slate-100'
+                  v.missing ? 'text-slate-500' : energy ? 'text-cyan-200' : 'text-slate-900'
                 }`}
                 title={v.reason || String(v.text)}
               >
@@ -159,7 +159,7 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
           />
           {tel || opportunity.dataState || 'TELEMETRY'}
         </span>
-        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-300">
+        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-800">
           Open
           <ArrowRight className="h-3 w-3" />
         </span>

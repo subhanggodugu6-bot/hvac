@@ -29,7 +29,7 @@ export function CondenserWaterControl({ data }: { data: O16Dashboard }) {
   ];
   return (
     <section className="kpi-tile space-y-2 col-span-12 lg:col-span-6" aria-labelledby="o16-cw">
-      <h2 id="o16-cw" className="text-sm font-semibold text-white">
+      <h2 id="o16-cw" className="text-sm font-semibold text-slate-900">
         Condenser Water Control
       </h2>
       <EngineeringTable>

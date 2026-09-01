@@ -6,12 +6,12 @@ import type { VentilationOpportunity } from '@/lib/hvac/ventilationTypes';
 
 function Col({ title, rows }: { title: string; rows: Array<[string, string]> }) {
   return (
-    <div className="border border-white/[0.08] px-3 py-2">
+    <div className="border border-slate-200 px-3 py-2">
       <div className="text-[11px] uppercase tracking-wider text-slate-500 mb-2">{title}</div>
       {rows.map(([k, v]) => (
         <div key={k} className="flex justify-between gap-2 py-1 text-xs font-mono">
           <span className="text-slate-500">{k}</span>
-          <span className="text-slate-100">{v}</span>
+          <span className="text-slate-900">{v}</span>
         </div>
       ))}
     </div>

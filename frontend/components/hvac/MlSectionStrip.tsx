@@ -13,7 +13,7 @@ export function MlSectionStrip({ opportunityIds }: { opportunityIds: string[] })
   const byId = new Map((q.data?.models || []).map((m) => [m.opportunity_id, m]));
   return (
     <div className="kpi-tile">
-      <div className="text-[10px] font-mono tracking-[0.18em] text-violet-300/80 mb-3">ML REGISTRY</div>
+      <div className="text-[10px] font-mono tracking-[0.18em] text-violet-700/80 mb-3">ML REGISTRY</div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-[11px] font-mono">
         {opportunityIds.map((oid) => {
           const row = byId.get(oid);
@@ -34,9 +34,9 @@ export function MlSectionStrip({ opportunityIds }: { opportunityIds: string[] })
                       ? 'MODEL NOT TRAINABLE'
                       : row.status;
           return (
-            <div key={oid} className="flex justify-between gap-2 border border-white/[0.06] px-2 py-1.5">
+            <div key={oid} className="flex justify-between gap-2 border border-slate-200 px-2 py-1.5">
               <span className="text-cyan-400">{oid}</span>
-              <span className="text-slate-300 truncate">{status}</span>
+              <span className="text-slate-700 truncate">{status}</span>
             </div>
           );
         })}

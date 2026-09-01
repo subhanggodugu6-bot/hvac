@@ -9,11 +9,11 @@ export function O15DecisionPanel({ data }: { data: O15Dashboard }) {
   const conf = confidencePct(data.confidence);
   return (
     <section className="kpi-tile space-y-2" aria-labelledby="o15-decision">
-      <h2 id="o15-decision" className="text-sm font-semibold text-white">
+      <h2 id="o15-decision" className="text-sm font-semibold text-slate-900">
         Supervisory Decision
       </h2>
       <StatusBadge tone={toneForStatus(decision)}>{decision}</StatusBadge>
-      <p className="text-xs text-slate-300 leading-relaxed">{data.reason || '—'}</p>
+      <p className="text-xs text-slate-700 leading-relaxed">{data.reason || '—'}</p>
       <div className="text-[11px] font-mono text-slate-400 space-y-0.5">
         <div>Confidence {conf}</div>
         <div>Engine O15</div>

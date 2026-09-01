@@ -31,7 +31,7 @@ export function HeadPressureOptimizationCard({ data }: { data: O16Dashboard }) {
   return (
     <section className="kpi-tile space-y-4 h-full" aria-labelledby="o16-opt-title">
       <div className="flex items-start justify-between gap-2">
-        <h2 id="o16-opt-title" className="text-sm font-semibold text-white">
+        <h2 id="o16-opt-title" className="text-sm font-semibold text-slate-900">
           Head Pressure Optimization
         </h2>
         <StatusBadge tone={toneForStatus(decision)}>
@@ -41,31 +41,31 @@ export function HeadPressureOptimizationCard({ data }: { data: O16Dashboard }) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
         <div>
           <div className="text-[10px] uppercase text-slate-500">Current condensing pressure</div>
-          <div className="text-lg text-slate-100 mt-1">{fmtDash(current)}</div>
+          <div className="text-lg text-slate-900 mt-1">{fmtDash(current)}</div>
         </div>
         <div>
           <div className="text-[10px] uppercase text-slate-500">Recommended</div>
-          <div className="text-lg text-cyan-300 mt-1">{fmtDash(recommended)}</div>
+          <div className="text-lg text-cyan-800 mt-1">{fmtDash(recommended)}</div>
         </div>
         <div>
           <div className="text-[10px] uppercase text-slate-500">Delta</div>
-          <div className="text-lg text-slate-100 mt-1">{delta == null ? '—' : `${delta > 0 ? '+' : ''}${fmtDash(delta)}`}</div>
+          <div className="text-lg text-slate-900 mt-1">{delta == null ? '—' : `${delta > 0 ? '+' : ''}${fmtDash(delta)}`}</div>
         </div>
         <div>
           <div className="text-[10px] uppercase text-slate-500">Confidence</div>
-          <div className="text-lg text-slate-100 mt-1">{confidencePct(data.confidence ?? rec.confidence)}</div>
+          <div className="text-lg text-slate-900 mt-1">{confidencePct(data.confidence ?? rec.confidence)}</div>
         </div>
       </div>
       <div className="space-y-3" aria-label="Pressure range">
         <div>
           <div className="text-[10px] uppercase text-slate-500 mb-1">Current {fmtDash(current)}</div>
-          <div className="relative h-2 bg-slate-800 border border-white/10">
+          <div className="relative h-2 bg-slate-200 border border-slate-200">
             {curPct != null && <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-cyan-400" style={{ left: `calc(${curPct}% - 5px)` }} />}
           </div>
         </div>
         <div>
           <div className="text-[10px] uppercase text-slate-500 mb-1">Recommended {fmtDash(recommended)}</div>
-          <div className="relative h-2 bg-slate-800 border border-white/10">
+          <div className="relative h-2 bg-slate-200 border border-slate-200">
             {recPct != null && <div className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-emerald-400" style={{ left: `calc(${recPct}% - 5px)` }} />}
           </div>
         </div>

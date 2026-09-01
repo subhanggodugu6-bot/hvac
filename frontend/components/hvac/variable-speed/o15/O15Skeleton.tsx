@@ -4,7 +4,7 @@ export function O15Skeleton({ label }: { label: string }) {
   return (
     <div className="kpi-tile min-h-[120px]" aria-busy="true" aria-label={`${label} loading`}>
       <div className="text-[10px] uppercase tracking-wider text-slate-500">{label}</div>
-      <div className="mt-3 h-5 w-2/3 bg-slate-800/80 animate-pulse rounded" />
+      <div className="mt-3 h-5 w-2/3 bg-slate-200 animate-pulse rounded" />
       <div className="mt-2 h-3 w-1/2 bg-slate-800/50 animate-pulse rounded" />
     </div>
   );

@@ -23,7 +23,7 @@ export function ControlPointTable({ data }: { data: OmOpportunity }) {
         <label className="text-[11px] text-slate-500 flex-1">
           Search
           <input
-            className="mt-1 w-full bg-[#090B12] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="mt-1 w-full bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             aria-label="Search points"
@@ -36,7 +36,7 @@ export function ControlPointTable({ data }: { data: OmOpportunity }) {
               type="button"
               aria-pressed={filter === f}
               className={`px-2 py-1.5 text-[11px] font-mono border focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                filter === f ? 'border-cyan-500/40 text-cyan-300' : 'border-white/10 text-slate-400'
+                filter === f ? 'border-cyan-500/40 text-cyan-800' : 'border-slate-200 text-slate-400'
               }`}
               onClick={() => setFilter(f)}
             >

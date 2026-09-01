@@ -21,7 +21,7 @@ export function O15FanPerformance({ data, points }: { data: O15Dashboard; points
   const fans = data.fans || [];
   return (
     <section className="kpi-tile space-y-3" aria-labelledby="o15-fan">
-      <h2 id="o15-fan" className="text-sm font-semibold text-white">
+      <h2 id="o15-fan" className="text-sm font-semibold text-slate-900">
         Condenser Fan Performance
       </h2>
       <div className="grid grid-cols-2 gap-2 text-xs font-mono">

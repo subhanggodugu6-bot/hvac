@@ -34,7 +34,7 @@ export function O16Header({
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-cyan-400/80 mb-1.5">O16</div>
-          <h1 className="text-[1.7rem] font-semibold text-white tracking-tight leading-tight">{def.title}</h1>
+          <h1 className="text-[1.7rem] font-semibold text-slate-900 tracking-tight leading-tight">{def.title}</h1>
           <p className="text-[13px] text-slate-400 mt-1.5 max-w-3xl leading-relaxed">{def.description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5" aria-label="O16 operating status">
             <StatusBadge tone={toneForStatus(bms)}>{`BMS ${bms}`}</StatusBadge>
@@ -53,7 +53,7 @@ export function O16Header({
         <label className="text-[11px] font-mono text-slate-500 shrink-0">
           Condenser plant
           <select
-            className="ml-2 bg-[#0c1220] border border-white/10 text-slate-200 px-2 py-1 rounded-md focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="ml-2 bg-white border border-slate-200 text-slate-800 px-2 py-1 rounded-md focus-visible:ring-2 focus-visible:ring-cyan-400"
             aria-label="Condenser plant"
             value={selectedId}
             onChange={(e) => onSelect(e.target.value)}

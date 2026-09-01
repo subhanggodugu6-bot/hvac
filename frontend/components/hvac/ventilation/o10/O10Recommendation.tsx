@@ -18,17 +18,17 @@ export function O10Recommendation({ data }: { data: VentilationOpportunity }) {
         <StatusBadge tone={toneForStatus(rec)}>{rec}</StatusBadge>
         <StatusBadge tone={toneForStatus(data.status)}>{formatDash(data.status)}</StatusBadge>
       </div>
-      <p className="text-sm text-slate-300">{formatDash(data.recommendation?.rationale)}</p>
+      <p className="text-sm text-slate-700">{formatDash(data.recommendation?.rationale)}</p>
       <button
         type="button"
-        className="text-[11px] font-mono text-cyan-300 underline-offset-2 hover:underline focus-visible:ring-2 focus-visible:ring-cyan-400"
+        className="text-[11px] font-mono text-cyan-800 underline-offset-2 hover:underline focus-visible:ring-2 focus-visible:ring-cyan-400"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
         Why this recommendation?
       </button>
       {open ? (
-        <div className="border border-white/[0.08] p-3 space-y-1 text-[12px] font-mono text-slate-300">
+        <div className="border border-slate-200 p-3 space-y-1 text-[12px] font-mono text-slate-700">
           <p>Outdoor temperature: {o10Temp(data, 'outdoor_drybulb_c')}</p>
           <p>Outdoor enthalpy: {o10Enth(data, 'outdoor_enthalpy_kj_kg')}</p>
           <p>Return enthalpy: {o10Enth(data, 'return_enthalpy_kj_kg')}</p>
@@ -39,14 +39,14 @@ export function O10Recommendation({ data }: { data: VentilationOpportunity }) {
       ) : null}
       <button
         type="button"
-        className="text-[11px] font-mono text-cyan-300 underline-offset-2 hover:underline"
+        className="text-[11px] font-mono text-cyan-800 underline-offset-2 hover:underline"
         aria-expanded={why}
         onClick={() => setWhy((v) => !v)}
       >
         Engineering rationale
       </button>
       {why ? (
-        <div className="border border-white/[0.08] p-3 space-y-2 text-[12px] text-slate-300">
+        <div className="border border-slate-200 p-3 space-y-2 text-[12px] text-slate-700">
           <p>
             <span className="text-slate-500">Why economy cycle? </span>
             Outdoor air can provide cooling when its total energy/enthalpy is favorable compared with return air.

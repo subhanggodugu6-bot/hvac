@@ -40,7 +40,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
               )}
               {crumb && (
                 <>
-                  <span className="text-slate-300">/</span>
+                  <span className="text-slate-700">/</span>
                   <span className="text-violet-600 font-semibold">{crumb}</span>
                 </>
               )}

@@ -12,7 +12,7 @@ function Bar({ label, value, total, tone }: { label: string; value: number | nul
         <span>{label}</span>
         <span>{value == null ? '—' : value}</span>
       </div>
-      <div className="h-1.5 bg-slate-800 overflow-hidden" aria-hidden>
+      <div className="h-1.5 bg-slate-200 overflow-hidden" aria-hidden>
         <div className={`h-full ${tone}`} style={{ width: pct == null ? '0%' : `${pct}%` }} />
       </div>
     </div>
@@ -32,9 +32,9 @@ export function TrainingProgress({ data }: { data: OmOpportunity }) {
           { label: 'In Progress', value: counts.inProgress },
           { label: 'Pending', value: counts.pending },
         ].map((c) => (
-          <div key={c.label} className="border border-white/[0.08] px-3 py-2">
+          <div key={c.label} className="border border-slate-200 px-3 py-2">
             <div className="text-[10px] uppercase tracking-wider text-slate-500">{c.label}</div>
-            <div className="text-lg font-mono text-slate-100 mt-1">{c.value == null ? '—' : c.value}</div>
+            <div className="text-lg font-mono text-slate-900 mt-1">{c.value == null ? '—' : c.value}</div>
           </div>
         ))}
       </div>

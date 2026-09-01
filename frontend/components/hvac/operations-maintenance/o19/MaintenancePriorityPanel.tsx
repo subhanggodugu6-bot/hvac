@@ -30,11 +30,11 @@ export function MaintenancePriorityPanel({
             <li key={r.id}>
               <button
                 type="button"
-                className="w-full text-left border border-white/[0.08] px-3 py-2 focus-visible:ring-2 focus-visible:ring-cyan-400"
+                className="w-full text-left border border-slate-200 px-3 py-2 focus-visible:ring-2 focus-visible:ring-cyan-400"
                 onClick={() => onSelect(r.id)}
               >
                 <div className="flex justify-between gap-2">
-                  <span className="font-mono text-xs text-slate-200">{r.id}</span>
+                  <span className="font-mono text-xs text-slate-800">{r.id}</span>
                   <StatusBadge tone={toneForStatus(r.status)}>{r.status.replace(/ /g, '_')}</StatusBadge>
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1">{formatDash(r.indicator)}</p>

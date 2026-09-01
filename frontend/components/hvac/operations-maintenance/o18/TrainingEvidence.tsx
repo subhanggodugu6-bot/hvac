@@ -12,7 +12,7 @@ export function TrainingEvidence({ data }: { data: OmOpportunity }) {
   return (
     <section className="kpi-tile space-y-3" aria-label="Evidence and details">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Evidence / details</h2>
-      <dl className="space-y-2 text-[12px] text-slate-300">
+      <dl className="space-y-2 text-[12px] text-slate-700">
         <div>
           <dt className="text-slate-500">Supporting evidence</dt>
           <dd className="mt-0.5 font-mono">{evidence.length ? evidence.join(' · ') : '—'}</dd>

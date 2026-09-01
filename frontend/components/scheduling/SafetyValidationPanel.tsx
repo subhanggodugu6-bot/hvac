@@ -47,13 +47,13 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
   return (
     <div className="glass-card overflow-hidden">
       {/* Header */}
-      <div className="p-4 sm:p-5 border-b border-white/5 flex items-center justify-between">
+      <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+          <div className="p-2 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700">
             <ShieldCheck className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Safety Validation Guardrails
             </h3>
             <p className="text-xs text-slate-400 font-sans mt-0.5">
@@ -85,7 +85,7 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
           <tbody className="font-mono text-xs">
             {checks.map((c, i) => (
               <tr key={i}>
-                <td className="font-sans font-medium text-slate-200">{c.name}</td>
+                <td className="font-sans font-medium text-slate-800">{c.name}</td>
                 <td>
                   <span
                     className={`inline-block text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
@@ -99,7 +99,7 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
                     {c.status}
                   </span>
                 </td>
-                <td className="text-slate-200">{c.value ?? 'AWAITING TELEMETRY'}</td>
+                <td className="text-slate-800">{c.value ?? 'AWAITING TELEMETRY'}</td>
                 <td className="text-slate-400">{c.limit}</td>
               </tr>
             ))}

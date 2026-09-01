@@ -14,8 +14,8 @@ import {
 
 function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <details className="border border-white/[0.08] px-3 py-2">
-      <summary className="cursor-pointer text-[12px] font-semibold text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400">
+    <details className="border border-slate-200 px-3 py-2">
+      <summary className="cursor-pointer text-[12px] font-semibold text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400">
         {title}
       </summary>
       <div className="mt-2 text-[12px] text-slate-400 leading-relaxed">{children}</div>

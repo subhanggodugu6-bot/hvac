@@ -63,9 +63,9 @@ export function O15Dashboard() {
 
         {actionErr && (
           <div className="col-span-12 kpi-tile" role="alert">
-            <div className="text-sm font-semibold text-white">Unable to complete O15 command</div>
+            <div className="text-sm font-semibold text-slate-900">Unable to complete O15 command</div>
             <p className="text-xs text-slate-400 mt-1">{actionErr}</p>
-            <button type="button" className="mt-2 px-3 py-1.5 border border-white/10 text-xs" onClick={() => setActionErr(null)}>
+            <button type="button" className="mt-2 px-3 py-1.5 border border-slate-200 text-xs" onClick={() => setActionErr(null)}>
               Dismiss
             </button>
           </div>
@@ -74,7 +74,7 @@ export function O15Dashboard() {
         <OpportunityGridChrome opportunityId="O15" hero={<O15Header data={dash.data || null} />}>
           {dash.isError && (
             <div className="col-span-12 kpi-tile space-y-3" role="alert">
-              <div className="text-sm font-semibold text-white">Unable to load O15 data</div>
+              <div className="text-sm font-semibold text-slate-900">Unable to load O15 data</div>
               <p className="text-xs text-slate-400">{operatorErrorMessage(dash.error instanceof ApiError ? dash.error : dash.error)}</p>
               <button type="button" className="btn-primary focus-visible:ring-2 focus-visible:ring-cyan-400" onClick={() => dash.refetch()}>
                 Retry

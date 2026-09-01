@@ -26,7 +26,7 @@ export function O15PressureRelationshipChart({ data, points }: { data: O15Dashbo
       : [];
   return (
     <section className="kpi-tile space-y-2" aria-labelledby="o15-oat-hp">
-      <h2 id="o15-oat-hp" className="text-sm font-semibold text-white">
+      <h2 id="o15-oat-hp" className="text-sm font-semibold text-slate-900">
         Outdoor Air Temperature vs Head Pressure
       </h2>
       <p className="text-[11px] text-slate-500">

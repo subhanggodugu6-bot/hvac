@@ -53,7 +53,7 @@ export function O10Dashboard() {
             <button type="button" className="btn-primary" onClick={() => opp.refetch()}>
               Retry
             </button>
-            {opp.error instanceof ApiError ? <p className="text-[11px] text-rose-300">{opp.error.message}</p> : null}
+            {opp.error instanceof ApiError ? <p className="text-[11px] text-rose-800">{opp.error.message}</p> : null}
           </div>
         ) : null}
 

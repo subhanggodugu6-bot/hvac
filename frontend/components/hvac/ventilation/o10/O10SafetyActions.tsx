@@ -62,7 +62,7 @@ export function O10SafetyActions({ data, platform }: { data: VentilationOpportun
         </dl>
         {!allowed ? (
           <div className="border border-rose-500/30 bg-rose-950/30 px-3 py-2" role="status">
-            <div className="text-[11px] font-semibold text-rose-300">DISPATCH BLOCKED</div>
+            <div className="text-[11px] font-semibold text-rose-800">DISPATCH BLOCKED</div>
             <p className="text-[11px] font-mono text-rose-200 mt-1">{block}</p>
             <p className="text-[11px] text-slate-500 mt-1">No BMS command will be issued.</p>
           </div>
@@ -104,7 +104,7 @@ export function O10SafetyActions({ data, platform }: { data: VentilationOpportun
           </button>
         </div>
         {err ? (
-          <p className="text-[11px] text-rose-300" role="alert">
+          <p className="text-[11px] text-rose-800" role="alert">
             {err}
           </p>
         ) : null}

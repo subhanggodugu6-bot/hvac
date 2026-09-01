@@ -15,12 +15,12 @@ export function PlanningActivityTimeline({ data }: { data: OmOpportunity }) {
       ) : (
         <ol className="space-y-2">
           {events.map((e, i) => (
-            <li key={`${e.timestamp || 't'}-${i}`} className="border border-white/[0.06] px-3 py-2">
+            <li key={`${e.timestamp || 't'}-${i}`} className="border border-slate-200 px-3 py-2">
               <div className="flex flex-wrap justify-between gap-2 text-[11px] font-mono text-slate-500">
                 <span>{formatDash(e.event_type)}</span>
                 <span>{o17SecondsAgo(e.timestamp)}</span>
               </div>
-              <p className="text-[12px] text-slate-300 mt-1">{formatDash(e.message)}</p>
+              <p className="text-[12px] text-slate-700 mt-1">{formatDash(e.message)}</p>
               <p className="text-[10px] font-mono text-slate-600 mt-1">
                 {formatDash(e.actor)}
                 {e.confidence != null ? ` · ${Math.round(e.confidence <= 1 ? e.confidence * 100 : e.confidence)}%` : ''}

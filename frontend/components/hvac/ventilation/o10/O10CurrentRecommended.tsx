@@ -6,9 +6,9 @@ import type { VentilationOpportunity } from '@/lib/hvac/ventilationTypes';
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex justify-between gap-3 py-1.5 text-xs font-mono border-b border-white/[0.04]">
+    <div className="flex justify-between gap-3 py-1.5 text-xs font-mono border-b border-slate-200">
       <span className="text-slate-500">{label}</span>
-      <span className="text-slate-100 text-right">{value}</span>
+      <span className="text-slate-900 text-right">{value}</span>
     </div>
   );
 }

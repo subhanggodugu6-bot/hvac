@@ -27,10 +27,10 @@ interface TipProps {
 function Tip({ active, payload, label }: TipProps) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#0c1220] border border-white/[0.08] px-2.5 py-2 text-[11px] font-mono">
+    <div className="bg-white border border-slate-200 px-2.5 py-2 text-[11px] font-mono">
       <div className="text-slate-400 mb-1">{label}</div>
       {payload.map((p) => (
-        <div key={p.name} className="text-slate-200">
+        <div key={p.name} className="text-slate-800">
           {p.name}: {p.value == null ? '—' : p.value}
         </div>
       ))}
@@ -58,7 +58,7 @@ export function EnergyAwarenessChart({ data, dash }: { data: OmOpportunity; dash
               type="button"
               aria-pressed={range === r}
               className={`px-2 py-1 text-[11px] font-mono border focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                range === r ? 'border-cyan-500/40 text-cyan-300' : 'border-white/10 text-slate-400'
+                range === r ? 'border-cyan-500/40 text-cyan-800' : 'border-slate-200 text-slate-400'
               }`}
               onClick={() => setRange(r)}
             >

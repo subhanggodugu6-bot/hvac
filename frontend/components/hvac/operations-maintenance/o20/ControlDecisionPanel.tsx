@@ -14,31 +14,31 @@ export function ControlDecisionPanel({ data }: { data: OmOpportunity }) {
       <dl className="space-y-2 text-[12px]">
         <div>
           <dt className="text-slate-500">Decision</dt>
-          <dd className="font-mono text-slate-100 mt-0.5">{decision}</dd>
+          <dd className="font-mono text-slate-900 mt-0.5">{decision}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Reason</dt>
-          <dd className="text-slate-300 mt-0.5">{formatDash(data.supervisory?.reason)}</dd>
+          <dd className="text-slate-700 mt-0.5">{formatDash(data.supervisory?.reason)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Confidence</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o20ConfidencePct(data.confidence)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o20ConfidencePct(data.confidence)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Telemetry Quality</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o20QualityLabel(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o20QualityLabel(data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Safety</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.safety?.status)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.safety?.status)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Current State</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.supervisory?.currentState || data.current?.controllerHealth)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.supervisory?.currentState || data.current?.controllerHealth)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Recommended State</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.supervisory?.recommendedState)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.supervisory?.recommendedState)}</dd>
         </div>
       </dl>
       <p className="text-[11px] text-slate-500">No automatic BMS or firmware write from this panel.</p>

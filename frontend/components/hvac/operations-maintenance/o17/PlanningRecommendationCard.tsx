@@ -28,34 +28,34 @@ export function PlanningRecommendationCard({ data }: { data: OmOpportunity }) {
           <h2 id="o17-rec-title" className="text-[11px] uppercase tracking-wider text-slate-500">
             Planning recommendations
           </h2>
-          <h3 className="text-sm font-semibold text-slate-100 mt-1">{formatDash(data.recommendation?.action)}</h3>
+          <h3 className="text-sm font-semibold text-slate-900 mt-1">{formatDash(data.recommendation?.action)}</h3>
         </div>
         <StatusBadge tone={toneForStatus(status)}>{status}</StatusBadge>
       </div>
       <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2 text-[12px]">
         <div>
           <dt className="text-slate-500">Engineering reason</dt>
-          <dd className="text-slate-300 mt-0.5">{formatDash(data.recommendation?.rationale)}</dd>
+          <dd className="text-slate-700 mt-0.5">{formatDash(data.recommendation?.rationale)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Current condition</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.supervisory?.currentState)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.supervisory?.currentState)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Recommended condition</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.supervisory?.recommendedState)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.supervisory?.recommendedState)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Expected energy impact</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17Kw(data.recommendation?.expectedImpactKw)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17Kw(data.recommendation?.expectedImpactKw)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Confidence</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17ConfidencePct(data.recommendation?.confidence)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17ConfidencePct(data.recommendation?.confidence)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Supporting data</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">
+          <dd className="font-mono text-slate-800 mt-0.5">
             {(data.recommendation?.evidence || []).length
               ? (data.recommendation?.evidence || []).join(' · ')
               : '—'}
@@ -64,14 +64,14 @@ export function PlanningRecommendationCard({ data }: { data: OmOpportunity }) {
       </dl>
       <button
         type="button"
-        className="text-[11px] font-mono text-cyan-300 underline-offset-2 hover:underline focus-visible:ring-2 focus-visible:ring-cyan-400"
+        className="text-[11px] font-mono text-cyan-800 underline-offset-2 hover:underline focus-visible:ring-2 focus-visible:ring-cyan-400"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
         Why this recommendation?
       </button>
       {open ? (
-        <div className="border border-white/[0.08] p-3 space-y-2 text-[12px] text-slate-300">
+        <div className="border border-slate-200 p-3 space-y-2 text-[12px] text-slate-700">
           <p>
             <span className="text-slate-500">Current state: </span>
             {formatDash(data.supervisory?.currentState)}
@@ -115,7 +115,7 @@ export function PlanningRecommendationCard({ data }: { data: OmOpportunity }) {
         )}
       </div>
       {dispatchPlan.isError ? (
-        <p className="text-[11px] text-rose-300" role="alert">
+        <p className="text-[11px] text-rose-800" role="alert">
           {actionErrorText(dispatchPlan.error)}
         </p>
       ) : null}

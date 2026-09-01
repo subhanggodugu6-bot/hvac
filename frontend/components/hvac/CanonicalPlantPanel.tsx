@@ -12,9 +12,9 @@ function prettyName(name: string) {
 
 function qualityClass(q?: string) {
   const v = String(q || '').toUpperCase();
-  if (v === 'GOOD') return 'text-emerald-300';
+  if (v === 'GOOD') return 'text-emerald-800';
   if (v === 'STALE') return 'text-amber-300';
-  if (v === 'BAD') return 'text-rose-300';
+  if (v === 'BAD') return 'text-rose-800';
   return 'text-slate-500';
 }
 
@@ -66,7 +66,7 @@ export function CanonicalPlantPanel({ opportunityId }: { opportunityId: string }
             {entries.map(([name, f]) => {
               const empty = f.value == null || String(f.quality || '').toUpperCase() === 'BAD';
               return (
-                <div key={name} className="rounded-lg border border-white/[0.07] bg-white/[0.025] px-3 py-2.5">
+                <div key={name} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
                   <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">{prettyName(name)}</div>
                   <div className="mt-1 text-[15px] font-semibold tabular-nums text-slate-50">
                     {empty ? '—' : displayValue(f.value)}
@@ -82,7 +82,7 @@ export function CanonicalPlantPanel({ opportunityId }: { opportunityId: string }
           </div>
         )}
         {missing.length > 0 && (
-          <div className="text-[11px] text-amber-200/90">Waiting for: {missing.map(prettyName).join(', ')}</div>
+          <div className="text-[11px] text-amber-800/90">Waiting for: {missing.map(prettyName).join(', ')}</div>
         )}
       </section>
 
@@ -99,7 +99,7 @@ export function CanonicalPlantPanel({ opportunityId }: { opportunityId: string }
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-lg border border-white/[0.07] bg-white/[0.025] px-3 py-3">
+          <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
             <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Current</div>
             <div className="mt-1 text-xl font-semibold tabular-nums text-slate-50">
               {r.current?.value == null ? '—' : r.current.value}
@@ -122,7 +122,7 @@ export function CanonicalPlantPanel({ opportunityId }: { opportunityId: string }
           <span>Energy {r.energy_impact == null ? 'NO DATA' : r.energy_impact}</span>
           {r.ml ? <span>MODEL PREDICTION {r.ml.status}</span> : null}
         </div>
-        <div className="text-[11px] text-rose-300">{r.dispatch?.reason || 'WRITE_DISABLED'}</div>
+        <div className="text-[11px] text-rose-800">{r.dispatch?.reason || 'WRITE_DISABLED'}</div>
       </section>
     </div>
   );

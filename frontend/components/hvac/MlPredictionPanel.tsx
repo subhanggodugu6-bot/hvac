@@ -42,25 +42,25 @@ export function MlPredictionPanel({ opportunityId }: { opportunityId: string }) 
 
   return (
     <section className="kpi-tile space-y-3" aria-label="ML prediction">
-      <div className="text-[10px] font-mono tracking-[0.18em] text-violet-300/90">ML PREDICTION</div>
+      <div className="text-[10px] font-mono tracking-[0.18em] text-violet-700">ML PREDICTION</div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-[12px]">
         <div>
           <div className="text-slate-500">ML provenance</div>
-          <div className="text-slate-100">{liveBlocked}</div>
+          <div className="text-slate-900">{liveBlocked}</div>
         </div>
         <div>
           <div className="text-slate-500">Model</div>
-          <div className="text-slate-100">{String(pred.data?.model_id || model.data?.model?.model_id || '—')}</div>
+          <div className="text-slate-900">{String(pred.data?.model_id || model.data?.model?.model_id || '—')}</div>
         </div>
         <div>
           <div className="text-slate-500">Confidence</div>
-          <div className="text-slate-100">
+          <div className="text-slate-900">
             {pred.data?.confidence == null ? '—' : `${Math.round(Number(pred.data.confidence) * 100)}%`}
           </div>
         </div>
         <div>
           <div className="text-slate-500">Prediction</div>
-          <div className="text-slate-100">
+          <div className="text-slate-900">
             {pred.data?.prediction?.value != null
               ? String(pred.data.prediction.value)
               : pred.data?.prediction?.label != null

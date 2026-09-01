@@ -68,16 +68,16 @@ export function MaintenanceWorkOrderTable({
                   <td className="font-mono">{formatDash(o.completedAt)}</td>
                   <td>
                     <div className="flex flex-wrap gap-1">
-                      <button type="button" className="px-2 py-1 text-[10px] border border-white/10 focus-visible:ring-2 focus-visible:ring-cyan-400" disabled={!o.id || st === 'ASSIGNED' || st === 'COMPLETED'} onClick={() => act(o.id, 'ASSIGNED')}>
+                      <button type="button" className="px-2 py-1 text-[10px] border border-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" disabled={!o.id || st === 'ASSIGNED' || st === 'COMPLETED'} onClick={() => act(o.id, 'ASSIGNED')}>
                         Assign
                       </button>
-                      <button type="button" className="px-2 py-1 text-[10px] border border-white/10 focus-visible:ring-2 focus-visible:ring-cyan-400" disabled={!o.id || st === 'IN_PROGRESS' || st === 'COMPLETED'} onClick={() => act(o.id, 'IN_PROGRESS')}>
+                      <button type="button" className="px-2 py-1 text-[10px] border border-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" disabled={!o.id || st === 'IN_PROGRESS' || st === 'COMPLETED'} onClick={() => act(o.id, 'IN_PROGRESS')}>
                         Start
                       </button>
-                      <button type="button" className="px-2 py-1 text-[10px] border border-white/10 focus-visible:ring-2 focus-visible:ring-cyan-400" disabled={!o.id || st === 'COMPLETED'} onClick={() => act(o.id, 'COMPLETED')}>
+                      <button type="button" className="px-2 py-1 text-[10px] border border-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" disabled={!o.id || st === 'COMPLETED'} onClick={() => act(o.id, 'COMPLETED')}>
                         Complete
                       </button>
-                      <button type="button" className="px-2 py-1 text-[10px] border border-white/10 focus-visible:ring-2 focus-visible:ring-cyan-400" onClick={() => onView(o.equipmentId)}>
+                      <button type="button" className="px-2 py-1 text-[10px] border border-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400" onClick={() => onView(o.equipmentId)}>
                         View Details
                       </button>
                     </div>
@@ -89,7 +89,7 @@ export function MaintenanceWorkOrderTable({
         </tbody>
       </EngineeringTable>
       {maintenanceAction.isError ? (
-        <p className="text-[11px] text-rose-300" role="alert">
+        <p className="text-[11px] text-rose-800" role="alert">
           {o19ErrorMessage(maintenanceAction.error)}
         </p>
       ) : null}

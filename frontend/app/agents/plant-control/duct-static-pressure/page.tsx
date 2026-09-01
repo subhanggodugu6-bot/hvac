@@ -201,10 +201,10 @@ export default function O5DuctStaticPressureStudio() {
       {statusMessage && (
         <div className={`p-3 rounded-xl border flex items-center gap-2.5 text-xs font-medium ${
           statusMessage.type === 'success'
-            ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300'
+            ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-800'
             : statusMessage.type === 'error'
-            ? 'bg-rose-950/40 border-rose-500/30 text-rose-300'
-            : 'bg-cyan-950/40 border-cyan-500/30 text-cyan-300'
+            ? 'bg-rose-950/40 border-rose-500/30 text-rose-800'
+            : 'bg-cyan-50 border-cyan-500/30 text-cyan-800'
         }`}>
           {statusMessage.type === 'success' ? (
             <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
@@ -225,7 +225,7 @@ export default function O5DuctStaticPressureStudio() {
             <span>1. Current Duct SP</span>
             <Gauge className="w-3.5 h-3.5 text-cyan-400" />
           </div>
-          <div className="text-xl font-bold text-white">
+          <div className="text-xl font-bold text-slate-900">
             {data?.current_static_pressure?.toFixed(2) ?? 'NO DATA'} <span className="text-xs font-normal text-slate-400">in.w.c.</span>
           </div>
           <div className="text-[10px] text-slate-400">Baseline SP: {data?.current_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</div>
@@ -233,11 +233,11 @@ export default function O5DuctStaticPressureStudio() {
 
         {/* 2. Optimized Static Pressure */}
         <div className="kpi-tile kpi-tile-accent">
-          <div className="flex items-center justify-between text-cyan-300 text-xs">
+          <div className="flex items-center justify-between text-cyan-800 text-xs">
             <span>2. Optimized SP</span>
             <Sliders className="w-3.5 h-3.5 text-cyan-400" />
           </div>
-          <div className="text-xl font-bold text-cyan-300">
+          <div className="text-xl font-bold text-cyan-800">
             {data?.optimized_setpoint?.toFixed(2) ?? 'NO DATA'} <span className="text-xs font-normal text-cyan-400">in.w.c.</span>
           </div>
           <div className="text-[10px] text-emerald-400 flex items-center gap-1">
@@ -263,7 +263,7 @@ export default function O5DuctStaticPressureStudio() {
             <span>4. Fan Power</span>
             <Zap className="w-3.5 h-3.5 text-amber-400" />
           </div>
-          <div className="text-xl font-bold text-white">
+          <div className="text-xl font-bold text-slate-900">
             {data?.fan_power_optimized_kw?.toFixed(1) ?? 'NO DATA'} <span className="text-xs font-normal text-slate-400">kW</span>
           </div>
           <div className="text-[10px] text-slate-400">Current: {data?.fan_power_current_kw?.toFixed(1) ?? 'NO DATA'} kW</div>
@@ -271,11 +271,11 @@ export default function O5DuctStaticPressureStudio() {
 
         {/* 5. Fan Energy Impact */}
         <div className="kpi-tile kpi-tile-accent">
-          <div className="flex items-center justify-between text-emerald-300 text-xs">
+          <div className="flex items-center justify-between text-emerald-800 text-xs">
             <span>5. Energy Impact</span>
             <TrendingDown className="w-3.5 h-3.5 text-emerald-400" />
           </div>
-          <div className="text-xl font-bold text-emerald-300">
+          <div className="text-xl font-bold text-emerald-800">
             -{data?.power_shed_kw?.toFixed(1) ?? 'NO DATA'} <span className="text-xs font-normal text-emerald-400">kW shed</span>
           </div>
           <div className="text-[10px] text-emerald-400">~{data?.daily_savings_kwh?.toFixed(1) ?? 'NO DATA'} kWh / day</div>
@@ -287,7 +287,7 @@ export default function O5DuctStaticPressureStudio() {
             <span>6. Max Damper</span>
             <Layers className="w-3.5 h-3.5 text-cyan-400" />
           </div>
-          <div className="text-xl font-bold text-white">
+          <div className="text-xl font-bold text-slate-900">
             {data?.highest_vav_damper_pct?.toFixed(1) ?? 'NO DATA'}%
           </div>
           <div className="text-[10px] text-slate-400">90th %ile: {data?.ninety_pct_damper_pct?.toFixed(1) ?? 'NO DATA'}%</div>
@@ -311,7 +311,7 @@ export default function O5DuctStaticPressureStudio() {
             <span>8. AHU Airflow</span>
             <Wind className="w-3.5 h-3.5 text-cyan-400" />
           </div>
-          <div className="text-xl font-bold text-white">
+          <div className="text-xl font-bold text-slate-900">
             {totalAirflow.toLocaleString()} <span className="text-xs font-normal text-slate-400">CFM</span>
           </div>
           <div className="text-[10px] text-slate-400">Total Supply Air Delivery</div>
@@ -323,7 +323,7 @@ export default function O5DuctStaticPressureStudio() {
             <span>9. Damper Headroom</span>
             <Gauge className="w-3.5 h-3.5 text-blue-400" />
           </div>
-          <div className="text-xl font-bold text-white">
+          <div className="text-xl font-bold text-slate-900">
             {data?.damper_headroom_pct != null ? `+${data.damper_headroom_pct}%` : 'NO DATA'} <span className="text-xs font-normal text-slate-400">margin</span>
           </div>
           <div className="text-[10px] text-slate-400">{data?.max_damper_limit != null ? `Max limit ceiling: ${data.max_damper_limit}%` : 'Damper authority'}</div>
@@ -345,16 +345,16 @@ export default function O5DuctStaticPressureStudio() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart 1: Duct Static Pressure vs Time */}
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/[0.08] space-y-4 lg:col-span-2">
+        <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
               <Activity className="w-4 h-4 text-cyan-400" />
               Duct Static Pressure vs Time (SP vs Measured)
             </h2>
             <span className="text-[11px] text-slate-400">Live 6-Hour Operating Envelope</span>
           </div>
 
-          <div className="h-56 w-full bg-slate-950/60 rounded-xl p-4 border border-white/[0.04] flex flex-col justify-between">
+          <div className="h-56 w-full bg-slate-100 rounded-xl p-4 border border-slate-200 flex flex-col justify-between">
             {/* Custom SVG Chart */}
             <div className="relative w-full h-40">
               <svg className="w-full h-full overflow-visible" viewBox="0 0 500 120" preserveAspectRatio="none">
@@ -388,7 +388,7 @@ export default function O5DuctStaticPressureStudio() {
             </div>
 
             {/* Time Axis Labels */}
-            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-white/[0.04]">
+            <div className="flex items-center justify-between text-[11px] text-slate-500 pt-2 border-t border-slate-200">
               {pressureTimeline.map((p, idx) => (
                 <div key={idx} className="flex flex-col items-center">
                   <span>{p.time}</span>
@@ -415,22 +415,22 @@ export default function O5DuctStaticPressureStudio() {
         </div>
 
         {/* Chart 2: Fan Affinity Cube-Law Power Curve */}
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/[0.08] space-y-4">
+        <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
               <Zap className="w-4 h-4 text-amber-400" />
               Fan Power Affinity Impact
             </h2>
             <span className="text-[10px] text-emerald-400 font-mono">{data?.fan_power_reduction_pct != null ? `-${data.fan_power_reduction_pct}% kW` : 'NO DATA'}</span>
           </div>
 
-          <div className="space-y-3 bg-slate-950/60 p-4 rounded-xl border border-white/[0.04]">
+          <div className="space-y-3 bg-slate-100 p-4 rounded-xl border border-slate-200">
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
                 <span className="text-slate-400">Baseline (2.00″ w.c.)</span>
-                <span className="text-slate-200 font-semibold">{data?.fan_power_current_kw != null ? `${Number(data.fan_power_current_kw).toFixed(1)} kW` : 'NO DATA'}</span>
+                <span className="text-slate-800 font-semibold">{data?.fan_power_current_kw != null ? `${Number(data.fan_power_current_kw).toFixed(1)} kW` : 'NO DATA'}</span>
               </div>
-              <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
                 <div className="h-full bg-slate-500 rounded-full w-full" />
               </div>
             </div>
@@ -438,30 +438,30 @@ export default function O5DuctStaticPressureStudio() {
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
                 <span className="text-cyan-400 font-medium">Optimized {data?.optimized_setpoint != null ? `(${Number(data.optimized_setpoint).toFixed(2)}″ w.c.)` : ''}</span>
-                <span className="text-cyan-300 font-bold">{data?.fan_power_optimized_kw != null ? `${Number(data.fan_power_optimized_kw).toFixed(1)} kW` : 'NO DATA'}</span>
+                <span className="text-cyan-800 font-bold">{data?.fan_power_optimized_kw != null ? `${Number(data.fan_power_optimized_kw).toFixed(1)} kW` : 'NO DATA'}</span>
               </div>
-              <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
+              <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
                 <div className="h-full bg-gradient-to-r from-cyan-500 to-emerald-400 rounded-full" style={{ width: `${data?.fan_power_current_kw && data?.fan_power_optimized_kw ? Math.min(100, (Number(data.fan_power_optimized_kw) / Number(data.fan_power_current_kw)) * 100) : 0}%` }} />
               </div>
             </div>
 
-            <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-xs">
+            <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
               <span className="text-slate-400">Net Continuous Shed</span>
               <span className="text-emerald-400 font-bold">{data?.power_shed_kw != null ? `-${Number(data.power_shed_kw).toFixed(1)} kW` : 'NO DATA'}</span>
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/40 border border-white/[0.04] text-[11px] text-slate-400 leading-relaxed">
-            <strong className="text-slate-300">Affinity Principle:</strong> Fan power varies with the pressure ratio to the 1.45th exponent: <span className="text-cyan-300 font-mono">P₂ = P₁ · (SP₂/SP₁)^1.45</span>. A 20% static pressure trim sheds ~27% fan motor kW.
+          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-[11px] text-slate-400 leading-relaxed">
+            <strong className="text-slate-700">Affinity Principle:</strong> Fan power varies with the pressure ratio to the 1.45th exponent: <span className="text-cyan-800 font-mono">P₂ = P₁ · (SP₂/SP₁)^1.45</span>. A 20% static pressure trim sheds ~27% fan motor kW.
           </div>
         </div>
       </div>
 
       {/* VAV Demand Distribution & VAV Telemetry Table */}
-      <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/[0.08] space-y-4">
+      <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
-            <h2 className="text-base font-semibold text-white flex items-center gap-2">
+            <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
               <Layers className="w-4 h-4 text-cyan-400" />
               Downstream VAV Damper Distribution & Zone Telemetry
             </h2>
@@ -470,7 +470,7 @@ export default function O5DuctStaticPressureStudio() {
             </p>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <span className="px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 font-mono">
+            <span className="px-2.5 py-1 rounded-md bg-slate-200 text-slate-700 font-mono">
               90th %ile: {data?.ninety_pct_damper_pct?.toFixed(1) ?? 'NO DATA'}%
             </span>
             <span className="px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/30 text-amber-300 font-mono">
@@ -480,9 +480,9 @@ export default function O5DuctStaticPressureStudio() {
         </div>
 
         {/* VAV Table */}
-        <div className="overflow-x-auto rounded-xl border border-white/[0.08]">
+        <div className="overflow-x-auto rounded-xl border border-slate-200">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-950/80 text-slate-400 font-medium border-b border-white/[0.08]">
+            <thead className="bg-slate-100 text-slate-400 font-medium border-b border-slate-200">
               <tr>
                 <th className="py-2.5 px-3">VAV ID</th>
                 <th className="py-2.5 px-3">Zone Name</th>
@@ -494,15 +494,15 @@ export default function O5DuctStaticPressureStudio() {
                 <th className="py-2.5 px-3 text-right">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.04] text-slate-300 font-mono">
+            <tbody className="divide-y divide-white/[0.04] text-slate-700 font-mono">
               {rawZones.map((zone: any) => (
                 <tr
                   key={zone.id}
-                  className={`hover:bg-slate-800/40 transition-colors ${
+                  className={`hover:bg-slate-100 transition-colors ${
                     zone.is_critical || zone.id === 'VAV-103' ? 'bg-amber-500/5' : ''
                   }`}
                 >
-                  <td className="py-2.5 px-3 font-semibold text-white flex items-center gap-1.5">
+                  <td className="py-2.5 px-3 font-semibold text-slate-900 flex items-center gap-1.5">
                     {zone.id}
                     {zone.is_critical && (
                       <span className="px-1.5 py-0.5 rounded text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 font-sans">
@@ -510,13 +510,13 @@ export default function O5DuctStaticPressureStudio() {
                       </span>
                     )}
                   </td>
-                  <td className="py-2.5 px-3 font-sans text-slate-200">{zone.name}</td>
+                  <td className="py-2.5 px-3 font-sans text-slate-800">{zone.name}</td>
                   <td className="py-2.5 px-3">
                     {zone.temp_c?.toFixed(1) ?? 'NO DATA'}°C / <span className="text-slate-500">{zone.setpoint_c?.toFixed(1) ?? 'NO DATA'}°C</span>
                   </td>
                   <td className="py-2.5 px-3">
                     <div className="flex items-center gap-2">
-                      <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="w-16 h-1.5 bg-slate-200 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${
                             (zone.damper_pct || 0) > 80
@@ -531,7 +531,7 @@ export default function O5DuctStaticPressureStudio() {
                       <span className="font-semibold">{zone.damper_pct?.toFixed(1) ?? 'NO DATA'}%</span>
                     </div>
                   </td>
-                  <td className="py-2.5 px-3 font-semibold text-cyan-300">
+                  <td className="py-2.5 px-3 font-semibold text-cyan-800">
                     {(zone.airflow_cfm || 0).toLocaleString()} CFM
                   </td>
                   <td className="py-2.5 px-3 font-sans">
@@ -540,7 +540,7 @@ export default function O5DuctStaticPressureStudio() {
                         ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
                         : zone.pressure_demand === 'TRIM'
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                        : 'bg-slate-800 text-slate-400'
+                        : 'bg-slate-200 text-slate-400'
                     }`}>
                       {zone.pressure_demand || 'STABLE'}
                     </span>
@@ -571,9 +571,9 @@ export default function O5DuctStaticPressureStudio() {
 
       {/* Decision Section & Candidate Evaluation Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/[0.08] space-y-4 lg:col-span-2">
+        <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
               <Sliders className="w-4 h-4 text-cyan-400" />
               Candidate Evaluation Matrix & Recommendation
             </h2>
@@ -588,35 +588,35 @@ export default function O5DuctStaticPressureStudio() {
                   key={c.candidate_id}
                   className={`p-3 rounded-xl border transition-all ${
                     isSelected
-                      ? 'bg-cyan-950/40 border-cyan-500/50 shadow-md shadow-cyan-950/50 ring-1 ring-cyan-500/30'
+                      ? 'bg-cyan-50 border-cyan-500/50 shadow-md shadow-cyan-200 ring-1 ring-cyan-500/30'
                       : c.safety_status === 'REJECT'
-                      ? 'bg-slate-950/40 border-rose-500/20 opacity-60'
-                      : 'bg-slate-950/60 border-white/[0.06] hover:border-white/[0.12]'
+                      ? 'bg-slate-100 border-rose-500/20 opacity-60'
+                      : 'bg-slate-100 border-slate-200 hover:border-slate-200'
                   }`}
                 >
                   <div className="flex items-center justify-between text-[11px] font-semibold">
-                    <span className={isSelected ? 'text-cyan-300' : 'text-slate-400'}>
+                    <span className={isSelected ? 'text-cyan-800' : 'text-slate-400'}>
                       {c.candidate_id}
                     </span>
                     <span className={`px-1.5 py-0.5 rounded text-[9px] ${
                       isSelected
-                        ? 'bg-cyan-500/20 text-cyan-300 font-bold'
+                        ? 'bg-cyan-500/20 text-cyan-800 font-bold'
                         : c.safety_status === 'REJECT'
-                        ? 'bg-rose-500/20 text-rose-300'
-                        : 'bg-slate-800 text-slate-400'
+                        ? 'bg-rose-500/20 text-rose-800'
+                        : 'bg-slate-200 text-slate-400'
                     }`}>
                       {c.decision}
                     </span>
                   </div>
 
-                  <div className="mt-2 text-base font-bold text-white font-mono">
+                  <div className="mt-2 text-base font-bold text-slate-900 font-mono">
                     {c.static_pressure_sp?.toFixed(2)}″ <span className="text-[10px] font-normal text-slate-400">w.c.</span>
                   </div>
 
                   <div className="mt-2 space-y-1 text-[10px] text-slate-400 font-mono">
                     <div className="flex justify-between">
                       <span>Fan kW:</span>
-                      <span className="text-slate-200 font-semibold">{c.predicted_fan_power_kw?.toFixed(1)}</span>
+                      <span className="text-slate-800 font-semibold">{c.predicted_fan_power_kw?.toFixed(1)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shed:</span>
@@ -624,7 +624,7 @@ export default function O5DuctStaticPressureStudio() {
                     </div>
                     <div className="flex justify-between">
                       <span>Max Damper:</span>
-                      <span className={(c.predicted_max_damper_pct ?? 0) > 90 ? 'text-amber-400 font-semibold' : 'text-slate-300'}>
+                      <span className={(c.predicted_max_damper_pct ?? 0) > 90 ? 'text-amber-400 font-semibold' : 'text-slate-700'}>
                         {c.predicted_max_damper_pct?.toFixed(1)}%
                       </span>
                     </div>
@@ -637,10 +637,10 @@ export default function O5DuctStaticPressureStudio() {
             ) : null}
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-950/60 border border-white/[0.06] flex items-center justify-between text-xs">
+          <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-between text-xs">
             <div className="space-y-0.5">
-              <div className="text-slate-400">Current Setpoint: <strong className="text-white font-mono">{data?.current_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</strong></div>
-              <div className="text-slate-400">Recommended Setpoint: <strong className="text-cyan-300 font-mono">{data?.optimized_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</strong></div>
+              <div className="text-slate-400">Current Setpoint: <strong className="text-slate-900 font-mono">{data?.current_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</strong></div>
+              <div className="text-slate-400">Recommended Setpoint: <strong className="text-cyan-800 font-mono">{data?.optimized_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</strong></div>
             </div>
             <div className="text-right space-y-0.5">
               <div className="text-emerald-400 font-bold">Expected Net Shed: {data?.power_shed_kw != null ? `-${Number(data.power_shed_kw).toFixed(1)} kW` : 'NO DATA'}</div>
@@ -650,9 +650,9 @@ export default function O5DuctStaticPressureStudio() {
         </div>
 
         {/* Safety & Guardrail Checklist */}
-        <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/[0.08] space-y-4">
+        <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+            <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               Safety & Deterministic Guardrails
             </h2>
@@ -662,35 +662,35 @@ export default function O5DuctStaticPressureStudio() {
           </div>
 
           <div className="space-y-2 text-xs">
-            <div className="p-2.5 rounded-lg bg-slate-950/60 border border-white/[0.04] flex items-center justify-between">
+            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
               <span className="text-slate-400">Telemetry Freshness</span>
               <span className="text-emerald-400 font-semibold flex items-center gap-1">
                 {data?.telemetry_age || (data?.telemetry?.ageSeconds != null ? `${data.telemetry.ageSeconds}s` : 'NO DATA')}
               </span>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-slate-950/60 border border-white/[0.04] flex items-center justify-between">
+            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
               <span className="text-slate-400">Sensor Signal Quality</span>
               <span className="text-emerald-400 font-semibold flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" /> 100% GOOD
               </span>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-slate-950/60 border border-white/[0.04] flex items-center justify-between">
+            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
               <span className="text-slate-400">Critical Zone Headroom</span>
               <span className="text-emerald-400 font-semibold flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" /> 88.5% (&le;90%)
               </span>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-slate-950/60 border border-white/[0.04] flex items-center justify-between">
+            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
               <span className="text-slate-400">Engineering Min/Max Limits</span>
               <span className="text-emerald-400 font-semibold flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" /> 1.00″ &le; 1.60″ &le; 2.40″
               </span>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-slate-950/60 border border-white/[0.04] flex items-center justify-between">
+            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
               <span className="text-slate-400">Rate of Change Clamping</span>
               <span className="text-emerald-400 font-semibold flex items-center gap-1">
                 <Check className="w-3.5 h-3.5" /> &le; 0.20″/10min
@@ -701,9 +701,9 @@ export default function O5DuctStaticPressureStudio() {
       </div>
 
       {/* Verification & Rollback Audit Section */}
-      <div className="p-5 rounded-2xl bg-slate-900/70 border border-white/[0.08] space-y-4">
+      <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-cyan-400" />
             15-Minute M&V Verification & Fail-Safe Rollback Engine
           </h2>
@@ -711,25 +711,25 @@ export default function O5DuctStaticPressureStudio() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-          <div className="p-3 rounded-xl bg-slate-950/60 border border-white/[0.04] space-y-1">
+          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">Target BACnet Point</div>
-            <div className="text-sm font-bold text-white font-mono">{data?.target_point ?? 'NO DATA'}</div>
+            <div className="text-sm font-bold text-slate-900 font-mono">{data?.target_point ?? 'NO DATA'}</div>
             <div className="text-[10px] text-slate-500">Instance: AV-2041</div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/60 border border-white/[0.04] space-y-1">
+          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">Dispatched Value</div>
-            <div className="text-sm font-bold text-cyan-300 font-mono">{data?.optimized_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</div>
+            <div className="text-sm font-bold text-cyan-800 font-mono">{data?.optimized_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</div>
             <div className="text-[10px] text-emerald-400">BMS Acknowledged</div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/60 border border-white/[0.04] space-y-1">
+          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">Actual Response Window</div>
-            <div className="text-sm font-bold text-white font-mono">{data?.verified_response || 'NO DATA'}</div>
+            <div className="text-sm font-bold text-slate-900 font-mono">{data?.verified_response || 'NO DATA'}</div>
             <div className="text-[10px] text-emerald-400">{data?.tracking_error || 'Verification window'}</div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-950/60 border border-white/[0.04] space-y-1">
+          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">Verification Outcome</div>
             <div className="text-sm font-bold text-emerald-400 font-mono">{data?.verification_outcome || 'NO DATA'}</div>
             <div className="text-[10px] text-slate-400">{data?.fail_safe_baseline != null ? `Fail-safe baseline: ${data.fail_safe_baseline}″ w.c.` : 'Fail-safe baseline unavailable'}</div>

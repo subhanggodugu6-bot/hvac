@@ -55,7 +55,7 @@ export function EngineeringRecommendation({ data, onError }: { data: O16Dashboar
   return (
     <section className="kpi-tile space-y-3 col-span-12 lg:col-span-7" aria-labelledby="o16-eng-rec">
       <div className="flex items-start justify-between gap-2">
-        <h2 id="o16-eng-rec" className="text-sm font-semibold text-white">
+        <h2 id="o16-eng-rec" className="text-sm font-semibold text-slate-900">
           Engineering Recommendation
         </h2>
         <StatusBadge tone={toneForStatus(decision)}>{decision}</StatusBadge>
@@ -64,15 +64,15 @@ export function EngineeringRecommendation({ data, onError }: { data: O16Dashboar
         <EmptyState title="No optimization recommendation available" detail="The engine has not produced a write recommendation from current telemetry." />
       ) : (
         <>
-          <p className="text-xs text-slate-300 leading-relaxed">{data.reason || rec.reason || '—'}</p>
+          <p className="text-xs text-slate-700 leading-relaxed">{data.reason || rec.reason || '—'}</p>
           <div className="grid grid-cols-2 gap-3 text-xs font-mono">
             <div>
               Current target
-              <div className="text-lg text-slate-100">{fmtDash(current)}</div>
+              <div className="text-lg text-slate-900">{fmtDash(current)}</div>
             </div>
             <div>
               Recommended target
-              <div className="text-lg text-cyan-300">{fmtDash(recommended)}</div>
+              <div className="text-lg text-cyan-800">{fmtDash(recommended)}</div>
             </div>
           </div>
           <div className="text-xs text-slate-400">
@@ -107,7 +107,7 @@ export function EngineeringRecommendation({ data, onError }: { data: O16Dashboar
             {approval && (
               <button
                 type="button"
-                className="px-3 py-1.5 border border-white/10 text-xs focus-visible:ring-2 focus-visible:ring-cyan-400"
+                className="px-3 py-1.5 border border-slate-200 text-xs focus-visible:ring-2 focus-visible:ring-cyan-400"
                 disabled={!cmd?.command_id}
                 onClick={() => cmd?.command_id && mut.approve.mutate(cmd.command_id)}
               >
@@ -122,13 +122,13 @@ export function EngineeringRecommendation({ data, onError }: { data: O16Dashboar
       )}
       {confirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true">
-          <div className="max-w-md w-full bg-[#0c1220] border border-white/[0.12] rounded-xl p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-white">Confirm O16 dispatch</h3>
-            <p className="text-xs font-mono text-slate-300">
+          <div className="max-w-md w-full bg-white border border-slate-200 rounded-xl p-4 space-y-3">
+            <h3 className="text-sm font-semibold text-slate-900">Confirm O16 dispatch</h3>
+            <p className="text-xs font-mono text-slate-700">
               {fmtDash(cmd?.old_value)} → {fmtDash(cmd?.new_value)} · {cmd?.point_id || '—'}
             </p>
             <div className="flex gap-2">
-              <button type="button" className="px-3 py-1.5 border border-white/10 text-xs" onClick={() => setConfirm(false)}>
+              <button type="button" className="px-3 py-1.5 border border-slate-200 text-xs" onClick={() => setConfirm(false)}>
                 Cancel
               </button>
               <button type="button" className="btn-primary opacity-40" disabled title="WRITE_DISABLED — read-only commissioning mode.">

@@ -39,7 +39,7 @@ export function ControlSoftwareHeader({
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-cyan-400/80 mb-1.5">O20</div>
-          <h1 className="text-[1.7rem] font-semibold text-white tracking-tight leading-tight">{def.title}</h1>
+          <h1 className="text-[1.7rem] font-semibold text-slate-900 tracking-tight leading-tight">{def.title}</h1>
           <p className="text-[13px] text-slate-400 mt-1.5 max-w-3xl leading-relaxed">{description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5" aria-label="O20 system status">
             <StatusBadge tone={toneForStatus(o20Bms(dash, data))}>{`BMS ${o20Bms(dash, data)}`}</StatusBadge>
@@ -63,19 +63,19 @@ export function ControlSoftwareHeader({
       <dl className="grid grid-cols-2 md:grid-cols-4 gap-4 text-[11px]">
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Controller</dt>
-          <dd className="font-mono text-slate-200 mt-1">{o20ControllerField(data, 'controller_id')}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{o20ControllerField(data, 'controller_id')}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Software</dt>
-          <dd className="font-mono text-slate-200 mt-1">{formatDash(data.current?.softwareVersion)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{formatDash(data.current?.softwareVersion)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Quality</dt>
-          <dd className="font-mono text-slate-200 mt-1">{o20QualityLabel(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{o20QualityLabel(data)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Evaluated</dt>
-          <dd className="font-mono text-slate-200 mt-1">{o20SecondsAgo(data.telemetry?.lastUpdated || data.timestamp)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{o20SecondsAgo(data.telemetry?.lastUpdated || data.timestamp)}</dd>
         </div>
       </dl>
     </header>

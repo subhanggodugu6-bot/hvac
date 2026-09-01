@@ -52,7 +52,7 @@ export function EnergyPlanningHeader({
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
         <div className="min-w-0">
           <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-cyan-400/80 mb-1.5">O17</div>
-          <h1 className="text-[1.7rem] font-semibold text-white tracking-tight leading-tight">{def.title}</h1>
+          <h1 className="text-[1.7rem] font-semibold text-slate-900 tracking-tight leading-tight">{def.title}</h1>
           <p className="text-[13px] text-slate-400 mt-1.5 max-w-3xl leading-relaxed">{description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5" aria-label="O17 system status">
             <StatusBadge tone={toneForStatus(bms)}>{`BMS ${bms}`}</StatusBadge>
@@ -84,27 +84,27 @@ export function EnergyPlanningHeader({
       <dl className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 text-[11px]">
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Opportunity status</dt>
-          <dd className="font-mono text-slate-200 mt-1">{formatDash(data.status)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{formatDash(data.status)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Current recommendation</dt>
-          <dd className="font-mono text-slate-200 mt-1">{formatDash(data.recommendation?.action)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{formatDash(data.recommendation?.action)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Potential energy impact</dt>
-          <dd className="font-mono text-slate-200 mt-1">{o17Kw(o17ImpactKw(data, dash))}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{o17Kw(o17ImpactKw(data, dash))}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Planning period</dt>
-          <dd className="font-mono text-slate-200 mt-1">{o17PlanningPeriod(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{o17PlanningPeriod(data)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Confidence</dt>
-          <dd className="font-mono text-slate-200 mt-1">{o17ConfidencePct(data.recommendation?.confidence ?? data.confidence)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{o17ConfidencePct(data.recommendation?.confidence ?? data.confidence)}</dd>
         </div>
         <div>
           <dt className="uppercase tracking-[0.16em] text-slate-500">Last evaluation</dt>
-          <dd className="font-mono text-slate-200 mt-1">{o17SecondsAgo(ts)}</dd>
+          <dd className="font-mono text-slate-800 mt-1">{o17SecondsAgo(ts)}</dd>
         </div>
       </dl>
     </header>

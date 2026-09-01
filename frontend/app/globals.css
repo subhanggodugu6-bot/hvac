@@ -328,3 +328,36 @@ button.glass-card:hover {
   color: #fff;
   box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
 }
+
+/* Light main canvas — readable text on white cards (sidebar/header unchanged). */
+.hvac-main .glass-card .text-slate-100,
+.hvac-main .kpi-tile .text-slate-100,
+.hvac-main .panel-card .text-slate-100,
+.hvac-main .studio-chrome .text-slate-100 {
+  color: var(--text-primary);
+}
+
+.hvac-main .glass-card [class*="bg-slate-9"],
+.hvac-main .kpi-tile [class*="bg-slate-9"],
+.hvac-main .glass-card [class*="bg-[#0"],
+.hvac-main .kpi-tile [class*="bg-[#0"],
+.hvac-main .glass-card [class*="bg-[#1"],
+.hvac-main .kpi-tile [class*="bg-[#1"] {
+  background-color: #f8fafc !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+.hvac-main .glass-card [class*="border-white/"],
+.hvac-main .kpi-tile [class*="border-white/"] {
+  border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+.hvac-main .kpi-tile .text-rose-300,
+.hvac-main .glass-card .text-rose-300 {
+  color: #be123c !important;
+}
+
+.hvac-main .kpi-tile .text-emerald-300,
+.hvac-main .glass-card .text-emerald-300 {
+  color: #047857 !important;
+}

@@ -9,7 +9,7 @@ function row(label: string, value: string, status?: string | null) {
   return (
     <tr key={label}>
       <td className="text-slate-500">{label}</td>
-      <td className="font-mono text-slate-100">{value}</td>
+      <td className="font-mono text-slate-900">{value}</td>
       <td className="font-mono text-slate-400">{status || '—'}</td>
     </tr>
   );
@@ -31,14 +31,14 @@ export function O15OperatingState({ data }: { data: O15Dashboard }) {
   return (
     <section className="kpi-tile space-y-2 col-span-12" aria-labelledby="o15-state">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-        <h2 id="o15-state" className="text-sm font-semibold text-white">
+        <h2 id="o15-state" className="text-sm font-semibold text-slate-900">
           Air-Cooled Condenser Operating State
         </h2>
         {units.length > 1 ? (
           <label className="text-[11px] font-mono text-slate-500">
             Condenser
             <select
-              className="ml-2 bg-[#0c1220] border border-white/10 text-slate-200 px-2 py-1 focus-visible:ring-2 focus-visible:ring-cyan-400"
+              className="ml-2 bg-white border border-slate-200 text-slate-800 px-2 py-1 focus-visible:ring-2 focus-visible:ring-cyan-400"
               aria-label="Condenser equipment"
               value={selectedId || ids[0] || ''}
               onChange={(e) => setSelectedId(e.target.value)}

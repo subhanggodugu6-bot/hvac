@@ -18,10 +18,10 @@ export function O15DataQuality({ data }: { data: O15Dashboard }) {
   else if (data.live || tel === 'GOOD' || tel === 'LIVE') health = 'HEALTHY';
   return (
     <section className="kpi-tile space-y-2" aria-labelledby="o15-dq">
-      <h2 id="o15-dq" className="text-sm font-semibold text-white">
+      <h2 id="o15-dq" className="text-sm font-semibold text-slate-900">
         Data Quality
       </h2>
-      <div className="text-xs font-mono space-y-1 text-slate-300">
+      <div className="text-xs font-mono space-y-1 text-slate-700">
         <div>Source {source}</div>
         <div>Quality {quality}</div>
         <div>Last Seen {fmtDash(data.header?.last_telemetry || data.evaluated_at)}</div>

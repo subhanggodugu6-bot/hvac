@@ -20,11 +20,11 @@ export function SetpointReasonPanel({ data }: { data: O16Dashboard }) {
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
       >
-        <h2 className="text-sm font-semibold text-white">Why {fmtDash(target)}?</h2>
+        <h2 className="text-sm font-semibold text-slate-900">Why {fmtDash(target)}?</h2>
         <span className="text-[11px] font-mono text-slate-500">{open ? 'Hide' : 'Show'}</span>
       </button>
       {open && (
-        <dl className="mt-3 space-y-1.5 text-xs font-mono text-slate-300">
+        <dl className="mt-3 space-y-1.5 text-xs font-mono text-slate-700">
           <div className="flex justify-between gap-2">
             <dt className="text-slate-500">Condenser water temperature</dt>
             <dd>{fmtUnit(cs.cewt_c, '°C')}</dd>

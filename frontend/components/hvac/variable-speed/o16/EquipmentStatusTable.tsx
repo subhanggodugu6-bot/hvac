@@ -21,7 +21,7 @@ export function EquipmentStatusTable({
   const cs = data.current_state || {};
   return (
     <section className="kpi-tile col-span-12" aria-labelledby="o16-eq">
-      <h2 id="o16-eq" className="text-sm font-semibold text-white mb-2">
+      <h2 id="o16-eq" className="text-sm font-semibold text-slate-900 mb-2">
         Water-Cooled Condenser Equipment
       </h2>
       {!equipment.length ? (

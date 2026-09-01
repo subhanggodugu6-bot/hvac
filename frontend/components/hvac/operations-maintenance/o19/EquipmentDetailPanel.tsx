@@ -24,7 +24,7 @@ export function EquipmentDetailPanel({ data, selectedId }: { data: OmOpportunity
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Equipment detail</h2>
       <div className="flex justify-between gap-2">
         <div>
-          <div className="font-mono text-sm text-slate-100">{eq.id}</div>
+          <div className="font-mono text-sm text-slate-900">{eq.id}</div>
           <div className="text-[11px] text-slate-500">{eq.type}</div>
         </div>
         <StatusBadge tone={toneForStatus(eq.status)}>{eq.status}</StatusBadge>
@@ -32,35 +32,35 @@ export function EquipmentDetailPanel({ data, selectedId }: { data: OmOpportunity
       <dl className="grid grid-cols-2 gap-2 text-[12px]">
         <div>
           <dt className="text-slate-500">Operating condition</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">Health {formatPercent(eq.health)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">Health {formatPercent(eq.health)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Telemetry freshness</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o19SecondsAgo(eq.lastSeen)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o19SecondsAgo(eq.lastSeen)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Quality</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o19QualityLabel(data)} · {o19TelemetryBadge(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o19QualityLabel(data)} · {o19TelemetryBadge(data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Maintenance priority</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(eq.priority)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(eq.priority)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Filter ΔP rise</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(metricNum(data.metrics, 'filter_dp_rise_pct'))}{metricNum(data.metrics, 'filter_dp_rise_pct') == null ? '' : '%'}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(metricNum(data.metrics, 'filter_dp_rise_pct'))}{metricNum(data.metrics, 'filter_dp_rise_pct') == null ? '' : '%'}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Fan power</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatKw(metricNum(data.metrics, 'fan_power_kw'))}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatKw(metricNum(data.metrics, 'fan_power_kw'))}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Runtime</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{metricNum(data.metrics, 'runtime_hours') == null ? '—' : `${formatNumber(metricNum(data.metrics, 'runtime_hours'), 0)} h`}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{metricNum(data.metrics, 'runtime_hours') == null ? '—' : `${formatNumber(metricNum(data.metrics, 'runtime_hours'), 0)} h`}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Recommendation</dt>
-          <dd className="text-slate-300 mt-0.5">{formatDash(data.recommendation?.action)}</dd>
+          <dd className="text-slate-700 mt-0.5">{formatDash(data.recommendation?.action)}</dd>
         </div>
       </dl>
       <div>

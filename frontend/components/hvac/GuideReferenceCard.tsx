@@ -64,47 +64,47 @@ function GuideReferenceInner({ opportunityId }: { opportunityId: string }) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-[10px] font-mono tracking-[0.18em] text-amber-400/90">GUIDE REFERENCE</div>
-          <h2 className="text-sm text-slate-100 mt-1">OEH / AIRAH Guide</h2>
+          <h2 className="text-sm text-slate-900 mt-1">OEH / AIRAH Guide</h2>
           <p className="text-[11px] text-slate-500 mt-0.5">
             Educational source information — not live telemetry, not measured savings.
           </p>
         </div>
-        <span className="text-[10px] font-mono px-2 py-1 rounded border border-white/10 text-slate-400">
+        <span className="text-[10px] font-mono px-2 py-1 rounded border border-slate-200 text-slate-400">
           {rec.energy_impact_class ?? 'GUIDE_POTENTIAL'}
         </span>
       </div>
       <dl className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-[12px]">
         <div>
           <dt className="text-slate-500">Opportunity</dt>
-          <dd className="text-slate-200">
+          <dd className="text-slate-800">
             {rec.opportunity_id} {rec.title}
           </dd>
         </div>
         <div>
           <dt className="text-slate-500">Guide section / page</dt>
-          <dd className="text-slate-200">
+          <dd className="text-slate-800">
             {rec.section} · p. {rec.guide_page}
           </dd>
         </div>
         <div className="md:col-span-2">
           <dt className="text-slate-500">Strategy summary</dt>
-          <dd className="text-slate-300">{rec.strategy_summary || '—'}</dd>
+          <dd className="text-slate-700">{rec.strategy_summary || '—'}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Applicability</dt>
-          <dd className="text-slate-300">{rec.equipment_applicability?.join('; ') || '—'}</dd>
+          <dd className="text-slate-700">{rec.equipment_applicability?.join('; ') || '—'}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Guide potential</dt>
-          <dd className="text-slate-300">{rec.guide_savings_potential || '—'}</dd>
+          <dd className="text-slate-700">{rec.guide_savings_potential || '—'}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Benefits</dt>
-          <dd className="text-slate-300">{rec.benefits?.join('; ') || '—'}</dd>
+          <dd className="text-slate-700">{rec.benefits?.join('; ') || '—'}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Risks</dt>
-          <dd className="text-slate-300">{rec.risks?.join('; ') || '—'}</dd>
+          <dd className="text-slate-700">{rec.risks?.join('; ') || '—'}</dd>
         </div>
       </dl>
       <p className="text-[10px] font-mono text-slate-600">

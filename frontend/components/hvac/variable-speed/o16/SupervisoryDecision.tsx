@@ -7,7 +7,7 @@ import { bmsBadge, confidencePct, fmtDash, freshnessBadge, mapO16Decision, recPa
 function Stage({ label, ok, warn }: { label: string; ok: boolean; warn?: boolean }) {
   return (
     <div className="flex flex-col items-center text-[10px] font-mono">
-      <span className={`px-2 py-1 border ${ok ? 'border-emerald-500/40 text-emerald-400' : warn ? 'border-amber-500/40 text-amber-300' : 'border-white/10 text-slate-500'}`}>
+      <span className={`px-2 py-1 border ${ok ? 'border-emerald-500/40 text-emerald-400' : warn ? 'border-amber-500/40 text-amber-300' : 'border-slate-200 text-slate-500'}`}>
         {label}
       </span>
     </div>
@@ -27,11 +27,11 @@ export function SupervisoryDecision({ data }: { data: O16Dashboard }) {
   const hasTel = tel === 'LIVE' || tel === 'SIMULATED' || tel === 'STALE' || tel === 'GOOD';
   return (
     <section className="kpi-tile space-y-3 col-span-12 lg:col-span-5" aria-labelledby="o16-dec">
-      <h2 id="o16-dec" className="text-sm font-semibold text-white">
+      <h2 id="o16-dec" className="text-sm font-semibold text-slate-900">
         Supervisory Decision
       </h2>
       <StatusBadge tone={toneForStatus(decision)}>{decision}</StatusBadge>
-      <div className="grid grid-cols-2 gap-2 text-xs font-mono text-slate-300">
+      <div className="grid grid-cols-2 gap-2 text-xs font-mono text-slate-700">
         <div>Current {fmtDash(cs.head_pressure)}</div>
         <div>Target {fmtDash(os.recommended_head_pressure ?? rec.target_condensing_pressure)}</div>
         <div>Confidence {confidencePct(data.confidence ?? rec.confidence)}</div>

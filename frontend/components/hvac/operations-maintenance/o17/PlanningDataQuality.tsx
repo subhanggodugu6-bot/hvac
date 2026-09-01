@@ -16,7 +16,7 @@ export function PlanningDataQuality({ data, dash }: { data: OmOpportunity; dash?
       <dl className="grid grid-cols-2 gap-3 text-[12px]">
         <div>
           <dt className="text-slate-500">Telemetry Source</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatDash(data.telemetry?.source || data.source)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatDash(data.telemetry?.source || data.source)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Quality</dt>
@@ -26,27 +26,27 @@ export function PlanningDataQuality({ data, dash }: { data: OmOpportunity; dash?
         </div>
         <div>
           <dt className="text-slate-500">Last Seen</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17SecondsAgo(last)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17SecondsAgo(last)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Freshness</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17Freshness(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17Freshness(data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Data Coverage</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{coverage}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{coverage}</dd>
         </div>
         <div>
           <dt className="text-slate-500">BMS Connection</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17Bms(dash, data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17Bms(dash, data)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Age</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{formatAgeSeconds(data.telemetry?.ageSeconds)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{formatAgeSeconds(data.telemetry?.ageSeconds)}</dd>
         </div>
         <div>
           <dt className="text-slate-500">Classified status</dt>
-          <dd className="font-mono text-slate-200 mt-0.5">{o17TelemetryBadge(data)}</dd>
+          <dd className="font-mono text-slate-800 mt-0.5">{o17TelemetryBadge(data)}</dd>
         </div>
       </dl>
       {isO17Simulation(data) ? (

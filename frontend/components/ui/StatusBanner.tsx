@@ -10,9 +10,9 @@ interface StatusBannerProps {
 
 export const StatusBanner: React.FC<StatusBannerProps> = ({ text, type = 'info' }) => {
   const styles = {
-    success: 'bg-emerald-950/40 border-emerald-500/30 text-emerald-300',
-    error: 'bg-rose-950/40 border-rose-500/30 text-rose-300',
-    info: 'bg-cyan-950/40 border-cyan-500/30 text-cyan-300',
+    success: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+    error: 'bg-rose-50 border-rose-200 text-rose-800',
+    info: 'bg-cyan-50 border-cyan-200 text-cyan-800',
   };
 
   const Icon = type === 'success' ? CheckCircle2 : type === 'error' ? AlertCircle : Radio;

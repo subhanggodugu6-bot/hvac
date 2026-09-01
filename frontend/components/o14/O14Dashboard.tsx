@@ -73,7 +73,7 @@ export function O14SystemState({ current, pumps }: { current: any; pumps: any[] 
         ].map(([label, val, unit]) => (
           <div key={String(label)}>
             <div className="text-[10px] uppercase text-slate-500">{label}</div>
-            <div className="font-mono text-slate-100 mt-0.5">{val == null ? 'Unavailable' : `${fmtNum(val)}${unit ? ` ${unit}` : ''}`}</div>
+            <div className="font-mono text-slate-900 mt-0.5">{val == null ? 'Unavailable' : `${fmtNum(val)}${unit ? ` ${unit}` : ''}`}</div>
           </div>
         ))}
       </div>
@@ -95,10 +95,10 @@ export function O14PumpGrid({ pumps }: { pumps: any[] }) {
       {pumps.map((p) => (
         <div key={p.pump_id} className="kpi-tile">
           <div className="flex items-center justify-between">
-            <div className="font-mono text-sm text-white">{p.pump_id}</div>
+            <div className="font-mono text-sm text-slate-900">{p.pump_id}</div>
             <StatusBadge tone={toneForStatus(p.data_quality)}>{na(p.status, 'Unknown')}</StatusBadge>
           </div>
-          <div className="mt-2 grid grid-cols-2 gap-2 text-xs font-mono text-slate-300">
+          <div className="mt-2 grid grid-cols-2 gap-2 text-xs font-mono text-slate-700">
             <div>Speed: {p.speed == null ? 'Unavailable' : `${fmtNum(p.speed)} %`}</div>
             <div>Flow: {p.flow == null ? 'Unavailable' : fmtNum(p.flow)}</div>
             <div>Power: {p.power == null ? 'Unavailable' : `${fmtNum(p.power)} kW`}</div>
@@ -118,28 +118,28 @@ export function O14OptimizationRecommendation({ data }: { data: any }) {
   return (
     <div className="kpi-tile space-y-3">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold text-white">Optimization recommendation</h3>
+        <h3 className="text-sm font-semibold text-slate-900">Optimization recommendation</h3>
         <StatusBadge tone={toneForStatus(data?.recommendation_state)}>{na(data?.recommendation_state)}</StatusBadge>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
         <div>
           <div className="text-[10px] uppercase text-slate-500">Current</div>
-          <div className="font-mono text-white">{data?.current_value == null ? 'Unavailable' : `${fmtNum(data.current_value)} ${data.unit || ''}`}</div>
+          <div className="font-mono text-slate-900">{data?.current_value == null ? 'Unavailable' : `${fmtNum(data.current_value)} ${data.unit || ''}`}</div>
         </div>
         <div>
           <div className="text-[10px] uppercase text-slate-500">Recommended</div>
-          <div className="font-mono text-cyan-300">{data?.optimized_value == null ? 'Unavailable' : `${fmtNum(data.optimized_value)} ${data.unit || ''}`}</div>
+          <div className="font-mono text-cyan-800">{data?.optimized_value == null ? 'Unavailable' : `${fmtNum(data.optimized_value)} ${data.unit || ''}`}</div>
         </div>
         <div>
           <div className="text-[10px] uppercase text-slate-500">Expected effect</div>
-          <div className="font-mono text-slate-200 text-xs">
+          <div className="font-mono text-slate-800 text-xs">
             {data?.energy_impact_class === 'PREDICTED' && data?.predicted_power_delta_kw != null
               ? `Predicted ${fmtNum(data.predicted_power_delta_kw)} kW (affinity, not verified)`
               : 'No verified savings'}
           </div>
         </div>
       </div>
-      <p className="text-xs text-slate-300 leading-relaxed">{data?.reason || 'AWAITING TELEMETRY'}</p>
+      <p className="text-xs text-slate-700 leading-relaxed">{data?.reason || 'AWAITING TELEMETRY'}</p>
       <div className="flex flex-wrap gap-2 text-[11px] font-mono">
         <StatusBadge tone={toneForStatus(String(data?.confidence))}>Confidence {data?.confidence == null ? 'Unavailable' : `${Math.round(Number(data.confidence) * 100)}%`}</StatusBadge>
         <StatusBadge tone={toneForStatus(data?.safety_status)}>Safety {na(data?.safety_status)}</StatusBadge>
@@ -166,13 +166,13 @@ export function O14SafetyPanel({ safety }: { safety: any }) {
     <div className="kpi-tile">
       <div className="flex items-center gap-2 mb-3">
         <ShieldCheck className="w-4 h-4 text-emerald-400" />
-        <h3 className="text-sm font-semibold text-white">Safety validation</h3>
+        <h3 className="text-sm font-semibold text-slate-900">Safety validation</h3>
         <span className="text-[10px] text-slate-500">Backend SafetyEngine is authoritative</span>
       </div>
       <div className="space-y-1.5">
         {checks.length ? (
           checks.map((c: any) => (
-            <div key={c.check_name} className="flex justify-between text-xs font-mono border-b border-white/[0.04] py-1">
+            <div key={c.check_name} className="flex justify-between text-xs font-mono border-b border-slate-200 py-1">
               <span className="text-slate-400">{c.check_name}</span>
               <span className={c.result === 'PASS' ? 'text-emerald-400' : 'text-amber-300'}>{c.result} · {c.reason}</span>
             </div>
@@ -181,7 +181,7 @@ export function O14SafetyPanel({ safety }: { safety: any }) {
           <EmptyState title="No safety evaluation" detail="Safety gates appear after telemetry is evaluated." />
         )}
       </div>
-      <div className="mt-3 text-sm font-semibold text-white">{na(safety?.overall, 'HOLD — SAFETY CONDITION NOT MET')}</div>
+      <div className="mt-3 text-sm font-semibold text-slate-900">{na(safety?.overall, 'HOLD — SAFETY CONDITION NOT MET')}</div>
     </div>
   );
 }
@@ -242,9 +242,9 @@ export function O14CommandPanel({ data, onError }: { data: any; onError: (m: str
 
   return (
     <div className="kpi-tile space-y-3">
-      <h3 className="text-sm font-semibold text-white">Control panel</h3>
+      <h3 className="text-sm font-semibold text-slate-900">Control panel</h3>
       <div className="text-xs font-mono text-slate-400">Mode {na(mode)} · SAFE_MODE {data?.safe_mode ? 'ON' : 'OFF'}</div>
-      <div className="text-xs text-slate-300">
+      <div className="text-xs text-slate-700">
         Current {cs?.dp_setpoint == null ? 'Unavailable' : fmtNum(cs.dp_setpoint)} → Proposed {os?.recommended_dp_setpoint == null ? 'Unavailable' : fmtNum(os.recommended_dp_setpoint)}
       </div>
       <div className="flex flex-wrap gap-2">
@@ -255,14 +255,14 @@ export function O14CommandPanel({ data, onError }: { data: any; onError: (m: str
           Apply
         </button>
         <button
-          className="px-3 py-1.5 rounded border border-white/[0.08] text-xs opacity-40"
+          className="px-3 py-1.5 rounded border border-slate-200 text-xs opacity-40"
           disabled
           title="WRITE_DISABLED — read-only commissioning mode."
         >
           Verify
         </button>
         <button
-          className="px-3 py-1.5 rounded border border-white/[0.08] text-xs opacity-40"
+          className="px-3 py-1.5 rounded border border-slate-200 text-xs opacity-40"
           disabled
           title="WRITE_DISABLED — read-only commissioning mode."
         >
@@ -274,9 +274,9 @@ export function O14CommandPanel({ data, onError }: { data: any; onError: (m: str
       </div>
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true">
-          <div className="max-w-md w-full bg-[#0c1220] border border-white/[0.12] rounded-xl p-4 space-y-3">
-            <h4 className="text-sm font-semibold text-white">Confirm SCHW write</h4>
-            <div className="text-xs font-mono text-slate-300 space-y-1">
+          <div className="max-w-md w-full bg-white border border-slate-200 rounded-xl p-4 space-y-3">
+            <h4 className="text-sm font-semibold text-slate-900">Confirm SCHW write</h4>
+            <div className="text-xs font-mono text-slate-700 space-y-1">
               <div>Point: {na(cmd?.point_id)}</div>
               <div>Current: {na(cmd?.old_value)}</div>
               <div>Proposed: {na(cmd?.new_value)}</div>
@@ -285,7 +285,7 @@ export function O14CommandPanel({ data, onError }: { data: any; onError: (m: str
               <div>Expected: lower index DP while most-open valve approaches 95% (guide).</div>
             </div>
             <div className="flex gap-2">
-              <button className="px-3 py-1.5 border border-white/10 text-xs" onClick={() => setOpen(false)}>
+              <button className="px-3 py-1.5 border border-slate-200 text-xs" onClick={() => setOpen(false)}>
                 CANCEL
               </button>
               <button className="btn-primary opacity-40" disabled title="WRITE_DISABLED — read-only commissioning mode.">
@@ -318,7 +318,7 @@ export function O14CommandHistory({ commands }: { commands: any[] }) {
         </thead>
         <tbody>
           {commands.map((c) => (
-            <tr key={c.command_id} className="border-t border-white/[0.06] text-slate-200">
+            <tr key={c.command_id} className="border-t border-slate-200 text-slate-800">
               <td className="py-1.5">{c.command_id}</td>
               <td>{c.status}</td>
               <td>{c.old_value == null ? 'Unavailable' : c.old_value}</td>
@@ -337,7 +337,7 @@ export function O14VerificationStatus({ commands }: { commands: any[] }) {
   return (
     <div className="kpi-tile text-xs">
       <div className="text-[11px] uppercase text-slate-500 mb-1">Verification</div>
-      <div className="font-mono text-slate-200">Status {na(c?.status)}</div>
+      <div className="font-mono text-slate-800">Status {na(c?.status)}</div>
       <div className="text-slate-500">Applied {na(c?.applied_at)} · Verified {na(c?.verified_at)} · Rollback {na(c?.rollback_at)}</div>
     </div>
   );
@@ -348,7 +348,7 @@ export function O14AuditTimeline({ events }: { events: any[] }) {
   return (
     <ol className="space-y-2">
       {events.slice(0, 20).map((e, i) => (
-        <li key={i} className="text-xs font-mono text-slate-300 border-l border-cyan-500/30 pl-3">
+        <li key={i} className="text-xs font-mono text-slate-700 border-l border-cyan-500/30 pl-3">
           {na(e.timestamp)} · {na(e.action)} · {na(e.result)}
         </li>
       ))}
@@ -379,7 +379,7 @@ export function O14Dashboard() {
       model={header.control_mode}
       bms={data?.bms_connected || header.bms === 'CONNECTED' || header.bms === 'LIVE' ? 'CONNECTED' : 'OFFLINE'}
       actions={
-        <button className="px-3 py-1.5 rounded border border-white/[0.08] text-xs font-mono text-slate-300" title="SAFE MODE">
+        <button className="px-3 py-1.5 rounded border border-slate-200 text-xs font-mono text-slate-700" title="SAFE MODE">
           SAFE MODE {header.safe_mode ? 'ON' : 'VISIBLE'}
         </button>
       }
@@ -414,7 +414,7 @@ export function O14Dashboard() {
             {[1, 6, 24, 168, 720].map((h) => (
               <button
                 key={h}
-                className={`px-2 py-1 border text-[11px] ${hours === h ? 'border-cyan-400 text-cyan-300' : 'border-white/10 text-slate-400'}`}
+                className={`px-2 py-1 border text-[11px] ${hours === h ? 'border-cyan-400 text-cyan-800' : 'border-slate-200 text-slate-400'}`}
                 onClick={() => setHours(h)}
               >
                 {h === 168 ? '7d' : h === 720 ? '30d' : `${h}h`}

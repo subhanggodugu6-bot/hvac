@@ -141,20 +141,20 @@ export function DispatchSafetyPanel({
       <div
         className={
           canWrite
-            ? 'border border-emerald-500/30 bg-emerald-950/20 px-3 py-2'
-            : 'border border-rose-500/30 bg-rose-950/30 px-3 py-2'
+            ? 'border border-emerald-200 bg-emerald-50 px-3 py-2 rounded-lg'
+            : 'border border-rose-200 bg-rose-50 px-3 py-2 rounded-lg'
         }
         role="status"
       >
-        <div className={`text-[11px] font-semibold ${canWrite ? 'text-emerald-300' : 'text-rose-300'}`}>
+        <div className={`text-[11px] font-semibold ${canWrite ? 'text-emerald-800' : 'text-rose-800'}`}>
           {canWrite ? 'CONTROL ARMED' : 'CONTROL BLOCKED'}
         </div>
-        <div className="text-[11px] font-mono text-slate-200 mt-1">{special || 'WRITE_DISABLED'}</div>
-        <p className="text-[11px] text-slate-400 mt-1">{reason}</p>
+        <div className="text-[11px] font-mono text-slate-800 mt-1">{special || 'WRITE_DISABLED'}</div>
+        <p className="text-[11px] text-slate-600 mt-1">{reason}</p>
         {oid === 'O18' && <p className="text-[11px] text-slate-500 mt-1">ADVISORY ONLY</p>}
         {oid === 'O19' && <p className="text-[11px] text-slate-500 mt-1">MAINTENANCE RECORD ONLY</p>}
         {oid === 'O20' && <p className="text-[11px] text-slate-500 mt-1">REVIEW REQUIRED</p>}
-        {message && <p className="text-[11px] font-mono text-amber-200 mt-1">{message}</p>}
+        {message && <p className="text-[11px] font-mono text-amber-800 mt-1">{message}</p>}
       </div>
       <div className="flex flex-wrap gap-2">
         <button type="button" className="btn-secondary text-xs" onClick={() => q.refetch()} title="Refresh dispatch evaluation">

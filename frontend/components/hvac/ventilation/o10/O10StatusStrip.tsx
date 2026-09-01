@@ -17,7 +17,7 @@ export function O10StatusStrip({ data, platform }: { data: VentilationOpportunit
         {platform?.safeMode ? <StatusBadge tone="danger">SAFE MODE</StatusBadge> : null}
         {prov === 'SIMULATED' ? <StatusBadge tone="warn">SIMULATED — never LIVE</StatusBadge> : null}
       </div>
-      <p className="text-sm text-slate-300">{cycle.reason}</p>
+      <p className="text-sm text-slate-700">{cycle.reason}</p>
     </section>
   );
 }

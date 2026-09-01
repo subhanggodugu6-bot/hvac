@@ -145,7 +145,7 @@ export function PlanningTable({ data, dash }: { data: OmOpportunity; dash?: OmDa
         <label className="text-[11px] text-slate-500 flex-1">
           Search
           <input
-            className="mt-1 w-full bg-[#070b14] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="mt-1 w-full bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             aria-label="Search planning items"
@@ -154,7 +154,7 @@ export function PlanningTable({ data, dash }: { data: OmOpportunity; dash?: OmDa
         <label className="text-[11px] text-slate-500">
           Filter
           <select
-            className="mt-1 block bg-[#070b14] border border-white/10 px-2 py-1.5 text-xs font-mono text-slate-200 focus-visible:ring-2 focus-visible:ring-cyan-400"
+            className="mt-1 block bg-slate-50 border border-slate-200 px-2 py-1.5 text-xs font-mono text-slate-800 focus-visible:ring-2 focus-visible:ring-cyan-400"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             aria-label="Filter by status"

@@ -38,11 +38,11 @@ export function EquipmentHealthGrid({
                   type="button"
                   onClick={() => onSelect(eq.id)}
                   className={`text-left border px-3 py-2 focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                    selectedId === eq.id ? 'border-cyan-500/40 bg-cyan-500/5' : 'border-white/[0.08]'
+                    selectedId === eq.id ? 'border-cyan-500/40 bg-cyan-500/5' : 'border-slate-200'
                   }`}
                 >
                   <div className="flex justify-between gap-2">
-                    <span className="font-mono text-xs text-slate-200">{eq.id}</span>
+                    <span className="font-mono text-xs text-slate-800">{eq.id}</span>
                     <StatusBadge tone={toneForStatus(eq.status)}>{eq.status}</StatusBadge>
                   </div>
                   <div className="text-[11px] text-slate-400 mt-1">{eq.name}</div>

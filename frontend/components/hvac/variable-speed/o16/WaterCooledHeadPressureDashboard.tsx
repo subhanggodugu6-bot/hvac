@@ -68,9 +68,9 @@ export function WaterCooledHeadPressureDashboard() {
 
         {actionErr && (
           <div className="col-span-12 kpi-tile" role="alert">
-            <div className="text-sm font-semibold text-white">Unable to complete O16 command</div>
+            <div className="text-sm font-semibold text-slate-900">Unable to complete O16 command</div>
             <p className="text-xs text-slate-400 mt-1">{actionErr}</p>
-            <button type="button" className="mt-2 px-3 py-1.5 border border-white/10 text-xs" onClick={() => setActionErr(null)}>
+            <button type="button" className="mt-2 px-3 py-1.5 border border-slate-200 text-xs" onClick={() => setActionErr(null)}>
               Dismiss
             </button>
           </div>
@@ -89,7 +89,7 @@ export function WaterCooledHeadPressureDashboard() {
         >
           {dash.isError && (
             <div className="col-span-12 kpi-tile space-y-3" role="alert">
-              <div className="text-sm font-semibold text-white">Unable to load O16 data</div>
+              <div className="text-sm font-semibold text-slate-900">Unable to load O16 data</div>
               <p className="text-xs text-slate-400">{o16Error(dash.error instanceof ApiError ? dash.error : dash.error)}</p>
               <button type="button" className="btn-primary focus-visible:ring-2 focus-visible:ring-cyan-400" onClick={() => dash.refetch()}>
                 Retry

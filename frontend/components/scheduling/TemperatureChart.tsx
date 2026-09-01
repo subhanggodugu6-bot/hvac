@@ -20,13 +20,13 @@ export const TemperatureChart: React.FC<TemperatureChartProps> = ({ data }) => {
 
   return (
     <div className="glass-card p-5">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-white/[0.08]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded border border-cyan-500/20 bg-cyan-500/10 text-cyan-400">
             <Zap className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-slate-100 tracking-tight">
+            <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Building Electrical Power Profile (kW)
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
@@ -41,7 +41,7 @@ export const TemperatureChart: React.FC<TemperatureChartProps> = ({ data }) => {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-1 rounded-full bg-cyan-400"></span>
-            <span className="text-cyan-300 font-medium">Optimized kW</span>
+            <span className="text-cyan-800 font-medium">Optimized kW</span>
           </div>
         </div>
       </div>

@@ -52,7 +52,7 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
   return (
     <section className="kpi-tile space-y-4 min-h-[280px]" aria-labelledby="o15-rec-title">
       <div className="flex items-start justify-between gap-2">
-        <h2 id="o15-rec-title" className="text-sm font-semibold text-white">
+        <h2 id="o15-rec-title" className="text-sm font-semibold text-slate-900">
           O15 Optimization Recommendation
         </h2>
         <StatusBadge tone={toneForStatus(decision)}>{decision}</StatusBadge>
@@ -64,19 +64,19 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-mono">
             <div>
               <div className="text-[10px] uppercase text-slate-500">Current target</div>
-              <div className="text-lg text-slate-100 mt-1">{fmtDash(current)}</div>
+              <div className="text-lg text-slate-900 mt-1">{fmtDash(current)}</div>
             </div>
             <div>
               <div className="text-[10px] uppercase text-slate-500">Recommended target</div>
-              <div className="text-lg text-cyan-300 mt-1">{fmtDash(recommended)}</div>
+              <div className="text-lg text-cyan-800 mt-1">{fmtDash(recommended)}</div>
             </div>
             <div>
               <div className="text-[10px] uppercase text-slate-500">Change</div>
-              <div className="text-lg text-slate-100 mt-1">{change == null ? '—' : `${change > 0 ? '+' : ''}${fmtDash(change)}`}</div>
+              <div className="text-lg text-slate-900 mt-1">{change == null ? '—' : `${change > 0 ? '+' : ''}${fmtDash(change)}`}</div>
             </div>
             <div>
               <div className="text-[10px] uppercase text-slate-500">Confidence</div>
-              <div className="text-lg text-slate-100 mt-1">{conf}</div>
+              <div className="text-lg text-slate-900 mt-1">{conf}</div>
             </div>
           </div>
           <div className="text-xs text-slate-400">
@@ -88,7 +88,7 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
           </div>
           <div>
             <div className="text-[11px] uppercase text-slate-500 mb-2">Why this recommendation</div>
-            <p className="text-xs text-slate-300 leading-relaxed">{data.reason || '—'}</p>
+            <p className="text-xs text-slate-700 leading-relaxed">{data.reason || '—'}</p>
             <ul className="mt-2 space-y-1 text-xs font-mono">
               {checks.map((c) => (
                 <li key={c.check_name} className={c.result === 'PASS' ? 'text-emerald-400' : 'text-amber-300'}>
@@ -116,7 +116,7 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
             </button>
             <button
               type="button"
-              className="px-3 py-1.5 rounded border border-white/[0.08] text-xs focus-visible:ring-2 focus-visible:ring-cyan-400"
+              className="px-3 py-1.5 rounded border border-slate-200 text-xs focus-visible:ring-2 focus-visible:ring-cyan-400"
               aria-label="Hold recommendation"
               onClick={() => setHeld(true)}
             >
@@ -135,10 +135,10 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
             </button>
             {approval && (
               <>
-                <button type="button" className="px-3 py-1.5 rounded border border-white/[0.08] text-xs" disabled title="O15 has no approve API">
+                <button type="button" className="px-3 py-1.5 rounded border border-slate-200 text-xs" disabled title="O15 has no approve API">
                   Approve
                 </button>
-                <button type="button" className="px-3 py-1.5 rounded border border-white/[0.08] text-xs" disabled title="O15 has no reject API">
+                <button type="button" className="px-3 py-1.5 rounded border border-slate-200 text-xs" disabled title="O15 has no reject API">
                   Reject
                 </button>
               </>
@@ -148,14 +148,14 @@ export function O15RecommendationCard({ data, onError }: { data: O15Dashboard; o
       )}
       {confirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" role="dialog" aria-modal="true" aria-labelledby="o15-apply-title">
-          <div className="max-w-md w-full bg-[#0c1220] border border-white/[0.12] rounded-xl p-4 space-y-3">
-            <h3 id="o15-apply-title" className="text-sm font-semibold text-white">Confirm O15 dispatch</h3>
-            <p className="text-xs font-mono text-slate-300">
+          <div className="max-w-md w-full bg-white border border-slate-200 rounded-xl p-4 space-y-3">
+            <h3 id="o15-apply-title" className="text-sm font-semibold text-slate-900">Confirm O15 dispatch</h3>
+            <p className="text-xs font-mono text-slate-700">
               {fmtDash(cmd?.old_value)} → {fmtDash(cmd?.new_value)} · {cmd?.point_id || '—'}
             </p>
             {block && <p className="text-xs text-amber-300">{block}</p>}
             <div className="flex gap-2">
-              <button type="button" className="px-3 py-1.5 border border-white/10 text-xs" onClick={() => setConfirm(false)}>
+              <button type="button" className="px-3 py-1.5 border border-slate-200 text-xs" onClick={() => setConfirm(false)}>
                 Cancel
               </button>
               <button type="button" className="btn-primary opacity-40" disabled title="WRITE_DISABLED — read-only commissioning mode.">

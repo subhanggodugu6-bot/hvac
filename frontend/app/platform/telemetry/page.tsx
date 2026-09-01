@@ -75,9 +75,9 @@ export default function TelemetryPage() {
                 const shown = p.value == null || q === 'BAD' ? 'NO DATA' : displayValue(p.value);
                 return (
                   <tr key={pid + String(p.timestamp || i)}>
-                    <td className="font-mono text-slate-200">{p.equipment_id || '—'}</td>
+                    <td className="font-mono text-slate-800">{p.equipment_id || '—'}</td>
                     <td className="font-mono">{p.point || '—'}</td>
-                    <td className={q === 'GOOD' ? 'text-emerald-300' : q === 'STALE' ? 'text-amber-300' : q === 'BAD' ? 'text-rose-300' : 'text-slate-400'}>{shown}</td>
+                    <td className={q === 'GOOD' ? 'text-emerald-800' : q === 'STALE' ? 'text-amber-300' : q === 'BAD' ? 'text-rose-800' : 'text-slate-400'}>{shown}</td>
                     <td>{p.unit || '—'}</td>
                     <td>{p.quality || '—'}</td>
                     <td>{p.source || '—'}</td>
