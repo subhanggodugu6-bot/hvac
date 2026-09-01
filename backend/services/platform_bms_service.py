@@ -715,6 +715,14 @@ def evaluate_safety(context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         **ctx,
     }
     ok, reason, classified = evaluate_dispatch(merged)
+    try:
+        from backend.bms.connection_manager import is_simulation_mode
+
+        sim = is_simulation_mode()
+    except Exception:
+        sim = False
+    tel_status = (tel.get("status") or "").upper()
+    tel_ok = tel_status in ("LIVE", "SIMULATED") or sim
     return {
         "allowed": ok,
         "reason": reason,
@@ -724,11 +732,12 @@ def evaluate_safety(context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         "safeMode": snap["safeMode"],
         "safety": snap.get("safety"),
         "controlEnabled": bool(snap.get("controlEnabled")),
+        "simulationMode": sim,
         "checks": {
-            "bms_connected": snap["bmsConnected"],
-            "telemetry_live": tel.get("status") == "LIVE",
-            "quality_good": (tel.get("quality") or "").upper() == "GOOD",
-            "fresh": tel.get("status") == "LIVE",
+            "bms_connected": bool(snap["bmsConnected"]) or sim,
+            "telemetry_live": tel_ok,
+            "quality_good": (tel.get("quality") or "").upper() == "GOOD" or sim,
+            "fresh": tel_ok,
             "safe_mode": snap["safeMode"],
             "write_enabled": bool(snap.get("writeEnabled")),
         },

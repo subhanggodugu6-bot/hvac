@@ -7,7 +7,10 @@ from datetime import datetime, timezone, timedelta
 from typing import Any, Dict, List, Optional
 
 from database.session import SessionLocal
+from database.models import Building, Equipment
+from database.models.existing import Point
 from database.models_o1 import O1PointMapDB, O1TelemetrySampleDB, O1ConfigurationDB, OccupancyScheduleDB
+from backend.services.logging_service import log_event
 
 RANGES = {
     "ZONE_TEMP": (-5, 45),
@@ -53,8 +56,6 @@ def load_point_map(db=None) -> List[Dict[str, Any]]:
 
 
 def _ensure_o1_prerequisites(db) -> None:
-    from database.models import Building, Equipment
-
     bid = "bldg-corp-hq-01"
     if db.query(Building).filter_by(id=bid).first() is None:
         db.add(
@@ -77,12 +78,51 @@ def _ensure_o1_prerequisites(db) -> None:
                 type="AHU",
             )
         )
+    if db.query(Equipment).filter_by(id="AHU-01").first() is None:
+        db.add(
+            Equipment(
+                id="AHU-01",
+                building_id=bid,
+                name="Primary AHU",
+                type="AHU",
+            )
+        )
+    if db.query(Equipment).filter_by(id="ZONE-01").first() is None:
+        db.add(
+            Equipment(
+                id="ZONE-01",
+                building_id=bid,
+                name="Zone 01",
+                type="ZONE",
+            )
+        )
+    map_path = os.path.abspath(MAP_PATH)
+    if os.path.isfile(map_path):
+        with open(map_path, "r", encoding="utf-8") as f:
+            for row in json.load(f):
+                pid = row.get("point_id")
+                if not pid or db.query(Point).filter_by(id=pid).first() is not None:
+                    continue
+                eq = eid if str(pid).startswith("AHU-1") else (
+                    "ZONE-01" if str(pid).startswith("ZONE") else None
+                )
+                db.add(
+                    Point(
+                        id=pid,
+                        equipment_id=eq,
+                        name=pid,
+                        category=row.get("signal", "O1"),
+                        point_type="AI",
+                        unit=row.get("unit"),
+                    )
+                )
 
 
 def ensure_point_map_and_config() -> None:
     db = SessionLocal()
     try:
         _ensure_o1_prerequisites(db)
+        db.flush()
         if db.query(O1PointMapDB).count() == 0:
             with open(os.path.abspath(MAP_PATH), "r", encoding="utf-8") as f:
                 for row in json.load(f):
@@ -103,11 +143,13 @@ def ensure_point_map_and_config() -> None:
                     source="CONFIG",
                 ))
         db.commit()
-    except Exception:
+    except Exception as exc:
         try:
             db.rollback()
         except Exception:
             pass
+        log_event("ERROR", "o1-telemetry", "ENSURE_CONFIG_FAILED", extra={"error": str(exc)})
+        raise
     finally:
         db.close()
 

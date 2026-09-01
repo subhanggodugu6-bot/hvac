@@ -21,9 +21,17 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
   const checks = [
     {
       name: 'Telemetry Freshness',
-      status: freshness === 'LIVE' ? 'PASS' : freshness ? 'WARNING' : '—',
-      value: age != null ? `${Math.round(age)}s age` : null,
-      limit: `< ${dashboard?.thresholds?.liveSeconds ?? 30}s LIVE`,
+      status: freshness === 'LIVE' || freshness === 'SIMULATED' ? 'PASS' : freshness ? 'WARNING' : '—',
+      value:
+        age != null
+          ? `${Math.round(age)}s age`
+          : freshness === 'SIMULATED'
+            ? 'Dataset / simulation feed active'
+            : null,
+      limit:
+        freshness === 'SIMULATED'
+          ? 'Simulation mode (no live BMS required)'
+          : `< ${dashboard?.thresholds?.liveSeconds ?? 30}s LIVE`,
     },
     {
       name: 'Sensor Quality Verification',

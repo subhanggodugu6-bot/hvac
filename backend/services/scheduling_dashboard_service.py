@@ -49,6 +49,8 @@ def _display_state(freshness: str, has_values: bool, engine_ok: bool, api_error:
         return "BACKEND OFFLINE"
     if not engine_ok:
         return "ENGINE NOT CONFIGURED"
+    if freshness == "SIMULATED" and has_values:
+        return "SIMULATED"
     if freshness == "OFFLINE" and not has_values:
         return "AWAITING TELEMETRY"
     if freshness == "STALE":
@@ -67,8 +69,8 @@ def _data_state(*, api_error: Optional[str], engine_ok: bool, freshness: str, ha
         return "ERROR"
     if not engine_ok:
         return "ENGINE_OFFLINE"
-    if freshness == "LIVE" and has_live:
-        return "LIVE"
+    if freshness in ("LIVE", "SIMULATED") and has_live:
+        return "LIVE" if freshness == "LIVE" else "LAST_KNOWN"
     if freshness in ("STALE", "DEGRADED") and (has_live or has_stored):
         return "STALE"
     if has_stored or has_live:
@@ -196,7 +198,7 @@ def _card(
         api_error=api_error,
         engine_ok=engine_ok,
         freshness=telemetry_status,
-        has_live=has and telemetry_status == "LIVE",
+        has_live=has and telemetry_status in ("LIVE", "SIMULATED"),
         has_stored=has_stored or has,
     )
     operational = status or _op_status(ds, blocked)
@@ -248,10 +250,8 @@ def _sim_cycle() -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
     try:
         from backend.services.simulation_service import sim_service
         if hasattr(sim_service, "get_latest_status"):
-            latest = sim_service.get_latest_status()
-            if latest:
-                return latest, None
-        return sim_service.step(elapsed_minutes=0), None
+            return sim_service.get_latest_status(), None
+        return sim_service.step(elapsed_minutes=5), None
     except Exception as exc:
         return None, str(exc)
 
@@ -276,9 +276,9 @@ def _build_o1(age: Optional[float], freshness: str, now_iso: str, dataset: bool 
             age_o1 = age
         fr = _freshness(age_o1) if age_o1 is not None else freshness
         if dataset and fr == "OFFLINE" and age_o1 is not None:
-            fr = _freshness(age_o1)
+            fr = "SIMULATED" if age_o1 < LIVE_S else _freshness(age_o1)
         if dataset and fr == "OFFLINE":
-            fr = "STALE"
+            fr = "SIMULATED"
 
         zone = kpis.get("current_zone_temp")
         zone_num = live_value("ZONE_TEMP")
@@ -854,9 +854,18 @@ def get_scheduling_dashboard() -> Dict[str, Any]:
                 pass
 
     age = None
+    if dataset or sim:
+        try:
+            from backend.services.o1_telemetry_service import telemetry_health
+
+            age = (telemetry_health(90) or {}).get("telemetry_age_seconds")
+        except Exception:
+            age = None
+        if age is None and sim:
+            age = 5.0
     dbk = _db_kpis()
     live_s = int(dbk.get("liveSeconds") or LIVE_S)
-    freshness = _freshness(age, live_s=live_s) if age is not None else "OFFLINE"
+    freshness = _freshness(age, live_s=live_s) if age is not None else ("SIMULATED" if dataset else "OFFLINE")
 
     o1 = _build_o1(age, freshness, now_iso, dataset=dataset)
     o2 = _build_o2(sim, age, freshness, now_iso, sim_err)

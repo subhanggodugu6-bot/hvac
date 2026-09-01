@@ -62,20 +62,29 @@ def _log(db, run_id: str, event_type: str, message: str, detail: Optional[dict] 
 def ingest_from_sim(sim_state: Dict[str, Any], source: str = "SIMULATED") -> None:
     weather = sim_state.get("weather") or {}
     zones = sim_state.get("zones") or []
+    ahus = sim_state.get("ahus") or []
+    ahu1 = ahus[0] if ahus else {}
     zone_temp = None
     if zones:
         temps = [z.get("temperature") for z in zones if z.get("temperature") is not None]
         zone_temp = sum(temps) / len(temps) if temps else None
+    elif ahu1.get("vav_zones"):
+        temps = [z.get("temp_actual") for z in ahu1["vav_zones"] if z.get("temp_actual") is not None]
+        zone_temp = sum(temps) / len(temps) if temps else None
+    occ = 1.0 if sim_state.get("simulation_time") and str(sim_state.get("simulation_time")) >= "08:00" else 0.0
+    now = datetime.utcnow()
     samples = [
-        {"signal": "OAT", "value": weather.get("oat"), "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
-        {"signal": "OA_RH", "value": weather.get("humidity"), "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
-        {"signal": "SOLAR", "value": weather.get("solar_irradiance"), "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
-        {"signal": "ZONE_TEMP", "value": zone_temp, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
-        {"signal": "AHU_STATUS", "value": 1.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
-        {"signal": "EQUIP_AVAIL", "value": 1.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
-        {"signal": "ALARM", "value": 0.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
-        {"signal": "OCCUPANCY", "value": 0.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
-        {"signal": "FAN_STATUS", "value": 0.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
+        {"signal": "OAT", "value": weather.get("oat"), "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "OA_RH", "value": weather.get("humidity"), "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "SOLAR", "value": weather.get("solar_irradiance"), "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "ZONE_TEMP", "value": zone_temp, "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "SAT", "value": ahu1.get("sat_actual"), "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "RAT", "value": ahu1.get("rat_actual"), "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "AHU_STATUS", "value": 1.0, "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "EQUIP_AVAIL", "value": 1.0, "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "ALARM", "value": 0.0, "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "OCCUPANCY", "value": occ, "quality": "GOOD", "source": source, "timestamp": now},
+        {"signal": "FAN_STATUS", "value": 1.0 if ahu1.get("fan_running") else 0.0, "quality": "GOOD", "source": source, "timestamp": now},
     ]
     ingest_samples([s for s in samples if s["value"] is not None], source=source)
 
@@ -97,12 +106,16 @@ def ingest_from_dataset_catalog(source: str = "SIMULATION") -> int:
     oat = _val("SITE", "outdoor_air_temperature")
     occ = _val("ZONE-01", "occupancy")
     enable = _val("AHU-01", "enable")
+    sat = _val("AHU-01", "supply_air_temperature")
+    rat = _val("AHU-01", "return_air_temperature")
     samples = [
         {"signal": "ZONE_TEMP", "value": zone, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
         {"signal": "OAT", "value": oat, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
         {"signal": "OA_RH", "value": 55.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
         {"signal": "SOLAR", "value": 420.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
         {"signal": "OCCUPANCY", "value": occ if occ is not None else 0.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
+        {"signal": "SAT", "value": sat, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
+        {"signal": "RAT", "value": rat, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
         {"signal": "AHU_STATUS", "value": enable if enable is not None else 1.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
         {"signal": "EQUIP_AVAIL", "value": 1.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},
         {"signal": "ALARM", "value": 0.0, "quality": "GOOD", "source": source, "timestamp": datetime.utcnow()},

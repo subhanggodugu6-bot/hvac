@@ -57,6 +57,19 @@ export function DispatchSafetyPanel({
   const special =
     oid === 'O18' ? 'ADVISORY' : oid === 'O19' ? 'MAINTENANCE_ONLY' : oid === 'O20' ? 'REVIEW_REQUIRED' : code;
   const reason = String(data.reason || 'Supervised writes require Live BMS, mapping, and write-enable.');
+  const simMode = dataset || Boolean(data.simulationMode);
+  const checkOk = (key: string) => {
+    if (simMode && (key === 'bms_connected' || key === 'telemetry_live' || key === 'fresh' || key === 'quality_good')) {
+      return true;
+    }
+    return Boolean(checks[key]);
+  };
+  const checkFailLabel = (key: string, failLabel: string) => {
+    if (simMode && key === 'bms_connected') return 'SIMULATION (BMS OFFLINE)';
+    if (simMode && key === 'telemetry_live') return 'DATASET FEED';
+    if (simMode && key === 'fresh') return 'DATASET FEED';
+    return failLabel;
+  };
   const canWrite = Boolean(data.allowed) && live.controlEnabled && !dataset && !live.safeMode;
   const writesOn = Boolean(checks.write_enabled) || live.controlEnabled;
 
@@ -113,10 +126,10 @@ export function DispatchSafetyPanel({
       <div className="text-[11px] uppercase tracking-wider text-slate-500">Dispatch readiness</div>
       <ul className="space-y-1 text-[12px] font-mono">
         {CHECKS.map((c) => {
-          const ok = Boolean(checks[c.key]);
+          const ok = checkOk(c.key);
           return (
             <li key={c.key} className={ok ? 'text-emerald-700' : 'text-slate-500'}>
-              {ok ? 'PASS' : 'FAIL'} {ok ? c.okLabel : c.failLabel}
+              {ok ? 'PASS' : 'FAIL'} {ok ? c.okLabel : checkFailLabel(c.key, c.failLabel)}
             </li>
           );
         })}

@@ -142,11 +142,11 @@ def get_ventilation_opportunity_alias(oid: str):
 
 @router.get("/agents/scheduling/status")
 def get_scheduling_agent_status():
-    return sim_service.step(elapsed_minutes=0)
+    return sim_service.get_latest_status()
 
 @router.get("/agents/scheduling/state")
 def get_scheduling_agent_state():
-    status = sim_service.step(elapsed_minutes=0)
+    status = sim_service.get_latest_status()
     return {
         "lifecycle_state": status.get("lifecycle_state"),
         "mode": status.get("mode"),
@@ -176,32 +176,32 @@ def get_scheduling_agent_kpis():
 
 @router.get("/agents/scheduling/opportunities")
 def get_scheduling_opportunities():
-    status = sim_service.step(elapsed_minutes=0)
+    status = sim_service.get_latest_status()
     return status.get("detected_opportunities", [])
 
 @router.get("/agents/scheduling/o1")
 def get_o1_status():
-    status = sim_service.step(elapsed_minutes=0)
+    status = sim_service.get_latest_status()
     return sim_service.orchestrator.o1_engine.evaluate(status)
 
 @router.get("/agents/scheduling/o2")
 def get_o2_status():
-    status = sim_service.step(elapsed_minutes=0)
+    status = sim_service.get_latest_status()
     return sim_service.orchestrator.o2_engine.evaluate(status)
 
 @router.get("/agents/scheduling/o3")
 def get_o3_status():
-    status = sim_service.step(elapsed_minutes=0)
+    status = sim_service.get_latest_status()
     return sim_service.orchestrator.o3_engine.evaluate(status)
 
 @router.get("/agents/scheduling/o4")
 def get_o4_status():
-    status = sim_service.step(elapsed_minutes=0)
+    status = sim_service.get_latest_status()
     return sim_service.orchestrator.o4_engine.evaluate(status)
 
 @router.get("/agents/scheduling/actions")
 def get_scheduling_actions():
-    status = sim_service.step(elapsed_minutes=0)
+    status = sim_service.get_latest_status()
     return {
         "candidate_actions": status.get("candidate_actions", []),
         "pending_approvals": status.get("pending_approvals", []),
@@ -210,7 +210,7 @@ def get_scheduling_actions():
 
 @router.get("/agents/scheduling/decisions")
 def get_scheduling_decisions():
-    status = sim_service.step(elapsed_minutes=0)
+    status = sim_service.get_latest_status()
     return {
         "cycle_time": status.get("simulation_time"),
         "mode": status.get("mode"),
@@ -273,6 +273,23 @@ def get_training_status():
 @router.get("/agents/scheduling/worker-status")
 def get_worker_status():
     """GET /api/agents/scheduling/worker-status"""
+    import os
+
+    if os.getenv("HVAC_USE_AI_PIPELINE", "1").strip().lower() in ("1", "true", "yes"):
+        from backend.workers.ai_pipeline_worker import get_worker
+
+        worker = get_worker()
+        if worker is not None:
+            status = worker.get_status()
+            status["worker_type"] = "ai_pipeline"
+            return status
+        return {
+            "worker_running": False,
+            "worker_type": "ai_pipeline",
+            "interval_seconds": int(os.getenv("HVAC_AI_PIPELINE_INTERVAL_SECONDS", "60") or "60"),
+            "last_summary": "AI pipeline worker not started on this host",
+            "pipeline": "RLS→LSTM→SafeRL→Rules→BMS",
+        }
     return control_worker.get_status()
 
 @router.post("/agents/scheduling/run")

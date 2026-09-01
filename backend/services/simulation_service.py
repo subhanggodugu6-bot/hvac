@@ -21,6 +21,7 @@ class SimulationService:
         self.orchestrator = SupervisoryOrchestrator()
         self.engineering_limits: EngineeringLimitsConfig = self._load_limits()
         self.telemetry_history: List[Dict[str, Any]] = []
+        self._last_status: Optional[Dict[str, Any]] = None
         self._init_history()
 
     def _load_limits(self) -> EngineeringLimitsConfig:
@@ -50,21 +51,30 @@ class SimulationService:
         finally:
             db.close()
 
+    def _run_cycle(self, elapsed_minutes: int) -> Dict[str, Any]:
+        result = self.orchestrator.run_supervisory_cycle(elapsed_minutes=elapsed_minutes)
+        self._last_status = result
+        return result
+
+    def get_latest_status(self) -> Dict[str, Any]:
+        if self._last_status is None:
+            self._last_status = self._run_cycle(0)
+        return self._last_status
+
     def _init_history(self):
         if not _simulation_enabled():
             return
         try:
-            result = self.orchestrator.run_supervisory_cycle(elapsed_minutes=0)
-            self._record_history(result)
+            for _ in range(12):
+                self.step(elapsed_minutes=5)
         except Exception as exc:
             log_event("ERROR", "simulation", "INIT_HISTORY_FAILED", extra={"error": type(exc).__name__})
 
     def step(self, elapsed_minutes: int = 5, minutes: int = None, **kwargs) -> Dict[str, Any]:
         dt = minutes if minutes is not None else elapsed_minutes
-        if hasattr(self.orchestrator, "run_supervisory_cycle"):
-            result = self.orchestrator.run_supervisory_cycle(elapsed_minutes=dt)
-        else:
-            result = self.orchestrator.run_cycle()
+        if dt == 0:
+            return self.get_latest_status()
+        result = self._run_cycle(dt)
         self._record_history(result)
         return result
 
@@ -92,7 +102,7 @@ class SimulationService:
             "predicted_kw": savings.get("predicted_kw", 18.5),
             "applied_kw": savings.get("applied_kw", 18.5),
             "verified_kw": savings.get("verified_kw", 18.0),
-            "comfort_pct": savings.get("comfort_compliance_pct", 99.8)
+            "comfort_pct": savings.get("comfort_compliance_pct", 99.8),
         }
         self.telemetry_history.append(entry)
         if len(self.telemetry_history) > 60:
@@ -102,6 +112,7 @@ class SimulationService:
         self.orchestrator = SupervisoryOrchestrator()
         self.orchestrator.safety_engine.limits = self.engineering_limits
         self.telemetry_history.clear()
+        self._last_status = None
         self._init_history()
 
     def set_mode(self, mode_str: str) -> Dict[str, Any]:

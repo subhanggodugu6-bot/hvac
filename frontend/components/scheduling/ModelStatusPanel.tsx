@@ -33,6 +33,20 @@ export const ModelStatusPanel: React.FC<{ opportunities?: any[] }> = ({ opportun
     refetchInterval: LIVE_POLL_MS,
   });
 
+  const workerRunning = Boolean(workerStatus?.worker_running);
+  const workerLabel = workerRunning
+    ? 'RUNNING'
+    : workerStatus?.worker_type === 'ai_pipeline'
+      ? 'AI PIPELINE'
+      : workerStatus
+        ? 'STOPPED'
+        : 'UNKNOWN';
+  const workerDetail = workerRunning
+    ? `Cycle #${workerStatus?.cycle_count ?? '—'} · ${workerStatus?.interval_seconds ?? '—'}s interval · ${workerStatus?.pipeline || workerStatus?.worker_type || 'worker'}`
+    : workerStatus?.worker_type === 'ai_pipeline'
+      ? workerStatus?.last_summary || 'AI pipeline worker idle on this host'
+      : 'Demo host — control worker is stopped.';
+
   const handleRunEvaluation = async () => {
     setEvaluating(true);
     try {
@@ -62,14 +76,10 @@ export const ModelStatusPanel: React.FC<{ opportunities?: any[] }> = ({ opportun
               Machine Learning Model Registry & Control Worker
             </h3>
             <span className="text-[10px] font-mono px-2 py-0.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
-              WORKER {workerStatus?.worker_running ? 'RUNNING' : workerStatus ? 'STOPPED' : 'UNKNOWN'}
+              WORKER {workerLabel}
             </span>
           </div>
-          <p className="text-[11px] text-slate-600 font-mono mt-0.5">
-            {workerStatus?.worker_running
-              ? `Cycle #${workerStatus?.cycle_count ?? '—'} · ${workerStatus?.interval_seconds ?? '—'}s interval`
-              : 'Demo host — control worker is stopped.'}
-          </p>
+          <p className="text-[11px] text-slate-600 font-mono mt-0.5">{workerDetail}</p>
         </div>
 
         <button

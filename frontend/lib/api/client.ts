@@ -1,30 +1,30 @@
+function hostedApiOrigin(): string | undefined {
+  const raw =
+    process.env['NEXT_PUBLIC_WS_ORIGIN'] ||
+    process.env['NEXT_PUBLIC_API_ORIGIN'];
+  if (!raw || !/^https?:/i.test(raw)) return undefined;
+  try {
+    return new URL(raw.replace(/\/$/, '')).origin;
+  } catch {
+    return undefined;
+  }
+}
+
 function publicApiBase(): string | undefined {
-  // Browser HTTP always uses same-origin /api proxy (avoids Render CORS / cold-start preflight).
-  if (typeof window !== 'undefined') return undefined;
+  // Hosted UI: call Render directly — Vercel Deployment Protection serves /login HTML for /api/*.
+  if (typeof window !== 'undefined') {
+    const origin = hostedApiOrigin();
+    if (origin) return `${origin}/api`;
+    return undefined;
+  }
   const pub = process.env['NEXT_PUBLIC_API_URL'];
   if (pub && /^https?:/i.test(pub)) return pub.replace(/\/$/, '');
   return undefined;
 }
 
-/** Render (or other) host for WebSocket only — Vercel cannot proxy WS on the app route. */
+/** Render host for WebSocket and browser HTTP when the UI is on Vercel. */
 function backendWsOrigin(): string | undefined {
-  const ws = process.env['NEXT_PUBLIC_WS_ORIGIN'];
-  if (ws && /^https?:/i.test(ws)) {
-    try {
-      return new URL(ws.replace(/\/$/, '')).origin;
-    } catch {
-      /* fall through */
-    }
-  }
-  const pub = process.env['NEXT_PUBLIC_API_URL'];
-  if (pub && /^https?:/i.test(pub)) {
-    try {
-      return new URL(pub.replace(/\/$/, '')).origin;
-    } catch {
-      /* fall through */
-    }
-  }
-  return undefined;
+  return hostedApiOrigin();
 }
 
 export { backendWsOrigin };
@@ -79,10 +79,10 @@ async function fetchWithTimeout(input: string, init: RequestInit, ms: number): P
 export async function hvacFetch(input: string, init: RequestInit = {}): Promise<Response> {
   const url = resolveApiUrl(input);
   const headers = new Headers(init.headers || {});
-  if (!headers.has("X-Request-ID")) headers.set("X-Request-ID", requestId());
-  if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
-  const method = (init.method || "GET").toUpperCase();
-  const attempts = method === "GET" ? 2 : 1;
+  if (!headers.has('X-Request-ID')) headers.set('X-Request-ID', requestId());
+  if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+  const method = (init.method || 'GET').toUpperCase();
+  const attempts = method === 'GET' ? 2 : 1;
   let last: Response | undefined;
   let lastErr: unknown;
   for (let i = 0; i < attempts; i++) {
@@ -96,20 +96,20 @@ export async function hvacFetch(input: string, init: RequestInit = {}): Promise<
     }
   }
   if (last) return last;
-  throw lastErr instanceof Error ? lastErr : new Error("NETWORK ERROR");
+  throw lastErr instanceof Error ? lastErr : new Error('NETWORK ERROR');
 }
 
-/** Browser uses same-origin `/api` proxy; server may call Render directly when configured. */
+/** Browser uses Render when NEXT_PUBLIC_WS_ORIGIN is set; otherwise same-origin /api proxy. */
 export async function apiJson(path: string, init: RequestInit = {}) {
-  const res = await hvacFetch(path, { ...init, cache: init.cache ?? "no-store" });
+  const res = await hvacFetch(path, { ...init, cache: init.cache ?? 'no-store' });
   if (!res.ok) {
     let message = `DATA SOURCE ERROR ${res.status}`;
     let code: string | undefined;
-    let rid = res.headers.get("X-Request-ID") || undefined;
+    let rid = res.headers.get('X-Request-ID') || undefined;
     try {
       const body = await res.json();
       code = body.code || body.detail?.code;
-      message = body.message || body.detail?.message || (typeof body.detail === "string" ? body.detail : message);
+      message = body.message || body.detail?.message || (typeof body.detail === 'string' ? body.detail : message);
       rid = body.request_id || rid;
     } catch {
       /* keep */
