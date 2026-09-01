@@ -339,6 +339,14 @@ export default function MlRegistryPage() {
     }
   }
 
+  const registryStats = useMemo(() => {
+    const missingDs = rows.filter((r) => r.missing_dataset).length;
+    const noDataset = rows.filter((r) => !r.dataset_id).length;
+    const noMetrics = rows.filter((r) => !r.metrics?.validation || !Object.keys(r.metrics.validation).length).length;
+    const notReady = rows.filter((r) => r.status !== 'MODEL_READY').length;
+    return { missingDs, noDataset, noMetrics, notReady, total: rows.length };
+  }, [rows]);
+
   const filters: { id: Filter; label: string }[] = [
     { id: 'all', label: 'All' },
     { id: 'MODEL_READY', label: 'Model Ready' },
@@ -367,7 +375,7 @@ export default function MlRegistryPage() {
 
       <PipelineStatusCard />
 
-      <section className="glass-card p-4 space-y-3">
+      <section id="stage-rls" className="glass-card p-4 space-y-3 scroll-mt-24">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">Online RLS learning</div>
@@ -375,9 +383,23 @@ export default function MlRegistryPage() {
               Stage C continuous adaptation (zone thermal + HVAC power). Read-only — never writes setpoints.
             </p>
           </div>
-          <StatusBadge tone={rls.isError ? 'danger' : rls.isLoading ? 'muted' : 'live'} pulse={false}>
-            {rls.isError ? 'UNAVAILABLE' : rls.isLoading ? 'LOADING' : 'ACTIVE'}
-          </StatusBadge>
+          <div className="flex flex-wrap gap-1.5">
+            {(rls.data?.models || []).some(
+              (m) => m.source_mode === 'LIVE_BMS' && m.status !== 'READY'
+            ) ? (
+              <StatusBadge tone="warn" pulse={false}>
+                LIVE_BMS GAP
+              </StatusBadge>
+            ) : null}
+            {(rls.data?.models || []).every((m) => m.n_updates === 0) && !rls.isLoading ? (
+              <StatusBadge tone="warn" pulse={false}>
+                NO UPDATES
+              </StatusBadge>
+            ) : null}
+            <StatusBadge tone={rls.isError ? 'danger' : rls.isLoading ? 'muted' : 'live'} pulse={false}>
+              {rls.isError ? 'UNAVAILABLE' : rls.isLoading ? 'LOADING' : 'ACTIVE'}
+            </StatusBadge>
+          </div>
         </div>
         {(rls.data?.models || []).length === 0 && !rls.isLoading ? (
           <EmptyState title="No RLS updates yet" detail="Models warm up after normalized GOOD samples arrive (poll or job worker tick)." />
@@ -397,7 +419,16 @@ export default function MlRegistryPage() {
                 </tr>
               </thead>
               <tbody>
-                {(rls.data?.models || []).map((m) => (
+                {(rls.data?.models || []).map((m) => {
+                  const rowGap =
+                    m.source_mode === 'LIVE_BMS' && m.status !== 'READY'
+                      ? 'LIVE_BMS not ready'
+                      : m.n_updates === 0
+                        ? 'No updates yet'
+                        : m.last_predicted == null || m.last_actual == null
+                          ? 'Missing pred/actual'
+                          : null;
+                  return (
                   <tr key={`${m.source_mode}-${m.zone_id}-${m.model_key}`} className="border-b border-slate-200">
                     <td className="p-2 font-mono text-cyan-800">{m.model_key}</td>
                     <td className="p-2 text-[12px]">{m.source_mode}</td>
@@ -405,6 +436,9 @@ export default function MlRegistryPage() {
                       <StatusBadge tone={m.status === 'READY' ? 'live' : 'warn'} pulse={false}>
                         {m.status}
                       </StatusBadge>
+                      {rowGap ? (
+                        <div className="text-[10px] text-amber-700 mt-0.5">{rowGap}</div>
+                      ) : null}
                     </td>
                     <td className="p-2 text-[12px]">{m.n_updates}</td>
                     <td className="p-2 text-[12px]">{m.last_error == null ? '—' : m.last_error.toFixed(3)}</td>
@@ -416,14 +450,15 @@ export default function MlRegistryPage() {
                     </td>
                     <td className="p-2 text-[12px]">{m.version}</td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
         )}
       </section>
 
-      <section className="glass-card p-4 space-y-3">
+      <section id="stage-lstm" className="glass-card p-4 space-y-3 scroll-mt-24">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">LSTM forecast</div>
@@ -431,12 +466,20 @@ export default function MlRegistryPage() {
               Stage D multi-horizon advisory forecast (15–60 min). MODEL PREDICTION only — never LIVE BMS write.
             </p>
           </div>
-          <StatusBadge
-            tone={lstmForecast.isError ? 'danger' : lstmForecast.isLoading ? 'muted' : 'live'}
-            pulse={false}
-          >
-            {lstmForecast.isError ? 'UNAVAILABLE' : lstmForecast.isLoading ? 'LOADING' : 'ADVISORY'}
-          </StatusBadge>
+          <div className="flex flex-wrap gap-1.5">
+            {(lstmStatus.data?.models || []).every((m) => m.status === 'MODEL_NOT_AVAILABLE') &&
+            !lstmStatus.isLoading ? (
+              <StatusBadge tone="warn" pulse={false}>
+                NOT TRAINED
+              </StatusBadge>
+            ) : null}
+            <StatusBadge
+              tone={lstmForecast.isError ? 'danger' : lstmForecast.isLoading ? 'muted' : 'live'}
+              pulse={false}
+            >
+              {lstmForecast.isError ? 'UNAVAILABLE' : lstmForecast.isLoading ? 'LOADING' : 'ADVISORY'}
+            </StatusBadge>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -507,7 +550,7 @@ export default function MlRegistryPage() {
         </p>
       </section>
 
-      <section className="glass-card p-4 space-y-3">
+      <section id="stage-safe-rl" className="glass-card p-4 space-y-3 scroll-mt-24">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">
@@ -517,22 +560,34 @@ export default function MlRegistryPage() {
               Stage E constrained recommend from RLS + LSTM + limits. RECOMMENDATION ONLY — plant does not move.
             </p>
           </div>
-          <StatusBadge
-            tone={
-              safeRlStatus.data?.safe_mode
-                ? 'danger'
-                : safeRlStatus.data?.readiness === 'READY'
-                  ? 'live'
-                  : safeRlStatus.data?.last_decision?.status === 'PROPOSED'
+          <div className="flex flex-wrap gap-1.5">
+            {!safeRlStatus.data?.telemetry_ok && !safeRlStatus.isLoading ? (
+              <StatusBadge tone="warn" pulse={false}>
+                TELEMETRY GAP
+              </StatusBadge>
+            ) : null}
+            {!safeRlStatus.data?.lstm_ready && !safeRlStatus.isLoading ? (
+              <StatusBadge tone="warn" pulse={false}>
+                LSTM GAP
+              </StatusBadge>
+            ) : null}
+            <StatusBadge
+              tone={
+                safeRlStatus.data?.safe_mode
+                  ? 'danger'
+                  : safeRlStatus.data?.readiness === 'READY'
                     ? 'live'
-                    : 'warn'
-            }
-            pulse={false}
-          >
-            {safeRlStatus.data?.last_decision?.status ||
-              safeRlStatus.data?.readiness ||
-              (safeRlStatus.isLoading ? 'LOADING' : 'ADVISORY')}
-          </StatusBadge>
+                    : safeRlStatus.data?.last_decision?.status === 'PROPOSED'
+                      ? 'live'
+                      : 'warn'
+              }
+              pulse={false}
+            >
+              {safeRlStatus.data?.last_decision?.status ||
+                safeRlStatus.data?.readiness ||
+                (safeRlStatus.isLoading ? 'LOADING' : 'ADVISORY')}
+            </StatusBadge>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2 text-[12px]">
@@ -660,7 +715,7 @@ export default function MlRegistryPage() {
         </p>
       </section>
 
-      <section className="glass-card p-4 space-y-3">
+      <section id="stage-rules" className="glass-card p-4 space-y-3 scroll-mt-24">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-800">
@@ -670,18 +725,25 @@ export default function MlRegistryPage() {
               Stage F checklist (R01–R10). No BMS write without APPROVED — writes still off until Stage G.
             </p>
           </div>
-          <StatusBadge
-            tone={
-              rulesResult?.verdict === 'APPROVED'
-                ? 'live'
-                : rulesResult?.verdict === 'REJECTED'
-                  ? 'danger'
-                  : 'muted'
-            }
-            pulse={false}
-          >
-            {rulesResult?.verdict || 'IDLE'}
-          </StatusBadge>
+          <div className="flex flex-wrap gap-1.5">
+            {!rulesResult && !rulesBusy ? (
+              <StatusBadge tone="warn" pulse={false}>
+                NOT EVALUATED
+              </StatusBadge>
+            ) : null}
+            <StatusBadge
+              tone={
+                rulesResult?.verdict === 'APPROVED'
+                  ? 'live'
+                  : rulesResult?.verdict === 'REJECTED'
+                    ? 'danger'
+                    : 'muted'
+              }
+              pulse={false}
+            >
+              {rulesResult?.verdict || 'IDLE'}
+            </StatusBadge>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -742,6 +804,51 @@ export default function MlRegistryPage() {
               .join(' · ')}
           </div>
         ) : null}
+      </section>
+
+      <section id="stage-registry" className="glass-card p-4 space-y-3 scroll-mt-24">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-violet-800">
+              ML registry data check
+            </div>
+            <p className="text-[12px] text-slate-600 mt-1">
+              O1–O20 training models — highlights missing datasets, empty columns, and non-ready statuses.
+            </p>
+          </div>
+          <StatusBadge
+            tone={
+              registryStats.missingDs === 0 && registryStats.noDataset === 0 ? 'live' : 'warn'
+            }
+            pulse={false}
+          >
+            {registryStats.missingDs === 0 && registryStats.noDataset === 0 ? 'DATA OK' : 'GAPS FOUND'}
+          </StatusBadge>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[11px]">
+          <div className="rounded-lg bg-slate-50 border border-slate-200 p-2">
+            <div className="text-slate-500">Opportunities</div>
+            <div className="text-slate-900 font-semibold">{registryStats.total}</div>
+          </div>
+          <div className="rounded-lg bg-slate-50 border border-slate-200 p-2">
+            <div className="text-slate-500">Missing datasets</div>
+            <div className={`font-semibold ${registryStats.missingDs ? 'text-amber-800' : 'text-slate-900'}`}>
+              {registryStats.missingDs}
+            </div>
+          </div>
+          <div className="rounded-lg bg-slate-50 border border-slate-200 p-2">
+            <div className="text-slate-500">No dataset ID</div>
+            <div className={`font-semibold ${registryStats.noDataset ? 'text-amber-800' : 'text-slate-900'}`}>
+              {registryStats.noDataset}
+            </div>
+          </div>
+          <div className="rounded-lg bg-slate-50 border border-slate-200 p-2">
+            <div className="text-slate-500">Not MODEL_READY</div>
+            <div className={`font-semibold ${registryStats.notReady ? 'text-amber-800' : 'text-slate-900'}`}>
+              {registryStats.notReady}
+            </div>
+          </div>
+        </div>
       </section>
 
       <div className="flex flex-wrap gap-2">
@@ -811,14 +918,21 @@ export default function MlRegistryPage() {
               >
                 <td className="p-2 text-cyan-800">{r.opportunity_id}</td>
                 <td className="p-2 text-slate-700">{r.agent_id || '—'}</td>
-                <td className="p-2 text-slate-700">{r.dataset_id || '—'}</td>
-                <td className="p-2 text-slate-600">
-                  {r.dataset_quality?.missing_pct == null ? '—' : `miss ${r.dataset_quality.missing_pct}%`}
+                <td className={`p-2 ${!r.dataset_id ? 'text-amber-700 bg-amber-50/40' : 'text-slate-700'}`}>
+                  {r.dataset_id || '— missing'}
                 </td>
-                <td className="p-2 text-slate-600 max-w-[9rem] truncate" title={JSON.stringify(r.feature_map || {})}>
-                  {r.feature_map && Object.keys(r.feature_map).length ? Object.keys(r.feature_map).join(', ') : '—'}
+                <td className={`p-2 ${r.dataset_quality?.missing_pct == null ? 'text-amber-700 bg-amber-50/40' : 'text-slate-600'}`}>
+                  {r.dataset_quality?.missing_pct == null ? '— no quality' : `miss ${r.dataset_quality.missing_pct}%`}
                 </td>
-                <td className="p-2 text-slate-600 max-w-[10rem] truncate">{r.target || '—'}</td>
+                <td
+                  className={`p-2 max-w-[9rem] truncate ${!r.feature_map || !Object.keys(r.feature_map).length ? 'text-amber-700 bg-amber-50/40' : 'text-slate-600'}`}
+                  title={JSON.stringify(r.feature_map || {})}
+                >
+                  {r.feature_map && Object.keys(r.feature_map).length ? Object.keys(r.feature_map).join(', ') : '— missing'}
+                </td>
+                <td className={`p-2 max-w-[10rem] truncate ${!r.target ? 'text-amber-700 bg-amber-50/40' : 'text-slate-600'}`}>
+                  {r.target || '— missing'}
+                </td>
                 <td className="p-2 text-slate-700">{r.model_id || '—'}</td>
                 <td className="p-2 text-slate-700">{r.model_version || '—'}</td>
                 <td className="p-2">
@@ -827,8 +941,12 @@ export default function MlRegistryPage() {
                   </StatusBadge>
                 </td>
                 <td className="p-2 text-slate-600">{r.validation_status || '—'}</td>
-                <td className="p-2 text-slate-600">{fmtMetrics(r.metrics?.validation)}</td>
-                <td className="p-2 text-slate-600">{r.last_trained || '—'}</td>
+                <td className={`p-2 ${!r.metrics?.validation || !Object.keys(r.metrics.validation).length ? 'text-amber-700 bg-amber-50/40' : 'text-slate-600'}`}>
+                  {fmtMetrics(r.metrics?.validation)}
+                </td>
+                <td className={`p-2 ${!r.last_trained ? 'text-amber-700 bg-amber-50/40' : 'text-slate-600'}`}>
+                  {r.last_trained || '— missing'}
+                </td>
                 <td className="p-2 text-slate-600">{r.prediction_availability || '—'}</td>
                 <td className="p-2 text-violet-700">
                   {r.provenance === 'LIVE' || r.provenance === 'LIVE_BMS' ? 'TRAINING DATA' : r.provenance}
