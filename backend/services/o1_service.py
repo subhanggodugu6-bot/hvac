@@ -1,6 +1,7 @@
 """O1 dashboard facade: reads persisted pipeline results. No fabricated KPIs."""
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 
 from database.session import SessionLocal
 from database.models import (
@@ -48,20 +49,20 @@ def _age_seconds(ts: Optional[datetime]) -> Optional[float]:
     return (datetime.utcnow() - _naive_utc(ts)).total_seconds()
 
 
+def _json_safe_value(value: Any) -> Any:
+    if isinstance(value, datetime):
+        return value.isoformat()
+    if isinstance(value, Decimal):
+        return float(value)
+    if isinstance(value, dict):
+        return {k: _json_safe_value(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_json_safe_value(v) for v in value]
+    return value
+
+
 def _json_safe_health(health: Dict[str, Any]) -> Dict[str, Any]:
-    out = dict(health or {})
-    signals: Dict[str, Any] = {}
-    for key, row in (out.get("signals") or {}).items():
-        safe = dict(row or {})
-        ts = safe.get("timestamp")
-        if isinstance(ts, datetime):
-            safe["timestamp"] = ts.isoformat()
-        signals[key] = safe
-    out["signals"] = signals
-    latest = out.get("latest_timestamp")
-    if isinstance(latest, datetime):
-        out["latest_timestamp"] = latest.isoformat()
-    return out
+    return _json_safe_value(health or {})
 
 
 def _latest_run(db) -> Optional[O1DailyRunDB]:
@@ -119,7 +120,28 @@ class O1Service:
         self.bms_status = "PENDING"
 
     def get_state(self) -> Dict[str, Any]:
-        run_id = _ensure_run()
+        try:
+            run_id = _ensure_run()
+        except Exception:
+            db = SessionLocal()
+            try:
+                run = _latest_run(db)
+                run_id = run.id if run else None
+            finally:
+                db.close()
+            if not run_id:
+                return _json_safe_value(
+                    {
+                        "title": "Optimum Start/Stop Programming (O1)",
+                        "subtitle": "Thermodynamic Pull-Down Trajectory & Passive Coasting Stop Optimizer",
+                        "run_status": "UNAVAILABLE",
+                        "bms_connection": "OFFLINE",
+                        "source": "PERSISTED",
+                        "timestamp": datetime.utcnow().isoformat(),
+                        "health": {"overall": "MISSING"},
+                        "kpis": {},
+                    }
+                )
         db = SessionLocal()
         try:
             run = db.query(O1DailyRunDB).filter_by(id=run_id).first()
@@ -132,8 +154,8 @@ class O1Service:
             conf = "MODEL NOT READY"
             if model and model.get("status") == "ACTIVE" and model.get("prediction_confidence_pct") is not None:
                 conf = f"{model['prediction_confidence_pct']}%"
-            elif dec and dec.start_confidence:
-                conf = f"{int(dec.start_confidence * 100)}%"
+            elif dec and dec.start_confidence is not None:
+                conf = f"{int(float(dec.start_confidence) * 100)}%"
             overall = health.get("overall")
             if overall == "STALE":
                 tel_label = "TELEMETRY STALE"
@@ -193,7 +215,7 @@ class O1Service:
             start_sel = db.query(O1StartCandidateDB).filter_by(run_id=run_id, decision="SELECTED").first()
             if start_sel:
                 kpis["predicted_target_reached"] = start_sel.predicted_target_reached
-            return {
+            return _json_safe_value({
                 "title": "Optimum Start/Stop Programming (O1)",
                 "subtitle": "Thermodynamic Pull-Down Trajectory & Passive Coasting Stop Optimizer",
                 "model_version": (model or {}).get("version") or (dec.model_version if dec else None),
@@ -211,7 +233,7 @@ class O1Service:
                 },
                 "health": health,
                 "kpis": kpis,
-            }
+            })
         finally:
             db.close()
 
