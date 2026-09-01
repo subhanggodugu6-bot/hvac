@@ -8,6 +8,7 @@ import { SkipToContent } from "@/components/layout/SkipToContent";
 import { Header } from "@/components/layout/Header";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { QueryProvider } from "@/components/providers/QueryProvider";
+import { PlatformBootstrap } from "@/components/providers/PlatformBootstrap";
 import { LiveTelemetryProvider } from "@/components/providers/LiveTelemetryProvider";
 import { ErrorBoundary } from "@/components/hvac/ErrorBoundary";
 
@@ -44,6 +45,7 @@ export default function RootLayout({
       <body className="hvac-shell text-slate-700 min-h-screen flex flex-col font-sans selection:bg-violet-200 selection:text-violet-950 antialiased">
         <SkipToContent />
         <QueryProvider>
+          <PlatformBootstrap />
           <LiveTelemetryProvider>
             <Header />
             <div className="hvac-body flex flex-1 min-h-0">

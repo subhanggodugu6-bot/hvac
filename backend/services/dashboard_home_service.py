@@ -528,4 +528,5 @@ def _build_dashboard_home() -> Dict[str, Any]:
         "labMode": snap.get("labMode"),
         "hasCoPoints": has_co,
         "provenance": tel_status,
+        "groups": groups,
     }

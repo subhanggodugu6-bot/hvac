@@ -67,6 +67,25 @@ export type DashboardHome = {
   controlLabel?: string;
   provenance?: string;
   hasCoPoints?: boolean;
+  groups?: AgentGroupPayload[];
+};
+
+export type AgentGroupPayload = {
+  id: string;
+  title: string;
+  href: string;
+  status?: string;
+  controlAvailability?: string;
+  recommendation?: string;
+  cards?: {
+    id: string;
+    title?: string;
+    telemetry?: string;
+    control?: string;
+    kind?: string;
+    missing_features?: string[];
+    [key: string]: unknown;
+  }[];
 };
 
 export const LAYER_GROUPS: { key: string; title: string }[] = [

@@ -548,7 +548,7 @@ def control_state_signature() -> tuple:
 
 
 def _agent_groups_telemetry_sig() -> tuple:
-    """Invalidate agent card cache when simulation/live telemetry first arrives."""
+    """Coarse telemetry signature — avoid busting cache on every sim tick timestamp."""
     try:
         from backend.services.canonical_telemetry_service import latest_points
 
@@ -556,7 +556,7 @@ def _agent_groups_telemetry_sig() -> tuple:
         if not pts:
             return ("no-telemetry",)
         p = pts[0]
-        return (p.get("point_id"), str(p.get("timestamp") or ""), p.get("source"))
+        return (p.get("source"), str(p.get("quality") or ""))
     except Exception:
         return ("telemetry-sig-error",)
 

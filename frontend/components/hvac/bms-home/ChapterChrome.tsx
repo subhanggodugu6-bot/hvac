@@ -1,12 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { EmptyState } from '@/components/hvac/EmptyState';
 import { PlantCanvas } from './PlantCanvas';
-import { hvacFetch, apiJson } from '@/lib/api/client';
-import { PLATFORM_POLL_MS } from '@/lib/hvac/poll';
+import { useDashboardHomeQuery } from '@/lib/hvac/platformQueries';
 import type { DashboardHome, PlantEquipment } from '@/lib/hvac/dashboardHome';
 
 const CHAPTER_LAYERS: Record<string, string[]> = {
@@ -18,11 +16,7 @@ const CHAPTER_LAYERS: Record<string, string[]> = {
 };
 
 export function ChapterChrome({ chapterId }: { chapterId: string }) {
-  const home = useQuery({
-    queryKey: ['dashboard-home'],
-    queryFn: async (): Promise<DashboardHome> => apiJson('/platform/dashboard/home'),
-    refetchInterval: PLATFORM_POLL_MS,
-  });
+  const home = useDashboardHomeQuery();
   const data = home.data;
   const ch = data?.chapters?.find((c) => c.id === chapterId);
   const layers: Record<string, PlantEquipment[]> = {};

@@ -2,17 +2,15 @@
 
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import { Activity, LayoutDashboard, Server, ShieldCheck, Zap } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { EmptyState } from '@/components/hvac/EmptyState';
 import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { AlertRail, AssetRailEmpty, KpiRow, PlantAssetPanel, SystemsHub } from '@/components/hvac/bms-home';
-import { hvacFetch } from '@/lib/api/client';
-import { PLATFORM_POLL_MS } from '@/lib/hvac/poll';
 import { getOpportunity } from '@/lib/hvac/opportunityConfig';
 import { DEFAULT_FACILITY_CONFIG } from '@/lib/facilityConfig';
+import { useDashboardHomeQuery } from '@/lib/hvac/platformQueries';
 import {
   mergeDashboardChapters,
   type DashboardHome,
@@ -107,18 +105,7 @@ function EnergyChart({ points, unit, loading }: { points: { t?: string; v?: numb
 }
 
 export default function FleetOverviewPage() {
-  const home = useQuery({
-    queryKey: ['dashboard-home'],
-    queryFn: async () => {
-      const res = await hvacFetch('/api/platform/dashboard/home');
-      if (!res.ok) throw new Error('DATA SOURCE ERROR');
-      return res.json() as Promise<DashboardHome>;
-    },
-    refetchInterval: PLATFORM_POLL_MS,
-    retry: 8,
-    retryDelay: (attempt) => Math.min(4000 * (attempt + 1), 20000),
-    staleTime: 15_000,
-  });
+  const home = useDashboardHomeQuery();
   const data = home.data;
   const booting = home.isLoading && !data;
   const layers = data?.layers;

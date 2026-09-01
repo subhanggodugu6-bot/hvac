@@ -6,10 +6,11 @@ import { Bell, ChevronDown, Settings2 } from 'lucide-react';
 import { useSupervisoryStore } from '@/lib/store';
 import { AgentMode } from '@/lib/types';
 import { DEFAULT_FACILITY_CONFIG } from '@/lib/facilityConfig';
-import { hvacFetch, apiJson, API_BASE } from '@/lib/api/client';
+import { hvacFetch, API_BASE } from '@/lib/api/client';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 import type { TelemetryFrame } from '@/lib/hvac/telemetrySocket';
-import { fleetOpportunityCards } from '@/lib/hvac/opportunityConfig';
+import { OPPORTUNITIES } from '@/lib/hvac/opportunityConfig';
+import { useDashboardHomeQuery, usePlatformStatusQuery } from '@/lib/hvac/platformQueries';
 
 function num(value: unknown): number | null {
   if (typeof value === 'number' && Number.isFinite(value)) return value;
@@ -104,9 +105,10 @@ export const Header: React.FC = () => {
   const [oat, setOat] = useState<number | null>(null);
   const [humidity, setHumidity] = useState<number | null>(null);
   const [search, setSearch] = useState('');
-  const [alertCount, setAlertCount] = useState(0);
   const [controlsOpen, setControlsOpen] = useState(false);
   const controlsRef = useRef<HTMLDivElement>(null);
+  const statusQuery = usePlatformStatusQuery();
+  const homeQuery = useDashboardHomeQuery();
   const bmsStatus = live.bmsStatus;
   const telemetryLabel = live.telemetryStatus;
   const telemetryAge = live.telemetryAgeSeconds;
@@ -137,54 +139,38 @@ export const Header: React.FC = () => {
   };
 
   useEffect(() => {
-    let cancelled = false;
-    const load = async () => {
-      try {
-        const [body, homeData] = await Promise.all([
-          apiJson('/platform/status'),
-          apiJson('/platform/dashboard/home').catch(() => null),
-        ]);
-        if (body && !cancelled) {
-          const facility = (body.facility || body.building) as
-            | { name?: string; location?: string; timezone?: string }
-            | undefined;
-          const weather = body.weather as { oat?: unknown; humidity?: unknown; oah?: unknown } | undefined;
-          if (facility?.name) setBuildingName(facility.name);
-          if (facility?.location) setBuildingLocation(facility.location);
-          if (facility?.timezone) setTimezone(facility.timezone);
-          const nextOat = num(weather?.oat);
-          const nextRh = num(weather?.humidity ?? weather?.oah);
-          if (nextOat != null) setOat(nextOat);
-          if (nextRh != null) setHumidity(nextRh);
-          if (body.plantMode === 'DATASET' || body.plantMode === 'LIVE_BMS') {
-            applyFrame(
-              {
-                bms: (body.bms as TelemetryFrame['bms']) || { status: String(body.bmsStatus || '') },
-                telemetry: (body.telemetry as TelemetryFrame['telemetry']) || { status: undefined },
-                safeMode: Boolean(body.safeMode),
-                plantMode: String(body.plantMode),
-                controlEnabled: Boolean(body.controlEnabled),
-                controlLabel: String(body.controlLabel || (body.controlEnabled ? 'WRITE ENABLED' : 'WRITE DISABLED')),
-                events: useLiveTelemetry.getState().events,
-              },
-              useLiveTelemetry.getState().connectionState,
-            );
-          }
-        }
-        if (homeData && !cancelled) {
-          setAlertCount(Number(homeData?.kpis?.alertCount || homeData?.alerts?.length || 0));
-        }
-      } catch {
-        /* keep last known */
-      }
-    };
-    load();
-    const id = window.setInterval(load, 8000);
-    return () => {
-      cancelled = true;
-      window.clearInterval(id);
-    };
-  }, [applyFrame]);
+    const body = statusQuery.data;
+    if (!body) return;
+    const facility = (body.facility || body.building) as
+      | { name?: string; location?: string; timezone?: string }
+      | undefined;
+    const weather = body.weather as { oat?: unknown; humidity?: unknown; oah?: unknown } | undefined;
+    if (facility?.name) setBuildingName(facility.name);
+    if (facility?.location) setBuildingLocation(facility.location);
+    if (facility?.timezone) setTimezone(facility.timezone);
+    const nextOat = num(weather?.oat);
+    const nextRh = num(weather?.humidity ?? weather?.oah);
+    if (nextOat != null) setOat(nextOat);
+    if (nextRh != null) setHumidity(nextRh);
+    if (body.plantMode === 'DATASET' || body.plantMode === 'LIVE_BMS') {
+      applyFrame(
+        {
+          bms: (body.bms as TelemetryFrame['bms']) || { status: String(body.bmsStatus || '') },
+          telemetry: (body.telemetry as TelemetryFrame['telemetry']) || { status: undefined },
+          safeMode: Boolean(body.safeMode),
+          plantMode: String(body.plantMode),
+          controlEnabled: Boolean(body.controlEnabled),
+          controlLabel: String(body.controlLabel || (body.controlEnabled ? 'WRITE ENABLED' : 'WRITE DISABLED')),
+          events: useLiveTelemetry.getState().events,
+        },
+        useLiveTelemetry.getState().connectionState,
+      );
+    }
+  }, [statusQuery.data, applyFrame]);
+
+  const alertCount = Number(
+    homeQuery.data?.kpis?.alertCount || homeQuery.data?.alerts?.length || 0,
+  );
 
   const [facilityTime, setFacilityTime] = useState({
     weekday: '',
@@ -237,7 +223,7 @@ export const Header: React.FC = () => {
   const searchHits = useMemo(() => {
     const q = search.trim().toLowerCase();
     if (q.length < 1) return [];
-    return fleetOpportunityCards().filter(
+    return OPPORTUNITIES.filter(
       (o) =>
         o.id.toLowerCase().includes(q) ||
         o.title.toLowerCase().includes(q) ||

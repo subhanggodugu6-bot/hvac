@@ -2,14 +2,11 @@
 
 import React, { useMemo } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import { Users } from 'lucide-react';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { EmptyState } from '@/components/hvac/EmptyState';
-import { hvacFetch } from '@/lib/api/client';
-import { PLATFORM_POLL_MS } from '@/lib/hvac/poll';
-import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
+import { useDashboardHomeQuery } from '@/lib/hvac/platformQueries';
 import {
   AgentsChapterGrid,
   AlertRail,
@@ -20,6 +17,7 @@ import {
 import { Nb2PipelineStrip } from '@/components/hvac/Nb2PipelineStrip';
 import { mergeDashboardChapters, type DashboardHome } from '@/lib/hvac/dashboardHome';
 import { getOpportunity } from '@/lib/hvac/opportunityConfig';
+import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
 
 const RAIL: Record<string, string> = {
   scheduling: 'var(--cat-scheduling)',
@@ -35,18 +33,9 @@ function controlArmed(label: string) {
 
 export default function AgentsPage() {
   const live = useLiveTelemetry();
-  const home = useQuery({
-    queryKey: ['dashboard-home'],
-    queryFn: async () => (await hvacFetch('/api/platform/dashboard/home')).json(),
-    refetchInterval: PLATFORM_POLL_MS,
-  });
-  const { data } = useQuery({
-    queryKey: ['agent-center'],
-    queryFn: async () => (await hvacFetch('/api/agents')).json(),
-    refetchInterval: PLATFORM_POLL_MS,
-  });
+  const home = useDashboardHomeQuery();
 
-  const groups = data?.groups || [];
+  const groups = home.data?.groups || [];
   const dash = home.data as DashboardHome | undefined;
   const chapters = mergeDashboardChapters(dash?.chapters);
 
@@ -122,17 +111,10 @@ export default function AgentsPage() {
         </div>
         <div className="space-y-8">
           {groups.map(
-            (g: {
-              id: string;
-              title: string;
-              href: string;
-              status: string;
-              controlAvailability?: string;
-              recommendation?: string;
-              cards?: AgentModuleCardData[];
-            }) => {
+            (g) => {
               const groupControl = moduleControlLabel(g.controlAvailability);
               const rail = RAIL[g.id] || 'var(--accent-purple)';
+              const cards = (g.cards || []) as AgentModuleCardData[];
               return (
                 <section key={g.id} className="space-y-3">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
@@ -145,7 +127,7 @@ export default function AgentsPage() {
                     </Link>
                     <div className="flex flex-wrap gap-1.5 justify-end">
                       <StatusBadge tone={toneForStatus(g.status)} pulse={false}>
-                        {g.status}
+                        {g.status || 'NO DATA'}
                       </StatusBadge>
                       <StatusBadge tone="muted" pulse={false}>
                         REC {g.recommendation || 'UNAVAILABLE'}
@@ -156,7 +138,7 @@ export default function AgentsPage() {
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-                    {(g.cards || []).map((card) => {
+                    {cards.map((card) => {
                       const def = getOpportunity(card.id);
                       const href = def?.route || g.href;
                       return <ModuleKpiCard key={card.id} card={card} href={href} railColor={rail} />;

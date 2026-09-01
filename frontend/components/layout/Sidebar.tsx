@@ -6,8 +6,10 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import { opportunitiesForSection } from '@/lib/hvac/opportunityConfig';
 import { useLiveTelemetry } from '@/lib/hvac/liveTelemetryStore';
+import { usePrefetchOnHover } from '@/lib/hvac/platformQueries';
 
 export const Sidebar: React.FC = () => {
+  const prefetch = usePrefetchOnHover();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const resetMode = (searchParams.get('mode') || '').toUpperCase();
@@ -111,19 +113,19 @@ export const Sidebar: React.FC = () => {
       </div>
       <nav className="px-2.5 pb-3 space-y-0.5 flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <div className="px-3 pt-3 pb-1 text-[10px] font-bold tracking-[0.12em] text-slate-500 uppercase">Platform</div>
-        <Link href="/overview" className={navItem(isActive('/overview') || isActive('/'))}>
+        <Link href="/overview" className={navItem(isActive('/overview') || isActive('/'))} onMouseEnter={() => prefetch('/overview')}>
           Dashboard
         </Link>
-        <Link href="/agents" className={navItem(isActive('/agents'))}>
+        <Link href="/agents" className={navItem(isActive('/agents'))} onMouseEnter={() => prefetch('/agents')}>
           Systems
         </Link>
-        <Link href="/platform/bms" className={navItem(pathname.startsWith('/platform/bms'))}>
+        <Link href="/platform/bms" className={navItem(pathname.startsWith('/platform/bms'))} onMouseEnter={() => prefetch('/platform/bms')}>
           Gateway
         </Link>
-        <Link href="/platform/telemetry" className={navItem(pathname.startsWith('/platform/telemetry'))}>
+        <Link href="/platform/telemetry" className={navItem(pathname.startsWith('/platform/telemetry'))} onMouseEnter={() => prefetch('/platform/telemetry')}>
           Telemetry
         </Link>
-        <Link href="/ml" className={navItem(isActive('/ml') || pathname.startsWith('/ml'))}>
+        <Link href="/ml" className={navItem(isActive('/ml') || pathname.startsWith('/ml'))} onMouseEnter={() => prefetch('/ml')}>
           ML Registry
         </Link>
         <div className="px-3 pt-4 pb-1 text-[10px] font-bold tracking-[0.12em] text-slate-500 uppercase">Opportunities</div>
