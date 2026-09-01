@@ -544,12 +544,30 @@ def control_state_signature() -> tuple:
     )
 
 
+def _agent_groups_telemetry_sig() -> tuple:
+    """Invalidate agent card cache when simulation/live telemetry first arrives."""
+    try:
+        from backend.services.canonical_telemetry_service import latest_points
+
+        pts = latest_points(limit=1)
+        if not pts:
+            return ("no-telemetry",)
+        p = pts[0]
+        return (p.get("point_id"), str(p.get("timestamp") or ""), p.get("source"))
+    except Exception:
+        return ("telemetry-sig-error",)
+
+
+def agent_groups_cache_signature() -> tuple:
+    return control_state_signature() + _agent_groups_telemetry_sig()
+
+
 def agent_groups() -> List[Dict[str, Any]]:
     """Cached briefly: this walks all 20 opportunities and their ML registry rows."""
     ttl = _agent_groups_ttl()
     if not ttl:
         return _build_agent_groups()
-    sig = control_state_signature()
+    sig = agent_groups_cache_signature()
     cached = _AGENT_GROUPS_CACHE.get("payload")
     fresh = (
         cached is not None

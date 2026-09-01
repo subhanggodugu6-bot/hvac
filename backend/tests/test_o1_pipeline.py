@@ -133,6 +133,24 @@ class TestO1BmsApi(unittest.TestCase):
         if e.get("verification_status") != "VERIFIED":
             self.assertIsNone(e.get("tiers", {}).get("verified_savings_kwh"))
 
+    def test_age_seconds_accepts_timezone_aware_timestamp(self):
+        from datetime import datetime, timezone, timedelta
+        from backend.services.o1_service import _age_seconds, _json_safe_health
+
+        started = datetime.now(timezone.utc) - timedelta(minutes=5)
+        age = _age_seconds(started)
+        self.assertIsNotNone(age)
+        self.assertGreater(age, 250)
+
+        health = _json_safe_health(
+            {
+                "signals": {"ZONE_TEMP": {"timestamp": started, "value": 22.0}},
+                "latest_timestamp": started,
+            }
+        )
+        self.assertIsInstance(health["signals"]["ZONE_TEMP"]["timestamp"], str)
+        self.assertIsInstance(health["latest_timestamp"], str)
+
 
 if __name__ == "__main__":
     unittest.main()

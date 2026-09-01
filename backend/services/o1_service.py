@@ -1,6 +1,6 @@
 """O1 dashboard facade: reads persisted pipeline results. No fabricated KPIs."""
 from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from database.session import SessionLocal
 from database.models import (
@@ -36,6 +36,34 @@ def _production_bms() -> bool:
         return False
 
 
+def _naive_utc(ts: datetime) -> datetime:
+    if ts.tzinfo is not None:
+        return ts.astimezone(timezone.utc).replace(tzinfo=None)
+    return ts
+
+
+def _age_seconds(ts: Optional[datetime]) -> Optional[float]:
+    if ts is None:
+        return None
+    return (datetime.utcnow() - _naive_utc(ts)).total_seconds()
+
+
+def _json_safe_health(health: Dict[str, Any]) -> Dict[str, Any]:
+    out = dict(health or {})
+    signals: Dict[str, Any] = {}
+    for key, row in (out.get("signals") or {}).items():
+        safe = dict(row or {})
+        ts = safe.get("timestamp")
+        if isinstance(ts, datetime):
+            safe["timestamp"] = ts.isoformat()
+        signals[key] = safe
+    out["signals"] = signals
+    latest = out.get("latest_timestamp")
+    if isinstance(latest, datetime):
+        out["latest_timestamp"] = latest.isoformat()
+    return out
+
+
 def _latest_run(db) -> Optional[O1DailyRunDB]:
     return db.query(O1DailyRunDB).order_by(O1DailyRunDB.started_at.desc()).first()
 
@@ -45,7 +73,8 @@ def _ensure_run() -> str:
     db = SessionLocal()
     try:
         run = _latest_run(db)
-        fresh = run and run.started_at and (datetime.utcnow() - run.started_at).total_seconds() < 20
+        age = _age_seconds(run.started_at) if run and run.started_at else None
+        fresh = run and age is not None and age < 20
         if fresh and run.status in ("READY", "FAILED", "DISPATCHED", "VERIFIED"):
             return run.id
     finally:
@@ -80,7 +109,7 @@ class O1Service:
             dec = db.query(O1DecisionDB).filter_by(id=run_id).first()
             sav = db.query(O1SavingsVerificationDB).filter_by(run_id=run_id).order_by(O1SavingsVerificationDB.id.desc()).first()
             cfg = db.query(O1ConfigurationDB).filter_by(id="o1-default").first()
-            health = telemetry_health(cfg.stale_telemetry_seconds if cfg else 30)
+            health = _json_safe_health(telemetry_health(cfg.stale_telemetry_seconds if cfg else 30))
             zone = live_value("ZONE_TEMP")
             model = get_active_model()
             conf = "MODEL NOT READY"
@@ -271,7 +300,11 @@ class O1Service:
                     "occupancy_start": cfg.occupancy_start if cfg else None,
                     "confidence_pct": int(dec.start_confidence * 100) if dec.start_confidence else None,
                     "decision": dec.start_decision,
-                    "reason": f"Selected start {dec.optimized_start} delays {int(dec.start_delay_min)} min from {dec.scheduled_start}.",
+                    "reason": (
+                        f"Selected start {dec.optimized_start} delays {int(dec.start_delay_min)} min from {dec.scheduled_start}."
+                        if dec.start_delay_min is not None and dec.optimized_start and dec.scheduled_start
+                        else "Start candidate selected."
+                    ),
                 },
                 "coast": {
                     "scheduled_stop": dec.scheduled_stop,
@@ -280,7 +313,11 @@ class O1Service:
                     "predicted_temp_1800": f"{stop.predicted_temp_at_occ_end}°C" if stop and stop.predicted_temp_at_occ_end is not None else None,
                     "confidence_pct": int(dec.stop_confidence * 100) if dec.stop_confidence else None,
                     "decision": dec.stop_decision,
-                    "reason": f"Selected coast {dec.optimized_stop} saves {int(dec.coast_advance_min)} min versus {dec.scheduled_stop}.",
+                    "reason": (
+                        f"Selected coast {dec.optimized_stop} saves {int(dec.coast_advance_min)} min versus {dec.scheduled_stop}."
+                        if dec.coast_advance_min is not None and dec.optimized_stop and dec.scheduled_stop
+                        else "Coast candidate selected."
+                    ),
                 },
             }
         finally:

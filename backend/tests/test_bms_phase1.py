@@ -68,10 +68,14 @@ def test_no_bms_discovery_empty(client: TestClient):
 
 def test_connect_failure_no_simulator_fallback(client: TestClient, monkeypatch):
     monkeypatch.setenv("HVAC_BMS_MODE", "production")
+    monkeypatch.setenv("HVAC_PLANT_MODE_PERSIST", "0")
+    monkeypatch.setenv("HVAC_BMS_LAB", "0")
     monkeypatch.setenv("HVAC_BMS_PROTOCOL", "bacnet")
     from backend.agents.scheduling_supervisory.gateway import reset_bms_gateway, get_bms_gateway, SimulatorBMSGateway
     from backend.bms.connection_manager import reset_connection_manager
+    from backend.services.platform_ops_service import set_plant_mode
 
+    set_plant_mode("LIVE_BMS")
     reset_connection_manager()
     reset_bms_gateway()
     res = client.post("/api/platform/bms/connect", json={"protocol": "bacnet", "host": "127.0.0.1", "port": 47808})
