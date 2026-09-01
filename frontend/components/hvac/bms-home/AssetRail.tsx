@@ -32,7 +32,7 @@ export function AssetRail({
 }) {
   if (!selected) {
     return (
-      <div className="card-static p-4 h-full">
+      <div className="card-static p-4 h-full min-w-0">
         <div className="text-[13px] font-semibold text-slate-800">Selected asset</div>
         <p className="text-[12px] text-slate-500 mt-3">Select a plant layer to inspect canonical points and applicable opportunities.</p>
       </div>
@@ -43,61 +43,70 @@ export function AssetRail({
   const applicable = applicableFor(selected.equipment_id, opportunities);
 
   return (
-    <div className="card-static p-4 space-y-4 h-full">
-      <div className="flex items-start justify-between gap-2">
+    <div className="card-static p-4 h-full flex flex-col min-w-0">
+      <div className="flex items-start justify-between gap-2 mb-3 shrink-0">
         <div>
           <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Selected asset</div>
-          <div className="font-mono text-lg text-slate-900 mt-1">{selected.equipment_id}</div>
+          <div className="font-mono text-base text-slate-900 mt-0.5">{selected.equipment_id}</div>
         </div>
         <StatusBadge tone={toneForStatus(telStatus)} pulse={false}>
           {telStatus || 'NO DATA'}
         </StatusBadge>
       </div>
-      <div className="space-y-1.5 text-[12px] font-mono">
+
+      <div className="flex-1 min-h-0 overflow-x-auto eng-scroll">
         {pts.length === 0 ? (
-          <div className="text-amber-700">NO DATA</div>
+          <div className="text-amber-700 text-[12px]">NO DATA</div>
         ) : (
-          pts.map(([name, p]) => {
-            const q = String(p.quality || '').toUpperCase();
-            const shown = p.value == null || q === 'BAD' ? 'NO DATA' : `${p.value}${p.unit ? ` ${p.unit}` : ''}`;
-            const color =
-              q === 'GOOD' ? 'text-emerald-600' : q === 'STALE' ? 'text-amber-600' : q === 'BAD' ? 'text-pink-600' : 'text-slate-500';
-            return (
-              <div key={name} className="flex justify-between gap-2">
-                <span className="text-slate-600 truncate">{name}</span>
-                <span className={color}>{shown}</span>
-              </div>
-            );
-          })
+          <div className="flex flex-wrap gap-2 min-w-max pb-1">
+            {pts.map(([name, p]) => {
+              const q = String(p.quality || '').toUpperCase();
+              const shown = p.value == null || q === 'BAD' ? 'NO DATA' : `${p.value}${p.unit ? ` ${p.unit}` : ''}`;
+              const color =
+                q === 'GOOD' ? 'text-emerald-600' : q === 'STALE' ? 'text-amber-600' : q === 'BAD' ? 'text-pink-600' : 'text-slate-500';
+              return (
+                <div
+                  key={name}
+                  className="rounded-xl border border-slate-100 bg-slate-50/60 px-2.5 py-2 min-w-[108px] max-w-[140px]"
+                >
+                  <div className="text-[9px] font-semibold text-slate-500 uppercase tracking-wide truncate">{name}</div>
+                  <div className={`text-[12px] font-mono font-semibold mt-0.5 truncate ${color}`}>{shown}</div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
-      <div>
-        <div className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-600 mb-2">Applicable O’s</div>
-        <div className="flex flex-wrap gap-1.5">
-          {applicable.length === 0 ? (
-            <span className="text-[11px] text-slate-500">None for this equipment class</span>
-          ) : (
-            applicable.map((o) => (
-              <Link
-                key={o.id}
-                href={o.href || '/agents'}
-                className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-slate-200 text-slate-600 hover:border-violet-300 hover:text-violet-700"
-              >
-                {o.id} {o.applicability || 'Unmapped'}
+
+      <div className="mt-3 pt-3 border-t border-slate-100 shrink-0">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap gap-1.5 min-w-0">
+            <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-600 mr-1">O&apos;s</span>
+            {applicable.length === 0 ? (
+              <span className="text-[11px] text-slate-500">None</span>
+            ) : (
+              applicable.slice(0, 6).map((o) => (
+                <Link
+                  key={o.id}
+                  href={o.href || '/agents'}
+                  className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-slate-200 text-slate-600 hover:border-violet-300 hover:text-violet-700"
+                >
+                  {o.id}
+                </Link>
+              ))
+            )}
+          </div>
+          <div className="flex gap-2 shrink-0">
+            {applicable[0]?.href ? (
+              <Link href={applicable[0].href} className="btn-primary text-[10px] py-1.5 px-3">
+                Studio
               </Link>
-            ))
-          )}
+            ) : null}
+            <Link href={mappingHref(selected.equipment_id, firstPoint)} className="btn-ghost text-[10px] py-1.5 px-3">
+              Map
+            </Link>
+          </div>
         </div>
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {applicable[0]?.href ? (
-          <Link href={applicable[0].href} className="btn-primary">
-            Open studio
-          </Link>
-        ) : null}
-        <Link href={mappingHref(selected.equipment_id, firstPoint)} className="btn-ghost">
-          Map point
-        </Link>
       </div>
     </div>
   );

@@ -6,9 +6,9 @@ import { mappingHref, type DashboardAlert } from '@/lib/hvac/dashboardHome';
 
 function ageLabel(age?: number | null) {
   if (age == null) return '';
-  if (age < 60) return `${Math.round(age)}s ago`;
-  if (age < 3600) return `${Math.round(age / 60)}m ago`;
-  return `${Math.round(age / 3600)}h ago`;
+  if (age < 60) return `${Math.round(age)}s`;
+  if (age < 3600) return `${Math.round(age / 60)}m`;
+  return `${Math.round(age / 3600)}h`;
 }
 
 function severityStyle(sev: string) {
@@ -18,11 +18,58 @@ function severityStyle(sev: string) {
   return { bar: 'bg-blue-500', tag: 'bg-blue-50 text-blue-700 border-blue-200', label: 'Medium' };
 }
 
-export function AlertRail({ alerts }: { alerts?: DashboardAlert[] }) {
+export function AlertRail({ alerts, compact }: { alerts?: DashboardAlert[]; compact?: boolean }) {
   const rows = alerts || [];
+
+  if (compact) {
+    return (
+      <section className="card-static px-4 py-2.5">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex items-center gap-2 shrink-0">
+            <div className="text-[11px] font-semibold text-slate-700 uppercase tracking-wide">Alert Feed</div>
+            <span className="text-[10px] font-bold text-slate-500 tabular-nums">{rows.length}</span>
+          </div>
+          {rows.length === 0 ? (
+            <p className="text-[11px] text-slate-500 truncate">No stale, bad, BMS, or maintenance alerts.</p>
+          ) : (
+            <ul className="flex items-center gap-2 overflow-x-auto eng-scroll min-w-0 flex-1 py-0.5">
+              {rows.slice(0, 8).map((a, i) => {
+                const style = severityStyle(a.severity);
+                const href = a.equipment_id
+                  ? mappingHref(a.equipment_id, a.point_id?.includes('.') ? a.point_id.split('.').slice(1).join('.') : undefined)
+                  : '/platform/bms';
+                const title = a.point_id || a.equipment_id || a.message;
+                return (
+                  <li key={`${a.severity}-${a.point_id || a.equipment_id || i}`} className="shrink-0">
+                    <Link
+                      href={href}
+                      className="inline-flex items-center gap-1.5 max-w-[220px] rounded-full border border-slate-200 bg-white px-2.5 py-1 hover:border-violet-300 hover:bg-violet-50/50 transition-colors"
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${style.bar}`} />
+                      <span className={`text-[9px] font-bold uppercase tracking-wide px-1 py-0.5 rounded-full border ${style.tag}`}>
+                        {style.label}
+                      </span>
+                      <span className="text-[11px] font-medium text-slate-800 truncate">{title}</span>
+                      {a.age_seconds != null ? (
+                        <span className="text-[9px] text-slate-500 shrink-0">{ageLabel(a.age_seconds)}</span>
+                      ) : null}
+                    </Link>
+                  </li>
+                );
+              })}
+              {rows.length > 8 ? (
+                <li className="shrink-0 text-[10px] text-slate-500 font-mono">+{rows.length - 8} more</li>
+              ) : null}
+            </ul>
+          )}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="card-static p-4 space-y-3 h-full">
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div className="text-[13px] font-semibold text-slate-800">Alert Feed</div>
         <span className="text-[11px] font-semibold text-slate-600">{rows.length}</span>
       </div>

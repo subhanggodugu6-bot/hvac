@@ -151,7 +151,70 @@ def _decorate_layers(plant: Dict[str, List[Dict[str, Any]]]) -> Dict[str, List[D
     return out
 
 
-def _measured_kpis() -> Dict[str, Optional[float]]:
+def _tons_from_plant_layers(plant: Dict[str, List[Dict[str, Any]]]) -> Optional[float]:
+    """Best-effort plant load from chiller Load / tons points."""
+    loads: List[float] = []
+    for row in plant.get("chillers") or []:
+        for name, p in (row.get("points") or {}).items():
+            key = str(name).lower()
+            if key not in ("load", "coolingload", "plantload") and "load" not in key:
+                continue
+            val = (p or {}).get("value")
+            if val is None:
+                continue
+            try:
+                v = float(val)
+            except (TypeError, ValueError):
+                continue
+            unit = str((p or {}).get("unit") or "").lower()
+            if unit in ("ton", "tons", "t", "tonnage"):
+                loads.append(v)
+            elif unit in ("", "%") and 0 < v < 500:
+                loads.append(v)
+    return round(max(loads), 1) if loads else None
+
+
+def _kw_from_plant_layers(plant: Dict[str, List[Dict[str, Any]]]) -> Optional[float]:
+    """Sum chiller `power` points only — avoid double-counting compressor sub-meters."""
+    total = 0.0
+    found = False
+    for row in plant.get("chillers") or []:
+        pts = row.get("points") or {}
+        for name, p in pts.items():
+            if str(name).lower() != "power":
+                continue
+            val = (p or {}).get("value")
+            if val is None:
+                continue
+            try:
+                total += float(val)
+                found = True
+            except (TypeError, ValueError):
+                continue
+    if found:
+        return round(total, 1)
+    # Fallback: any equipment-level power/kW point
+    for rows in plant.values():
+        for row in rows:
+            for name, p in (row.get("points") or {}).items():
+                key = str(name).lower()
+                if key not in ("power", "kw", "energy"):
+                    continue
+                unit = str((p or {}).get("unit") or "").lower()
+                if unit and unit not in ("kw", "k w"):
+                    continue
+                val = (p or {}).get("value")
+                if val is None:
+                    continue
+                try:
+                    total += float(val)
+                    found = True
+                except (TypeError, ValueError):
+                    continue
+    return round(total, 1) if found else None
+
+
+def _measured_kpis(plant_layers: Optional[Dict[str, List[Dict[str, Any]]]] = None) -> Dict[str, Optional[float]]:
     cooling_tons: Optional[float] = None
     comfort_pct: Optional[float] = None
     verified_kw: Optional[float] = None
@@ -172,12 +235,42 @@ def _measured_kpis() -> Dict[str, Optional[float]]:
                 cooling_tons = float(tons)
             except (TypeError, ValueError):
                 cooling_tons = None
+        if cooling_tons is None:
+            for opp in dash.get("opportunities") or []:
+                if str(opp.get("id") or "").upper() != "O4":
+                    continue
+                extra = opp.get("extra") or {}
+                candidate = extra.get("plantLoadTons")
+                if candidate is None:
+                    for m in opp.get("secondaryMetrics") or opp.get("secondary_metrics") or []:
+                        if str(m.get("label") or "").lower().startswith("plant load"):
+                            raw = str(m.get("value") or "")
+                            candidate = raw.replace(" Tons", "").replace(" tons", "").strip() or None
+                            break
+                if candidate is not None:
+                    try:
+                        cooling_tons = float(candidate)
+                    except (TypeError, ValueError):
+                        pass
+                break
         # Do not convert guide % or unverified sim defaults into verified kW.
         raw = dash.get("verifiedPowerKw")
         if raw is not None:
             verified_kw = float(raw)
+        if verified_kw is None:
+            savings = dash.get("verifiedSavingsKwh")
+            if savings is not None:
+                try:
+                    verified_kw = round(float(savings) / 24.0, 1)
+                except (TypeError, ValueError):
+                    pass
     except Exception:
         pass
+    if plant_layers:
+        if cooling_tons is None:
+            cooling_tons = _tons_from_plant_layers(plant_layers)
+        if verified_kw is None:
+            verified_kw = _kw_from_plant_layers(plant_layers)
     return {"coolingTons": cooling_tons, "comfortPct": comfort_pct, "verifiedKw": verified_kw}
 
 
@@ -241,13 +334,25 @@ def _alerts(points: List[Dict[str, Any]], snap: Dict[str, Any]) -> List[Dict[str
 
 def _energy_series() -> Dict[str, Any]:
     try:
-        points = latest_points(limit=80)
-        energy_ids = [
+        points = latest_points(limit=120)
+        ranked: List[str] = []
+        seen: set = set()
+        for p in points:
+            pid = str(p.get("point_id") or "")
+            low = pid.lower()
+            if not pid or pid in seen:
+                continue
+            if ".power" in low or low.endswith(".power"):
+                ranked.insert(0, pid)
+                seen.add(pid)
+            elif any(tok in low for tok in ("energy", "power", "kw")) and "compressor" not in low:
+                ranked.append(pid)
+                seen.add(pid)
+        energy_ids = ranked[:1] or [
             str(p.get("point_id"))
             for p in points
-            if p.get("point_id")
-            and any(tok in str(p.get("point_id") or "").lower() for tok in ("energy", "power", "kw", "load"))
-        ][:3]
+            if p.get("point_id") and "power" in str(p.get("point_id") or "").lower()
+        ][:1]
         if not energy_ids:
             return {"unit": "kW", "points": []}
         rows = query_telemetry(point_ids=energy_ids, limit=48, prefer_buffer=True)
@@ -256,7 +361,13 @@ def _energy_series() -> Dict[str, Any]:
             if r.get("value") is None:
                 continue
             series.append({"t": r.get("timestamp"), "v": r.get("value"), "point_id": r.get("point_id")})
-        return {"unit": "kW", "points": series[-48:]}
+        series.sort(key=lambda x: str(x.get("t") or ""))
+        deduped: List[Dict[str, Any]] = []
+        for item in series:
+            if deduped and deduped[-1].get("v") == item.get("v") and deduped[-1].get("t") == item.get("t"):
+                continue
+            deduped.append(item)
+        return {"unit": "kW", "points": deduped[-48:]}
     except Exception:
         return {"unit": "kW", "points": []}
 
@@ -338,7 +449,8 @@ def _build_dashboard_home() -> Dict[str, Any]:
         for c in g.get("cards") or []:
             cards_by_oid[str(c.get("id") or "").upper()] = c
 
-    kpis = _measured_kpis()
+    decorated = _decorate_layers(plant)
+    kpis = _measured_kpis(decorated)
     alerts = _alerts(points, snap)
     kpis["alertCount"] = len(alerts)
 
@@ -401,7 +513,7 @@ def _build_dashboard_home() -> Dict[str, Any]:
         "telemetry": telemetry,
         "building": building,
         "kpis": kpis,
-        "layers": _decorate_layers(plant),
+        "layers": decorated,
         "alerts": alerts,
         "chapters": chapters,
         "energy": _energy_series(),

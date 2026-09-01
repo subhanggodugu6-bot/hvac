@@ -26,8 +26,8 @@ export function PlantCanvas({
   if (groups.length === 0) return null;
 
   return (
-    <div className={`card-static ${compact ? 'p-3 space-y-2' : 'p-5 space-y-4'}`}>
-      <div className="flex items-center justify-between gap-2">
+    <div className={`card-static ${compact ? 'p-3' : 'p-4'} h-full flex flex-col min-w-0`}>
+      <div className="flex items-center justify-between gap-2 mb-3 shrink-0">
         <div className="text-[13px] font-semibold text-slate-800">Plant layers</div>
         <div className="flex flex-wrap gap-2 text-[10px] text-slate-500">
           {(['good', 'stale', 'bad', 'unmapped'] as PlantTone[]).map((t) => (
@@ -38,11 +38,11 @@ export function PlantCanvas({
           ))}
         </div>
       </div>
-      <div className="space-y-4">
+      <div className="flex gap-3 overflow-x-auto eng-scroll pb-1 min-h-0 flex-1">
         {groups.map((g) => (
-          <div key={g.key}>
+          <div key={g.key} className="shrink-0 w-[168px]">
             <div className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-600 mb-2">{g.title}</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="flex flex-col gap-1.5">
               {g.rows.map((row) => {
                 const tone = (row.tone || 'unmapped') as PlantTone;
                 const on = selectedId === row.equipment_id;
@@ -52,17 +52,17 @@ export function PlantCanvas({
                     key={row.equipment_id}
                     type="button"
                     onClick={() => onSelect(row)}
-                    className={`w-full text-left rounded-2xl border px-3 py-3 flex items-center justify-between gap-2 transition-all ${
+                    className={`w-full text-left rounded-xl border px-2.5 py-2 flex items-center justify-between gap-2 transition-all ${
                       on
-                        ? 'border-violet-400 bg-violet-50 -translate-y-0.5 shadow-md shadow-violet-100'
+                        ? 'border-violet-400 bg-violet-50 shadow-sm shadow-violet-100'
                         : 'border-slate-150 bg-slate-50/80 hover:border-violet-200 hover:bg-white'
                     }`}
                   >
-                    <span className="inline-flex items-center gap-2 min-w-0">
-                      <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${TONE_DOT[tone]}`} />
-                      <span className="font-mono text-[12px] text-slate-800 truncate">{row.equipment_id}</span>
+                    <span className="inline-flex items-center gap-1.5 min-w-0">
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${TONE_DOT[tone]}`} />
+                      <span className="font-mono text-[11px] text-slate-800 truncate">{row.equipment_id}</span>
                     </span>
-                    <span className="text-[10px] font-mono text-slate-600">{n} pts</span>
+                    <span className="text-[9px] font-mono text-slate-600">{n}</span>
                   </button>
                 );
               })}
