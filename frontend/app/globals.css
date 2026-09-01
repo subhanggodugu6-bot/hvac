@@ -326,6 +326,7 @@ button.glass-card:hover {
 
 .bms-table {
   width: 100%;
+  min-width: 44rem;
   border-collapse: separate;
   border-spacing: 0;
   font-variant-numeric: tabular-nums;
@@ -439,11 +440,7 @@ button.glass-card:hover {
 }
 
 .hvac-main .glass-card [class*="bg-slate-9"],
-.hvac-main .kpi-tile [class*="bg-slate-9"],
-.hvac-main .glass-card [class*="bg-[#0"],
-.hvac-main .kpi-tile [class*="bg-[#0"],
-.hvac-main .glass-card [class*="bg-[#1"],
-.hvac-main .kpi-tile [class*="bg-[#1"] {
+.hvac-main .kpi-tile [class*="bg-slate-9"] {
   background-color: #f8fafc !important;
   border-color: rgba(15, 23, 42, 0.1) !important;
 }
@@ -608,4 +605,55 @@ button.glass-card:hover {
 .bms-table th:last-child,
 .bms-table td:last-child {
   padding-right: 1rem;
+}
+
+/* Page rhythm — consistent spacing on hub pages */
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-bottom: 3rem;
+}
+
+/* Studio / opportunity headers and remaining light-surface text */
+.hvac-main header .text-slate-400,
+.hvac-main .studio-chrome .text-slate-400,
+.hvac-main .card-static .text-slate-400,
+.hvac-main table .text-slate-400,
+.hvac-main thead.text-slate-400 {
+  color: #475569 !important;
+}
+
+.hvac-main header [class*="text-cyan-400"],
+.hvac-main .studio-chrome [class*="text-cyan-400"] {
+  color: #6d28d9 !important;
+}
+
+.hvac-main .text-sky-400,
+.hvac-main [class*="text-sky-400"] {
+  color: #0369a1 !important;
+}
+
+.hvac-main table .text-emerald-400,
+.hvac-main table .text-cyan-400,
+.hvac-main table .text-rose-400 {
+  color: inherit;
+}
+
+.hvac-main table .text-emerald-400 {
+  color: #047857 !important;
+}
+
+.hvac-main table .text-cyan-400 {
+  color: #0e7490 !important;
+}
+
+.hvac-main table .text-rose-400 {
+  color: #be123c !important;
+}
+
+.hvac-main .eng-scroll table,
+.hvac-main table.bms-table,
+.hvac-main table.w-full {
+  min-width: 44rem;
 }

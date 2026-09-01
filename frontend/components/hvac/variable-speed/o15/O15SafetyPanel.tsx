@@ -19,7 +19,7 @@ export function O15SafetyPanel({ data }: { data: O15Dashboard }) {
             return (
               <li key={c.check_name} className="flex justify-between gap-3 text-xs font-mono border-b border-slate-200 py-1">
                 <span className="text-slate-400">{c.check_name}</span>
-                <span className={pass ? 'text-emerald-400' : 'text-amber-300'}>
+                <span className={pass ? 'text-emerald-700' : 'text-amber-300'}>
                   ● {pass ? 'PASS' : 'BLOCKED'}
                   {!pass && c.reason ? ` · ${c.reason}` : ''}
                 </span>

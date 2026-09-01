@@ -33,9 +33,9 @@ export function O16Header({
       <StudioBreadcrumb def={def} />
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-cyan-400/80 mb-1.5">O16</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-violet-700 mb-1.5">O16</div>
           <h1 className="text-[1.7rem] font-semibold text-slate-900 tracking-tight leading-tight">{def.title}</h1>
-          <p className="text-[13px] text-slate-400 mt-1.5 max-w-3xl leading-relaxed">{def.description}</p>
+          <p className="text-[13px] text-slate-600 mt-1.5 max-w-3xl leading-relaxed">{def.description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5" aria-label="O16 operating status">
             <StatusBadge tone={toneForStatus(bms)}>{`BMS ${bms}`}</StatusBadge>
             <StatusBadge tone={toneForStatus(tel)}>{`Telemetry ${tel}`}</StatusBadge>
@@ -73,7 +73,7 @@ export function O16Header({
       {sim && (
         <div className="glass-card p-4 border-amber-500/40" role="status">
           <div className="text-[11px] font-semibold tracking-[0.16em] text-amber-300">BMS OFFLINE — SIMULATED TELEMETRY</div>
-          <div className="text-[13px] text-slate-400 mt-1">Simulation is never LIVE. BMS writes are disabled.</div>
+          <div className="text-[13px] text-slate-600 mt-1">Simulation is never LIVE. BMS writes are disabled.</div>
         </div>
       )}
     </header>

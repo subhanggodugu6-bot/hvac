@@ -150,7 +150,7 @@ export default function ChillerStagingPage() {
 
         <div className="glass-card p-4 flex flex-col justify-between">
           <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Capacity</span>
-          <div className="my-1 text-base font-bold font-mono text-sky-400">{kpis.available_capacity || 'NO DATA'}</div>
+          <div className="my-1 text-base font-bold font-mono text-sky-700">{kpis.available_capacity || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">{kpis.capacity_headroom || 'Available capacity'}</span>
         </div>
 
@@ -181,7 +181,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card p-5 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Snowflake className="w-4 h-4 text-cyan-400" />
+              <Snowflake className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Central Plant Cooling Load & Hydraulic Balance
               </h3>
@@ -232,7 +232,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card p-5 space-y-3.5">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Timer className="w-4 h-4 text-emerald-400" />
+              <Timer className="w-4 h-4 text-emerald-700" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Anti-Short-Cycling Timers
               </h3>
@@ -278,7 +278,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card overflow-hidden lg:col-span-2">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Server className="w-4 h-4 text-cyan-400" />
+              <Server className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Central Plant Chiller Fleet Status
               </h3>
@@ -311,7 +311,7 @@ export default function ChillerStagingPage() {
                       <span
                         className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
                           ch.status === 'RUNNING'
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                             : 'bg-slate-200 border-slate-200 text-slate-400'
                         }`}
                       >
@@ -340,7 +340,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-cyan-400" />
+              <Cpu className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Compressor Stages
               </h3>
@@ -369,7 +369,7 @@ export default function ChillerStagingPage() {
                       <span
                         className={`px-2 py-0.5 rounded-full text-[9px] font-semibold border ${
                           c.status === 'RUNNING'
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                             : 'bg-slate-200 border-slate-200 text-slate-400'
                         }`}
                       >
@@ -395,7 +395,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Layers className="w-4 h-4 text-cyan-400" />
+              <Layers className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Plant Staging Configuration Candidates
               </h3>
@@ -443,13 +443,13 @@ export default function ChillerStagingPage() {
                     </div>
                     <div>
                       <span className="text-[9px] text-slate-500 block">EFFICIENCY</span>
-                      <strong className="text-emerald-400">{sc.efficiency_kw_per_ton} kW/T</strong>
+                      <strong className="text-emerald-700">{sc.efficiency_kw_per_ton} kW/T</strong>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between text-[11px] text-slate-600 font-sans">
-                    <span>Power Impact: <strong className={isSelected ? 'text-emerald-400' : 'text-rose-400'}>{sc.power_impact}</strong></span>
-                    <span>Anti-Cycling: <strong className="text-emerald-400">{sc.anti_cycling_safety}</strong></span>
+                    <span>Power Impact: <strong className={isSelected ? 'text-emerald-700' : 'text-rose-400'}>{sc.power_impact}</strong></span>
+                    <span>Anti-Cycling: <strong className="text-emerald-700">{sc.anti_cycling_safety}</strong></span>
                   </div>
                 </div>
               );
@@ -461,7 +461,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-cyan-400" />
+              <Sliders className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 CHWS Reset Candidates (6.5°C – 7.5°C)
               </h3>
@@ -530,7 +530,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-cyan-400" />
+              <Cpu className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O4 Supervisory Central Plant Decision
               </h3>
@@ -563,7 +563,7 @@ export default function ChillerStagingPage() {
             <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-[11px]">
               <span className="text-slate-600">Model: <strong className="text-slate-800">{decisionData?.model_version || 'NO DATA'}</strong></span>
               <span className="text-slate-600">Confidence: <strong className="text-purple-700">{decisionData?.confidence != null ? `${decisionData.confidence}%` : 'NO DATA'}</strong></span>
-              <span className="text-slate-600">Safety: <strong className="text-emerald-400">{decisionData?.safety || 'NO DATA'}</strong></span>
+              <span className="text-slate-600">Safety: <strong className="text-emerald-700">{decisionData?.safety || 'NO DATA'}</strong></span>
             </div>
           </div>
 
@@ -601,8 +601,8 @@ export default function ChillerStagingPage() {
             </div>
 
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
-              <span className="text-[10px] text-cyan-400 block font-sans">OPTIMIZED</span>
-              <div className="flex justify-between"><span>Chiller Power:</span><strong className="text-emerald-400">{powerData?.optimized?.chiller_kw != null ? `${powerData.optimized.chiller_kw} kW` : 'NO DATA'}</strong></div>
+              <span className="text-[10px] text-cyan-800 block font-sans">OPTIMIZED</span>
+              <div className="flex justify-between"><span>Chiller Power:</span><strong className="text-emerald-700">{powerData?.optimized?.chiller_kw != null ? `${powerData.optimized.chiller_kw} kW` : 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Pump Power:</span><strong className="text-slate-800">{powerData?.optimized?.pump_kw != null ? `${powerData.optimized.pump_kw} kW` : 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Fan Power:</span><strong className="text-slate-800">{powerData?.optimized?.fan_kw != null ? `${powerData.optimized.fan_kw} kW` : 'NO DATA'}</strong></div>
               <div className="flex justify-between pt-1 border-t border-slate-200 font-bold"><span>Total:</span><span className="text-cyan-800">{powerData?.optimized?.total_kw != null ? `${powerData.optimized.total_kw} kW` : 'NO DATA'}</span></div>
@@ -610,9 +610,9 @@ export default function ChillerStagingPage() {
           </div>
 
           <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-1 text-xs font-mono">
-            <div className="flex justify-between text-[11px]"><span className="text-slate-600">Chiller Lift Savings:</span><span className="text-emerald-400">{powerData?.delta?.chiller || 'NO DATA'}</span></div>
+            <div className="flex justify-between text-[11px]"><span className="text-slate-600">Chiller Lift Savings:</span><span className="text-emerald-700">{powerData?.delta?.chiller || 'NO DATA'}</span></div>
             <div className="flex justify-between text-[11px]"><span className="text-slate-600">Fan Compensation:</span><span className="text-amber-400">{powerData?.delta?.fan || 'NO DATA'}</span></div>
-            <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200"><span className="text-slate-800">Net Power Impact:</span><span className="text-emerald-400">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Net Plant Shed` : 'NO DATA'}</span></div>
+            <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200"><span className="text-slate-800">Net Power Impact:</span><span className="text-emerald-700">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Net Plant Shed` : 'NO DATA'}</span></div>
           </div>
         </div>
       </div>
@@ -625,7 +625,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card p-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Cooling Load vs Plant Capacity Margins
               </h3>
@@ -667,7 +667,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card p-5">
           <div className="flex items-center justify-between pb-4 border-b border-slate-200">
             <div className="flex items-center gap-2">
-              <Gauge className="w-4 h-4 text-cyan-400" />
+              <Gauge className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Central Plant Load & Efficiency Trend
               </h3>
@@ -699,7 +699,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-emerald-700" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Central Plant Safety Validation
               </h3>
@@ -741,12 +741,12 @@ export default function ChillerStagingPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Building className="w-4 h-4 text-cyan-400" />
+              <Building className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 BMS Control Action & Verification
               </h3>
             </div>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-400">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-700">
               {bmsActionData?.bms_status || 'NO DATA'}
             </span>
           </div>
@@ -830,7 +830,7 @@ export default function ChillerStagingPage() {
                     <td className="text-slate-700">{h.new_stage}</td>
                     <td className="text-cyan-800 font-bold">{h.new_chws}</td>
                     <td className="text-purple-700">{h.plr}</td>
-                    <td className="text-emerald-400">{h.kw_per_ton}</td>
+                    <td className="text-emerald-700">{h.kw_per_ton}</td>
                     <td className="text-emerald-700 font-semibold">{h.power_impact}</td>
                     <td>
                       <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold pill-live">
@@ -848,7 +848,7 @@ export default function ChillerStagingPage() {
         <div className="glass-card overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Live Agent Activity Stream
               </h3>

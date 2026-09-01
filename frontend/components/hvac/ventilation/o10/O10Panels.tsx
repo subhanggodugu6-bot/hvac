@@ -144,7 +144,7 @@ export function O10Energy({ data }: { data: VentilationOpportunity }) {
         ))}
       </div>
       <div className="border border-cyan-500/20 px-3 py-2">
-        <div className="text-[10px] uppercase text-cyan-400">Guide reported potential</div>
+        <div className="text-[10px] uppercase text-cyan-800">Guide reported potential</div>
         <p className="text-sm text-slate-800 mt-1">{O10_GUIDE.compressorPotential}</p>
         <p className="text-[11px] text-slate-500 mt-1">Not actual site performance. Measured site impact is shown only when the backend computes and verifies it.</p>
       </div>
@@ -298,7 +298,7 @@ export function O10GuideReference() {
   return (
     <section className="col-span-12 xl:col-span-6 kpi-tile space-y-2" aria-label="Guide reference">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Guide reference</h2>
-      <p className="text-[11px] text-cyan-400 font-mono">{O10_GUIDE.source}</p>
+      <p className="text-[11px] text-cyan-800 font-mono">{O10_GUIDE.source}</p>
       <p className="text-sm text-slate-700">Outdoor air can be used directly for space cooling when conditions are favorable.</p>
       <ul className="text-[12px] font-mono text-slate-400 space-y-1">
         <li>Temperature {O10_GUIDE.outdoorTempC}</li>

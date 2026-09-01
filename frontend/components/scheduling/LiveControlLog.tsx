@@ -14,7 +14,7 @@ export const LiveControlLog: React.FC<LiveControlLogProps> = ({ activities }) =>
     <div className="glass-card overflow-hidden">
       <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-400">
+          <div className="p-2 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-700">
             <Activity className="w-4 h-4" />
           </div>
           <div>

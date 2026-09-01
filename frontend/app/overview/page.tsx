@@ -42,9 +42,9 @@ function EnergySparkline({ points, unit }: { points: { t?: string; v?: number }[
     <div className="mt-3">
       <div className="flex items-baseline justify-between gap-2 mb-2">
         <div className="text-[1.35rem] font-bold text-slate-900 tabular-nums">
-          {last.toFixed(1)} <span className="text-[12px] font-semibold text-slate-400">{unit || 'kW'}</span>
+          {last.toFixed(1)} <span className="text-[12px] font-semibold text-slate-600">{unit || 'kW'}</span>
         </div>
-        <span className="text-[10px] font-mono text-slate-400">{vals.length} pts</span>
+        <span className="text-[10px] font-mono text-slate-500">{vals.length} pts</span>
       </div>
       <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-[120px]" preserveAspectRatio="none" role="img" aria-label="Energy series">
         <path d={path} fill="none" stroke="#8b5cf6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
@@ -87,7 +87,7 @@ export default function FleetOverviewPage() {
   const energy = data?.energy?.points || [];
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <PageHeader
         icon={LayoutDashboard}
         title="Building operations"
@@ -182,15 +182,15 @@ export default function FleetOverviewPage() {
       </div>
 
       <div>
-        <div className="text-[13px] font-semibold text-slate-800 mb-3">Guide chapters</div>
+        <div className="section-heading-label mb-3">Guide chapters</div>
         <SystemsHub chapters={chapters} variant="compact" />
-        <p className="text-[10px] font-mono text-slate-400 mt-2">GUIDE_POTENTIAL · non-cumulative · not measured LIVE</p>
+        <p className="text-[10px] font-mono text-slate-500 mt-2">GUIDE_POTENTIAL · non-cumulative · not measured LIVE</p>
       </div>
 
       <section className="card-static overflow-hidden">
         <div className="px-5 py-4 flex items-center justify-between gap-2 border-b border-slate-100">
           <div className="text-[13px] font-semibold text-slate-800">Opportunities O1–O20</div>
-          <span className="text-[11px] text-slate-400">{allOpps.length} modules</span>
+          <span className="text-[11px] text-slate-600">{allOpps.length} modules</span>
         </div>
         <div className="overflow-x-auto">
           <table className="bms-table">

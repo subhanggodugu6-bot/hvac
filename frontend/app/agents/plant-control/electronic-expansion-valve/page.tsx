@@ -77,7 +77,7 @@ export default function O9ElectronicExpansionValveStudio() {
       actions={
         <div className="flex flex-wrap items-center gap-2.5">
           <div className="px-3 py-1.5 rounded border border-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1.5">
-            <FileText className="w-3.5 h-3.5 text-cyan-400" />
+            <FileText className="w-3.5 h-3.5 text-cyan-800" />
             ENGINEERING ASSESSMENT ONLY (NON-DISPATCHING)
           </div>
           <button
@@ -85,7 +85,7 @@ export default function O9ElectronicExpansionValveStudio() {
             disabled={refreshing}
             className="btn-secondary"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-cyan-400' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-cyan-800' : ''}`} />
             Recalculate ROI
           </button>
         </div>
@@ -142,7 +142,7 @@ export default function O9ElectronicExpansionValveStudio() {
           <div className="text-slate-400 text-xs">4. Superheat Target</div>
           <div className="text-base font-bold text-slate-900 font-mono">
             {data?.current_superheat_c != null ? `${data.current_superheat_c}°C` : 'NO DATA'}
-            {data?.target_superheat_c != null && <span className="text-emerald-400"> → {data.target_superheat_c}°C</span>}
+            {data?.target_superheat_c != null && <span className="text-emerald-700"> → {data.target_superheat_c}°C</span>}
           </div>
         </div>
         <div className="kpi-tile">
@@ -209,10 +209,10 @@ export default function O9ElectronicExpansionValveStudio() {
         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-emerald-400" />
+              <DollarSign className="w-4 h-4 text-emerald-700" />
               5-Year Cumulative Cash Flow & Breakeven Curve
             </h2>
-            <span className="text-[11px] text-emerald-400 font-mono">{data?.payback_years != null ? `Payback ${data.payback_years} yrs` : 'NO DATA'}</span>
+            <span className="text-[11px] text-emerald-700 font-mono">{data?.payback_years != null ? `Payback ${data.payback_years} yrs` : 'NO DATA'}</span>
           </div>
 
           <div className="h-56 w-full bg-slate-100 rounded-xl p-4 border border-slate-200 flex flex-col justify-between">
@@ -223,7 +223,7 @@ export default function O9ElectronicExpansionValveStudio() {
                 {paybackCurve.map((p: { year: string; cash_flow: number }, idx: number) => (
                   <div key={idx} className="flex flex-col items-center">
                     <span>{p.year}</span>
-                    <span className={`text-[10px] font-mono ${p.cash_flow >= 0 ? 'text-emerald-400' : 'text-slate-400'}`}>
+                    <span className={`text-[10px] font-mono ${p.cash_flow >= 0 ? 'text-emerald-700' : 'text-slate-400'}`}>
                       {p.cash_flow >= 0 ? `+$${p.cash_flow}` : `-$${Math.abs(p.cash_flow)}`}
                     </span>
                   </div>
@@ -260,13 +260,13 @@ export default function O9ElectronicExpansionValveStudio() {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto rounded-xl border border-slate-200">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-100 text-slate-400 font-medium border-b border-slate-200">
+        <div className="eng-scroll rounded-xl border border-slate-200 bg-white">
+          <table className="bms-table text-xs">
+            <thead>
               <tr>
-                <th className="py-2.5 px-3">Thermodynamic Parameter</th>
-                <th className="py-2.5 px-3">Current TXV</th>
-                <th className="py-2.5 px-3">Projected EXV</th>
+                <th>Thermodynamic Parameter</th>
+                <th>Current TXV</th>
+                <th>Projected EXV</th>
                 <th className="py-2.5 px-3">Difference</th>
                 <th className="py-2.5 px-3">Engineering Safety Limit</th>
                 <th className="py-2.5 px-3 text-right">Assessment</th>
@@ -284,12 +284,12 @@ export default function O9ElectronicExpansionValveStudio() {
                   <td className="py-2.5 px-3 text-rose-800">{param.current ?? 'NO DATA'}</td>
                   <td className="py-2.5 px-3 text-emerald-800 font-bold">{param.expected}</td>
                   <td className="py-2.5 px-3 text-cyan-800">{param.difference ?? 'NO DATA'}</td>
-                  <td className="py-2.5 px-3 text-slate-400">{param.limit}</td>
+                  <td className="py-2.5 px-3 text-slate-600">{param.limit}</td>
                   <td className="py-2.5 px-3 text-right font-sans">
                     <span className={`inline-flex items-center gap-1 text-[11px] font-semibold ${
                       /FAIL|REJECT|RISK|BLOCK/i.test(String(param.assessment || ''))
                         ? 'text-rose-400'
-                        : 'text-emerald-400'
+                        : 'text-emerald-700'
                     }`}>
                       <CheckCircle2 className="w-3 h-3" />
                       {param.assessment}
@@ -306,7 +306,7 @@ export default function O9ElectronicExpansionValveStudio() {
       <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
-            <DollarSign className="w-4 h-4 text-emerald-400" />
+            <DollarSign className="w-4 h-4 text-emerald-700" />
             Capital Investment & Lifecycle Economic Projections
           </h2>
           <span className="text-xs text-slate-600 font-mono font-medium">Utility Rate: $0.12 / kWh</span>

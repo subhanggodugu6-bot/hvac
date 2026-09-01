@@ -165,7 +165,7 @@ export function O14SafetyPanel({ safety }: { safety: any }) {
   return (
     <div className="kpi-tile">
       <div className="flex items-center gap-2 mb-3">
-        <ShieldCheck className="w-4 h-4 text-emerald-400" />
+        <ShieldCheck className="w-4 h-4 text-emerald-700" />
         <h3 className="text-sm font-semibold text-slate-900">Safety validation</h3>
         <span className="text-[10px] text-slate-500">Backend SafetyEngine is authoritative</span>
       </div>
@@ -174,7 +174,7 @@ export function O14SafetyPanel({ safety }: { safety: any }) {
           checks.map((c: any) => (
             <div key={c.check_name} className="flex justify-between text-xs font-mono border-b border-slate-200 py-1">
               <span className="text-slate-400">{c.check_name}</span>
-              <span className={c.result === 'PASS' ? 'text-emerald-400' : 'text-amber-300'}>{c.result} · {c.reason}</span>
+              <span className={c.result === 'PASS' ? 'text-emerald-700' : 'text-amber-300'}>{c.result} · {c.reason}</span>
             </div>
           ))
         ) : (
@@ -409,7 +409,7 @@ export function O14Dashboard() {
           <O14SystemState current={data?.current_state} pumps={data?.pumps || []} />
           <O14OptimizationRecommendation data={data || {}} />
           <div className="flex items-center gap-2 text-xs">
-            <Activity className="w-3.5 h-3.5 text-cyan-400" />
+            <Activity className="w-3.5 h-3.5 text-cyan-800" />
             History
             {[1, 6, 24, 168, 720].map((h) => (
               <button

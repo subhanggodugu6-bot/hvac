@@ -107,7 +107,7 @@ export function WaterCooledHeadPressureDashboard() {
           {ui === 'STALE' && (
             <div className="col-span-12 kpi-tile min-h-0 border-amber-500/30" role="status">
               <div className="text-[11px] font-semibold tracking-wider text-amber-300">STALE TELEMETRY</div>
-              <div className="text-[11px] text-slate-400 mt-1">Optimization is held until a fresh production sample arrives.</div>
+              <div className="text-[11px] text-slate-600 mt-1">Optimization is held until a fresh production sample arrives.</div>
             </div>
           )}
           <HeadPressureKPIGrid data={data} history={points} />

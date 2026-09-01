@@ -156,7 +156,7 @@ export default function O5DuctStaticPressureStudio() {
               disabled={refreshing}
               className="btn-secondary"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-cyan-400' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${refreshing ? 'animate-spin text-cyan-800' : ''}`} />
               Sync BMS
             </button>
 
@@ -177,7 +177,7 @@ export default function O5DuctStaticPressureStudio() {
             disabled={!!actionLoading}
             className="btn-secondary"
           >
-            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
             {actionLoading === 'verify' ? 'Verifying...' : '15-Min M&V'}
           </button>
 
@@ -207,11 +207,11 @@ export default function O5DuctStaticPressureStudio() {
             : 'bg-cyan-50 border-cyan-500/30 text-cyan-800'
         }`}>
           {statusMessage.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
           ) : statusMessage.type === 'error' ? (
             <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
           ) : (
-            <Radio className="w-4 h-4 text-cyan-400 shrink-0" />
+            <Radio className="w-4 h-4 text-cyan-800 shrink-0" />
           )}
           <span>{statusMessage.text}</span>
         </div>
@@ -223,7 +223,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="kpi-tile">
           <div className="flex items-center justify-between text-slate-600 text-xs">
             <span>1. Current Duct SP</span>
-            <Gauge className="w-3.5 h-3.5 text-cyan-400" />
+            <Gauge className="w-3.5 h-3.5 text-cyan-800" />
           </div>
           <div className="text-xl font-bold text-slate-900">
             {data?.current_static_pressure?.toFixed(2) ?? 'NO DATA'} <span className="text-xs font-normal text-slate-600">in.w.c.</span>
@@ -235,7 +235,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="kpi-tile kpi-tile-accent">
           <div className="flex items-center justify-between text-cyan-800 text-xs">
             <span>2. Optimized SP</span>
-            <Sliders className="w-3.5 h-3.5 text-cyan-400" />
+            <Sliders className="w-3.5 h-3.5 text-cyan-800" />
           </div>
           <div className="text-xl font-bold text-cyan-800">
             {data?.optimized_setpoint?.toFixed(2) ?? 'NO DATA'} <span className="text-xs font-normal text-cyan-700">in.w.c.</span>
@@ -249,7 +249,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="kpi-tile">
           <div className="flex items-center justify-between text-slate-600 text-xs">
             <span>3. SP Reduction</span>
-            <TrendingDown className="w-3.5 h-3.5 text-emerald-400" />
+            <TrendingDown className="w-3.5 h-3.5 text-emerald-700" />
           </div>
           <div className="text-xl font-bold text-emerald-700">
             {data?.pressure_reduction != null ? `-${Number(data.pressure_reduction).toFixed(2)}` : 'NO DATA'} <span className="text-xs font-normal text-slate-600">in.w.c.</span>
@@ -273,7 +273,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="kpi-tile kpi-tile-accent">
           <div className="flex items-center justify-between text-emerald-800 text-xs">
             <span>5. Energy Impact</span>
-            <TrendingDown className="w-3.5 h-3.5 text-emerald-400" />
+            <TrendingDown className="w-3.5 h-3.5 text-emerald-700" />
           </div>
           <div className="text-xl font-bold text-emerald-800">
             -{data?.power_shed_kw?.toFixed(1) ?? 'NO DATA'} <span className="text-xs font-normal text-emerald-700">kW shed</span>
@@ -285,7 +285,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="kpi-tile">
           <div className="flex items-center justify-between text-slate-600 text-xs">
             <span>6. Max Damper</span>
-            <Layers className="w-3.5 h-3.5 text-cyan-400" />
+            <Layers className="w-3.5 h-3.5 text-cyan-800" />
           </div>
           <div className="text-xl font-bold text-slate-900">
             {data?.highest_vav_damper_pct?.toFixed(1) ?? 'NO DATA'}%
@@ -309,7 +309,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="kpi-tile">
           <div className="flex items-center justify-between text-slate-600 text-xs">
             <span>8. AHU Airflow</span>
-            <Wind className="w-3.5 h-3.5 text-cyan-400" />
+            <Wind className="w-3.5 h-3.5 text-cyan-800" />
           </div>
           <div className="text-xl font-bold text-slate-900">
             {totalAirflow.toLocaleString()} <span className="text-xs font-normal text-slate-600">CFM</span>
@@ -333,7 +333,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="kpi-tile">
           <div className="flex items-center justify-between text-slate-600 text-xs">
             <span>10. Mode & Status</span>
-            <Radio className="w-3.5 h-3.5 text-emerald-400" />
+            <Radio className="w-3.5 h-3.5 text-emerald-700" />
           </div>
           <div className="text-xs font-bold text-emerald-700 truncate">
             {data?.optimization_status || data?.mode || 'NO DATA'}
@@ -348,10 +348,10 @@ export default function O5DuctStaticPressureStudio() {
         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-4 h-4 text-cyan-800" />
               Duct Static Pressure vs Time (SP vs Measured)
             </h2>
-            <span className="text-[11px] text-slate-400">Live 6-Hour Operating Envelope</span>
+            <span className="text-[11px] text-slate-600">Live 6-Hour Operating Envelope</span>
           </div>
 
           <div className="h-56 w-full bg-slate-100 rounded-xl p-4 border border-slate-200 flex flex-col justify-between">
@@ -392,7 +392,7 @@ export default function O5DuctStaticPressureStudio() {
               {pressureTimeline.map((p, idx) => (
                 <div key={idx} className="flex flex-col items-center">
                   <span>{p.time}</span>
-                  <span className="text-[10px] text-cyan-400 font-mono">{p.actual.toFixed(2)}″</span>
+                  <span className="text-[10px] text-cyan-800 font-mono">{p.actual.toFixed(2)}″</span>
                 </div>
               ))}
             </div>
@@ -451,7 +451,7 @@ export default function O5DuctStaticPressureStudio() {
             </div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-[11px] text-slate-400 leading-relaxed">
+          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 text-[11px] text-slate-600 leading-relaxed">
             <strong className="text-slate-700">Affinity Principle:</strong> Fan power varies with the pressure ratio to the 1.45th exponent: <span className="text-cyan-800 font-mono">P₂ = P₁ · (SP₂/SP₁)^1.45</span>. A 20% static pressure trim sheds ~27% fan motor kW.
           </div>
         </div>
@@ -462,7 +462,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
             <h2 className="text-base font-semibold text-slate-900 flex items-center gap-2">
-              <Layers className="w-4 h-4 text-cyan-400" />
+              <Layers className="w-4 h-4 text-cyan-800" />
               Downstream VAV Damper Distribution & Zone Telemetry
             </h2>
             <p className="text-xs text-slate-400">
@@ -480,21 +480,21 @@ export default function O5DuctStaticPressureStudio() {
         </div>
 
         {/* VAV Table */}
-        <div className="overflow-x-auto rounded-xl border border-slate-200">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-100 text-slate-400 font-medium border-b border-slate-200">
+        <div className="eng-scroll rounded-xl border border-slate-200 bg-white">
+          <table className="bms-table text-xs">
+            <thead>
               <tr>
-                <th className="py-2.5 px-3">VAV ID</th>
-                <th className="py-2.5 px-3">Zone Name</th>
-                <th className="py-2.5 px-3">Temp / SP</th>
-                <th className="py-2.5 px-3">Damper %</th>
-                <th className="py-2.5 px-3">Airflow (CFM)</th>
-                <th className="py-2.5 px-3">Pressure Demand</th>
-                <th className="py-2.5 px-3">Occupancy</th>
-                <th className="py-2.5 px-3 text-right">Status</th>
+                <th>VAV ID</th>
+                <th>Zone Name</th>
+                <th>Temp / SP</th>
+                <th>Damper %</th>
+                <th>Airflow (CFM)</th>
+                <th>Pressure Demand</th>
+                <th>Occupancy</th>
+                <th className="text-right">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/[0.04] text-slate-700 font-mono">
+            <tbody className="font-mono">
               {rawZones.map((zone: any) => (
                 <tr
                   key={zone.id}
@@ -505,7 +505,7 @@ export default function O5DuctStaticPressureStudio() {
                   <td className="py-2.5 px-3 font-semibold text-slate-900 flex items-center gap-1.5">
                     {zone.id}
                     {zone.is_critical && (
-                      <span className="px-1.5 py-0.5 rounded text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/40 font-sans">
+                      <span className="px-1.5 py-0.5 rounded text-[9px] bg-amber-100 text-amber-800 border border-amber-300 font-sans">
                         CRITICAL
                       </span>
                     )}
@@ -539,7 +539,7 @@ export default function O5DuctStaticPressureStudio() {
                       zone.pressure_demand === 'RESPOND'
                         ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
                         : zone.pressure_demand === 'TRIM'
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                        ? 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/30'
                         : 'bg-slate-200 text-slate-400'
                     }`}>
                       {zone.pressure_demand || 'STABLE'}
@@ -552,7 +552,7 @@ export default function O5DuctStaticPressureStudio() {
                     <span className={`inline-flex items-center gap-1 text-[11px] font-semibold ${
                       zone.status === 'CRITICAL'
                         ? 'text-amber-400'
-                        : 'text-emerald-400'
+                        : 'text-emerald-700'
                     }`}>
                       {zone.status === 'CRITICAL' ? (
                         <AlertTriangle className="w-3 h-3" />
@@ -574,7 +574,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4 lg:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-cyan-400" />
+              <Sliders className="w-4 h-4 text-cyan-800" />
               Candidate Evaluation Matrix & Recommendation
             </h2>
             <span className="text-xs text-slate-600 font-mono font-medium">Algorithm: Trim & Respond (Cube-Law)</span>
@@ -644,7 +644,7 @@ export default function O5DuctStaticPressureStudio() {
             </div>
             <div className="text-right space-y-0.5">
               <div className="text-emerald-700 font-bold">Expected Net Shed: {data?.power_shed_kw != null ? `-${Number(data.power_shed_kw).toFixed(1)} kW` : 'NO DATA'}</div>
-              <div className="text-slate-400 text-[11px]">Safety Assessment: <strong className="text-emerald-400">{data?.safety_status || 'NO DATA'}</strong></div>
+              <div className="text-slate-400 text-[11px]">Safety Assessment: <strong className="text-emerald-700">{data?.safety_status || 'NO DATA'}</strong></div>
             </div>
           </div>
         </div>
@@ -653,7 +653,7 @@ export default function O5DuctStaticPressureStudio() {
         <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-emerald-700" />
               Safety & Deterministic Guardrails
             </h2>
             <span className="pill-live">{data?.safety_status || 'NO DATA'}</span>
@@ -694,7 +694,7 @@ export default function O5DuctStaticPressureStudio() {
       <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+            <CheckCircle2 className="w-4 h-4 text-cyan-800" />
             15-Minute M&V Verification & Fail-Safe Rollback Engine
           </h2>
           <span className="text-xs text-slate-600 font-mono font-medium">BMS Protocol: BACnet/IP Priority 10</span>

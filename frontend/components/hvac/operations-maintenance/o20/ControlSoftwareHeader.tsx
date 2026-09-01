@@ -38,9 +38,9 @@ export function ControlSoftwareHeader({
       <StudioBreadcrumb def={def} />
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-cyan-400/80 mb-1.5">O20</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-violet-700 mb-1.5">O20</div>
           <h1 className="text-[1.7rem] font-semibold text-slate-900 tracking-tight leading-tight">{def.title}</h1>
-          <p className="text-[13px] text-slate-400 mt-1.5 max-w-3xl leading-relaxed">{description}</p>
+          <p className="text-[13px] text-slate-600 mt-1.5 max-w-3xl leading-relaxed">{description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5" aria-label="O20 system status">
             <StatusBadge tone={toneForStatus(o20Bms(dash, data))}>{`BMS ${o20Bms(dash, data)}`}</StatusBadge>
             <StatusBadge tone={toneForStatus(o20TelemetryBadge(data))}>{`Telemetry ${o20TelemetryBadge(data)}`}</StatusBadge>
@@ -57,7 +57,7 @@ export function ControlSoftwareHeader({
       {isO20Simulation(data) ? (
         <div className="glass-card p-4" role="status">
           <div className="text-[11px] uppercase tracking-[0.16em] font-semibold text-amber-300">SIMULATED</div>
-          <p className="text-[13px] text-slate-400 mt-1">Demo / simulation is never LIVE. Automatic software deploy is prohibited.</p>
+          <p className="text-[13px] text-slate-600 mt-1">Demo / simulation is never LIVE. Automatic software deploy is prohibited.</p>
         </div>
       ) : null}
       <dl className="grid grid-cols-2 md:grid-cols-4 gap-4 text-[11px]">

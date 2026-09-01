@@ -44,9 +44,9 @@ export function O15Header({ data }: { data?: O15Dashboard | null }) {
       <StudioBreadcrumb def={def} />
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 mt-3">
         <div className="min-w-0">
-          <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-cyan-400/80 mb-1.5">O15</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-violet-700 mb-1.5">O15</div>
           <h1 className="text-[1.7rem] font-semibold text-slate-900 tracking-tight leading-tight">{def.title}</h1>
-          <p className="text-[13px] text-slate-400 mt-1.5 max-w-3xl leading-relaxed">{def.description}</p>
+          <p className="text-[13px] text-slate-600 mt-1.5 max-w-3xl leading-relaxed">{def.description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5" aria-label="O15 operating status">
           <StatusBadge tone={toneForStatus(bms)}>{`BMS ${bms}`}</StatusBadge>
           <StatusBadge tone={toneForStatus(prov)}>{`Telemetry ${prov}`}</StatusBadge>
@@ -84,7 +84,7 @@ export function O15StatusStrip({ data }: { data: O15Dashboard }) {
       {banners.map((b) => (
         <div key={b.title} className="kpi-tile min-h-0 border-amber-500/30" role="status">
           <div className="text-[11px] font-semibold tracking-wider text-amber-300">{b.title}</div>
-          <div className="text-[11px] text-slate-400 mt-1">{b.detail}</div>
+          <div className="text-[11px] text-slate-600 mt-1">{b.detail}</div>
         </div>
       ))}
     </div>

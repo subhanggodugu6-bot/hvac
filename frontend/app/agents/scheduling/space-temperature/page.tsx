@@ -139,7 +139,7 @@ export default function SpaceTemperaturePage() {
 
         <div className="glass-card p-4 flex flex-col justify-between">
           <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Zones Optimized</span>
-          <div className="my-1.5 text-base font-bold font-mono text-sky-400">{kpis.zones_optimized || 'NO DATA'}</div>
+          <div className="my-1.5 text-base font-bold font-mono text-sky-700">{kpis.zones_optimized || 'NO DATA'}</div>
           <span className="text-[10px] text-slate-600">Active Float</span>
         </div>
 
@@ -162,7 +162,7 @@ export default function SpaceTemperaturePage() {
       <div className="glass-card p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200 mb-4">
           <div className="flex items-center gap-2">
-            <Building className="w-4 h-4 text-cyan-400" />
+            <Building className="w-4 h-4 text-cyan-800" />
             <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Facility Zone Thermal & Setpoint Matrix
             </h3>
@@ -216,11 +216,11 @@ export default function SpaceTemperaturePage() {
                   </div>
                   <div>
                     <span className="text-[9px] text-slate-500 block">Optimized</span>
-                    <strong className="text-cyan-400">{z.optimized_setpoint}°C</strong>
+                    <strong className="text-cyan-800">{z.optimized_setpoint}°C</strong>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-400">
+                <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-600">
                   <div>Damper: <span className="text-slate-800">{z.damper_position}%</span></div>
                   <div>Clg Valve: <span className="text-slate-800">{z.cooling_valve}%</span></div>
                   <div>Reheat: <span className="text-slate-800">{z.reheat_valve}%</span></div>
@@ -245,7 +245,7 @@ export default function SpaceTemperaturePage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-cyan-400" />
+              <Sliders className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Selected Zone Control Detail
               </h3>
@@ -309,7 +309,7 @@ export default function SpaceTemperaturePage() {
         <div className="glass-card p-5 lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Gauge className="w-4 h-4 text-cyan-400" />
+              <Gauge className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Dynamic Control Band & Temperature Bounds
               </h3>
@@ -367,7 +367,7 @@ export default function SpaceTemperaturePage() {
       <div className="glass-card p-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
           <div className="flex items-center gap-2">
-            <Activity className="w-4 h-4 text-cyan-400" />
+            <Activity className="w-4 h-4 text-cyan-800" />
             <div>
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Temperature & Setpoint Response — {selectedZoneId}
@@ -418,7 +418,7 @@ export default function SpaceTemperaturePage() {
       <div className="glass-card overflow-hidden">
         <div className="p-5 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-cyan-400" />
+            <Layers className="w-4 h-4 text-cyan-800" />
             <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Candidate Setpoint Evaluation — {selectedZoneId}
             </h3>
@@ -459,7 +459,7 @@ export default function SpaceTemperaturePage() {
                     <span
                       className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
                         cand.safety_status === 'PASS'
-                          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                           : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
                       }`}
                     >
@@ -494,7 +494,7 @@ export default function SpaceTemperaturePage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-cyan-400" />
+              <Cpu className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O2 Supervisory Decision — {selectedZoneId}
               </h3>
@@ -527,7 +527,7 @@ export default function SpaceTemperaturePage() {
             <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-[11px]">
               <span className="text-slate-600">Model: <strong className="text-slate-800">{decisionData?.model_version || 'NO DATA'}</strong></span>
               <span className="text-slate-600">Confidence: <strong className="text-purple-700">{decisionData?.confidence != null ? `${decisionData.confidence}%` : 'NO DATA'}</strong></span>
-              <span className="text-slate-600">Safety: <strong className="text-emerald-400">{decisionData?.safety || 'NO DATA'}</strong></span>
+              <span className="text-slate-600">Safety: <strong className="text-emerald-700">{decisionData?.safety || 'NO DATA'}</strong></span>
             </div>
           </div>
 
@@ -547,7 +547,7 @@ export default function SpaceTemperaturePage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-emerald-700" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Comfort & Safety Validation — {selectedZoneId}
               </h3>
@@ -634,7 +634,7 @@ export default function SpaceTemperaturePage() {
             </div>
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">PREDICTED SHED</span>
-              <span className="text-sm font-bold text-sky-400">{energyData?.predicted_power_reduction_kw != null ? `${energyData.predicted_power_reduction_kw} kW` : 'NO DATA'}</span>
+              <span className="text-sm font-bold text-sky-700">{energyData?.predicted_power_reduction_kw != null ? `${energyData.predicted_power_reduction_kw} kW` : 'NO DATA'}</span>
             </div>
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">VERIFIED SHED</span>
@@ -659,12 +659,12 @@ export default function SpaceTemperaturePage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Building className="w-4 h-4 text-cyan-400" />
+              <Building className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 BMS Control Action & Verification — {selectedZoneId}
               </h3>
             </div>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-400">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-700">
               {bmsActionData?.bms_status || 'NO DATA'}
             </span>
           </div>
@@ -766,7 +766,7 @@ export default function SpaceTemperaturePage() {
         <div className="glass-card overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Live Agent Activity Stream
               </h3>

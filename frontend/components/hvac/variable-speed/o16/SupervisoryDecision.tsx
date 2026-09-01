@@ -7,7 +7,7 @@ import { bmsBadge, confidencePct, fmtDash, freshnessBadge, mapO16Decision, recPa
 function Stage({ label, ok, warn }: { label: string; ok: boolean; warn?: boolean }) {
   return (
     <div className="flex flex-col items-center text-[10px] font-mono">
-      <span className={`px-2 py-1 border ${ok ? 'border-emerald-500/40 text-emerald-400' : warn ? 'border-amber-500/40 text-amber-300' : 'border-slate-200 text-slate-500'}`}>
+      <span className={`px-2 py-1 border ${ok ? 'border-emerald-500/40 text-emerald-700' : warn ? 'border-amber-500/40 text-amber-300' : 'border-slate-200 text-slate-500'}`}>
         {label}
       </span>
     </div>

@@ -61,7 +61,7 @@ export const ModelStatusPanel: React.FC<{ opportunities?: any[] }> = ({ opportun
             <h3 className="text-[11px] font-semibold text-slate-900 uppercase tracking-[0.14em]">
               Machine Learning Model Registry & Control Worker
             </h3>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-700">
               WORKER {workerStatus?.worker_running ? 'RUNNING' : workerStatus ? 'STOPPED' : 'UNKNOWN'}
             </span>
           </div>
@@ -89,7 +89,7 @@ export const ModelStatusPanel: React.FC<{ opportunities?: any[] }> = ({ opportun
               <span className="text-[10px] text-emerald-700 font-semibold">{m.live?.displayState || modelStatus?.[m.code]?.status || 'UNKNOWN'}</span>
             </div>
             <div className="font-sans text-slate-800 text-xs font-medium truncate">{m.name}</div>
-            <div className="text-[11px] text-slate-400">Ver: <strong className="text-slate-700">{m.live?.modelVersion || modelStatus?.[m.code]?.version || '—'}</strong></div>
+            <div className="text-[11px] text-slate-600">Ver: <strong className="text-slate-700">{m.live?.modelVersion || modelStatus?.[m.code]?.version || '—'}</strong></div>
             <div className="text-[11px] text-slate-500 pt-1 border-t border-slate-200">{m.live?.dataSource || 'NO REGISTRY METRICS'}</div>
           </div>
         ))}
@@ -98,7 +98,7 @@ export const ModelStatusPanel: React.FC<{ opportunities?: any[] }> = ({ opportun
       {evalResult && (
         <div className="p-3 border-t border-slate-200 text-xs font-mono flex flex-col md:flex-row md:items-center justify-between gap-2">
           <div className="text-slate-700">
-            Evaluation Result: <strong className="text-emerald-400">{evalResult.passed} / {evalResult.total_scenarios} Scenarios Passed ({evalResult.success_rate_pct}%)</strong>
+            Evaluation Result: <strong className="text-emerald-700">{evalResult.passed} / {evalResult.total_scenarios} Scenarios Passed ({evalResult.success_rate_pct}%)</strong>
           </div>
           <span className="text-[11px] text-slate-500">Evaluation report written on the API host</span>
         </div>

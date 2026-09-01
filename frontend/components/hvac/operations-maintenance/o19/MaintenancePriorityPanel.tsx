@@ -37,7 +37,7 @@ export function MaintenancePriorityPanel({
                   <span className="font-mono text-xs text-slate-800">{r.id}</span>
                   <StatusBadge tone={toneForStatus(r.status)}>{r.status.replace(/ /g, '_')}</StatusBadge>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">{formatDash(r.indicator)}</p>
+                <p className="text-[11px] text-slate-600 mt-1">{formatDash(r.indicator)}</p>
               </button>
             </li>
           ))}

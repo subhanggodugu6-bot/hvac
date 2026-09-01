@@ -59,7 +59,7 @@ export const OpportunityHeader: React.FC<OpportunityHeaderProps> = ({
             {code} · {def.title}
             {page ? ` · p.${page}` : ''}
           </h1>
-          <p className="text-[13px] text-slate-500 mt-1.5 max-w-3xl leading-relaxed">{def.description}</p>
+          <p className="text-[13px] text-slate-600 mt-1.5 max-w-3xl leading-relaxed">{def.description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5">
             <StatusBadge tone={toneForStatus(live)} pulse={live === 'LIVE'}>
               Telemetry {live || 'NO DATA'}

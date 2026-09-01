@@ -7,6 +7,7 @@ import { apiJson } from '@/lib/api/client';
 import { StatusBadge } from '@/components/hvac/StatusBadge';
 import { PageHeader } from '@/components/ui/PageHeader';
 import { EmptyState } from '@/components/hvac/EmptyState';
+import { PipelineStatusCard } from '@/components/hvac/PipelineStatusCard';
 import {
   EngineeringChart,
   LineChart,
@@ -75,6 +76,14 @@ export default function MlRegistryPage() {
   const [selected, setSelected] = useState<string>('O1');
   const [lstmTarget, setLstmTarget] = useState<LstmSeriesKey>('zone_temp');
   const [safeRlBusy, setSafeRlBusy] = useState(false);
+  const [llmBusy, setLlmBusy] = useState(false);
+  const [llmExplanation, setLlmExplanation] = useState<{
+    explanation?: string;
+    provider?: string;
+    model?: string;
+    fallback?: boolean;
+    code?: string;
+  } | null>(null);
   const [showRejected, setShowRejected] = useState(false);
   const [rulesBusy, setRulesBusy] = useState(false);
   const [rulesResult, setRulesResult] = useState<{
@@ -193,6 +202,27 @@ export default function MlRegistryPage() {
     retry: 1,
   });
 
+  const llmStatus = useQuery({
+    queryKey: ['llm-status'],
+    queryFn: () =>
+      apiJson('/platform/ai/llm/status') as Promise<{
+        enabled: boolean;
+        provider: string;
+        free_options?: {
+          providers: Array<{
+            id: string;
+            label: string;
+            free: boolean;
+            needs_key: boolean;
+            available: boolean;
+            hint?: string;
+          }>;
+        };
+      }>,
+    staleTime: 30_000,
+    refetchInterval: 60_000,
+  });
+
   const rulesAudit = useQuery({
     queryKey: ['rules-audit'],
     queryFn: () =>
@@ -248,6 +278,23 @@ export default function MlRegistryPage() {
       await queryClient.invalidateQueries({ queryKey: ['rules-audit'] });
     } finally {
       setSafeRlBusy(false);
+    }
+  }
+
+  async function runLlmExplain() {
+    setLlmBusy(true);
+    try {
+      const res = (await apiJson('/platform/ai/llm/explain', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          zone_id: 'ZONE-01',
+          decision_id: safeRlStatus.data?.last_decision?.decision_id || null,
+        }),
+      })) as typeof llmExplanation;
+      setLlmExplanation(res);
+    } finally {
+      setLlmBusy(false);
     }
   }
 
@@ -317,6 +364,8 @@ export default function MlRegistryPage() {
         subtitle="Training/reference models for O1–O20. Provenance is MODEL PREDICTION only — never LIVE BMS."
         badge="MODEL PREDICTION"
       />
+
+      <PipelineStatusCard />
 
       <section className="glass-card p-4 space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -514,7 +563,35 @@ export default function MlRegistryPage() {
           >
             {showRejected ? 'Hide rejected' : 'Show rejected'}
           </button>
+          <button
+            type="button"
+            disabled={llmBusy || !llmStatus.data?.enabled}
+            onClick={() => void runLlmExplain()}
+            className="chip-filter disabled:opacity-50"
+          >
+            {llmBusy ? 'Explaining…' : 'Explain (free LLM)'}
+          </button>
         </div>
+
+        {llmStatus.data?.enabled ? (
+          <p className="text-[11px] text-slate-500">
+            LLM provider: {llmStatus.data.provider || 'auto'} — template, Ollama (local), Groq, Gemini, or OpenRouter free tiers.
+          </p>
+        ) : (
+          <p className="text-[11px] text-amber-700">
+            Set HVAC_LLM_ENABLED=1 on the API for free operator explanations (template works without keys).
+          </p>
+        )}
+
+        {llmExplanation?.explanation ? (
+          <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-3 text-[13px] text-slate-800 leading-relaxed">
+            <div className="text-[10px] font-mono text-violet-700 mb-1">
+              {llmExplanation.provider || 'llm'} / {llmExplanation.model || '—'}
+              {llmExplanation.fallback ? ' (fallback)' : ''}
+            </div>
+            <div className="whitespace-pre-wrap">{llmExplanation.explanation}</div>
+          </div>
+        ) : null}
 
         {safeRlStatus.data?.last_decision ? (
           <div className="space-y-2 text-[12px]">
@@ -688,7 +765,7 @@ export default function MlRegistryPage() {
               .filter((r) => r.missing_dataset)
               .map((r) => (
                 <li key={r.opportunity_id}>
-                  <span className="text-cyan-400 font-mono">{r.opportunity_id}</span> {r.missing_dataset}
+                  <span className="text-cyan-800 font-mono">{r.opportunity_id}</span> {r.missing_dataset}
                 </li>
               ))}
           </ul>
@@ -732,7 +809,7 @@ export default function MlRegistryPage() {
                   selected === r.opportunity_id ? 'bg-cyan-500/[0.08]' : 'hover:bg-white/[0.03]'
                 }`}
               >
-                <td className="p-2 text-cyan-400">{r.opportunity_id}</td>
+                <td className="p-2 text-cyan-800">{r.opportunity_id}</td>
                 <td className="p-2 text-slate-700">{r.agent_id || '—'}</td>
                 <td className="p-2 text-slate-700">{r.dataset_id || '—'}</td>
                 <td className="p-2 text-slate-400">

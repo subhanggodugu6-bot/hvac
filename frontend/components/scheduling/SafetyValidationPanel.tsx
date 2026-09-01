@@ -66,7 +66,7 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
           onClick={() => setIsLimitsModalOpen(true)}
           className="btn-secondary"
         >
-          <Sliders className="w-3.5 h-3.5 text-sky-400" />
+          <Sliders className="w-3.5 h-3.5 text-sky-700" />
           <span>Configure Limits</span>
         </button>
       </div>
@@ -90,7 +90,7 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
                   <span
                     className={`inline-block text-[11px] px-2.5 py-0.5 rounded-full font-semibold border ${
                       c.status === 'PASS'
-                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                         : c.status === 'WARNING'
                         ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
                         : 'bg-rose-500/10 border-rose-500/30 text-rose-400'

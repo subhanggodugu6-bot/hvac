@@ -35,7 +35,7 @@ export function MlSectionStrip({ opportunityIds }: { opportunityIds: string[] })
                       : row.status;
           return (
             <div key={oid} className="flex justify-between gap-2 border border-slate-200 px-2 py-1.5">
-              <span className="text-cyan-400">{oid}</span>
+              <span className="text-cyan-800">{oid}</span>
               <span className="text-slate-700 truncate">{status}</span>
             </div>
           );

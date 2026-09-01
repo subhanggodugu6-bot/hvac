@@ -54,7 +54,7 @@ export default function TelemetryPage() {
           actionLabel="Open BMS mapping"
         />
       ) : (
-        <div className="glass-card overflow-x-auto max-h-[70vh]">
+        <div className="glass-card eng-scroll overflow-auto max-h-[70vh]">
           <table className="bms-table">
             <thead>
               <tr>

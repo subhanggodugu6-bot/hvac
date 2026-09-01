@@ -30,7 +30,7 @@ export function EquipmentHealthGrid({
       ) : (
         Array.from(groups.entries()).map(([type, items]) => (
           <div key={type}>
-            <h3 className="text-[11px] font-mono text-cyan-400 mb-2">{type}</h3>
+            <h3 className="text-[11px] font-mono text-cyan-800 mb-2">{type}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2">
               {items.map((eq) => (
                 <button
@@ -45,7 +45,7 @@ export function EquipmentHealthGrid({
                     <span className="font-mono text-xs text-slate-800">{eq.id}</span>
                     <StatusBadge tone={toneForStatus(eq.status)}>{eq.status}</StatusBadge>
                   </div>
-                  <div className="text-[11px] text-slate-400 mt-1">{eq.name}</div>
+                  <div className="text-[11px] text-slate-600 mt-1">{eq.name}</div>
                   <dl className="mt-2 grid grid-cols-2 gap-1 text-[10px] font-mono text-slate-500">
                     <div>Health {formatPercent(eq.health)}</div>
                     <div>Priority {formatDash(eq.priority)}</div>

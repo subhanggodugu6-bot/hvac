@@ -28,9 +28,9 @@ export function O10Header({
       <StudioBreadcrumb def={def} />
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-cyan-400/80 mb-1.5">O10</div>
+          <div className="text-[10px] uppercase tracking-[0.18em] font-semibold text-violet-700 mb-1.5">O10</div>
           <h1 className="text-[1.7rem] font-semibold text-slate-900 tracking-tight leading-tight">{def.title}</h1>
-          <p className="text-[13px] text-slate-400 mt-1.5 max-w-3xl leading-relaxed">{description}</p>
+          <p className="text-[13px] text-slate-600 mt-1.5 max-w-3xl leading-relaxed">{description}</p>
           <div className="flex flex-wrap gap-1.5 mt-3.5" aria-label="O10 system status">
             <StatusBadge tone={toneForStatus(bms)}>{`BMS ${bms}`}</StatusBadge>
             <StatusBadge tone={toneForStatus(prov)}>{`Telemetry ${prov}`}</StatusBadge>
@@ -49,7 +49,7 @@ export function O10Header({
       {prov === 'SIMULATED' ? (
         <div className="glass-card p-4" role="status">
           <div className="text-[11px] uppercase tracking-[0.16em] font-semibold text-amber-300">SIMULATED DATA</div>
-          <p className="text-[13px] text-slate-400 mt-1">Demo / simulation telemetry is never labeled LIVE. BMS writes are not implied.</p>
+          <p className="text-[13px] text-slate-600 mt-1">Demo / simulation telemetry is never labeled LIVE. BMS writes are not implied.</p>
         </div>
       ) : null}
       <dl className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 text-[11px]">

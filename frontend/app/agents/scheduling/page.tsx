@@ -42,7 +42,7 @@ export default function SchedulingAgentPage() {
   const chartData = Array.isArray(history.data) ? history.data : [];
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="page-shell">
       <PageHeader
         icon={Cpu}
         title="Scheduling & Supervisory Agent"

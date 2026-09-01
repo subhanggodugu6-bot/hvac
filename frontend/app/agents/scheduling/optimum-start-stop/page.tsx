@@ -200,7 +200,7 @@ export default function OptimumStartStopPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-cyan-400" />
+              <Cpu className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Calibrated Thermal Response Model
               </h3>
@@ -214,7 +214,7 @@ export default function OptimumStartStopPage() {
           <div className="space-y-2 text-xs font-mono">
             <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
               <span className="text-[10px] text-slate-500 block font-sans">MODEL ACCURACY & CALIBRATION</span>
-              <div className="flex justify-between"><span>R² Score:</span><strong className="text-emerald-400">{model.r2_score ?? 'NO DATA'}</strong></div>
+              <div className="flex justify-between"><span>R² Score:</span><strong className="text-emerald-700">{model.r2_score ?? 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Mean Absolute Error:</span><strong className="text-cyan-800">{model.mae_minutes != null ? `${model.mae_minutes} min` : 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Root Mean Sq Error:</span><strong className="text-slate-700">{model.rmse_minutes != null ? `${model.rmse_minutes} min` : 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Confidence:</span><strong className="text-purple-700">{model.prediction_confidence_pct != null ? `${model.prediction_confidence_pct}%` : 'NO DATA'}</strong></div>
@@ -225,7 +225,7 @@ export default function OptimumStartStopPage() {
               <div className="flex justify-between"><span>Pull-Down Rate:</span><strong className="text-slate-800">{model.parameters?.pull_down_rate || 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Weather Sensitivity:</span><strong className="text-slate-800">{model.parameters?.weather_sensitivity || 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Thermal Time Constant:</span><strong className="text-slate-800">{model.parameters?.thermal_time_constant || 'NO DATA'}</strong></div>
-              <div className="flex justify-between"><span>Safety Buffer:</span><strong className="text-emerald-400">{model.parameters?.safety_buffer || 'NO DATA'}</strong></div>
+              <div className="flex justify-between"><span>Safety Buffer:</span><strong className="text-emerald-700">{model.parameters?.safety_buffer || 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Balance Point Temp:</span><strong className="text-slate-800">{model.parameters?.balance_point_temp || 'NO DATA'}</strong></div>
             </div>
           </div>
@@ -236,7 +236,7 @@ export default function OptimumStartStopPage() {
         <div className="glass-card p-5 lg:col-span-2 space-y-3">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Pre-Cooling Thermal Response Trajectory
               </h3>
@@ -276,7 +276,7 @@ export default function OptimumStartStopPage() {
         <div className="glass-card overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-cyan-400" />
+              <Sliders className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Start Time Candidate Evaluation (06:00 – 07:45)
               </h3>
@@ -309,7 +309,7 @@ export default function OptimumStartStopPage() {
                       <span
                         className={`px-2 py-0.5 rounded-full text-[9px] font-semibold border ${
                           String(c.comfort_risk || '').startsWith('LOW') || c.comfort_risk === 'NIL'
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                             : c.comfort_risk === 'MODERATE'
                             ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
                             : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
@@ -340,7 +340,7 @@ export default function OptimumStartStopPage() {
         <div className="glass-card overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sliders className="w-4 h-4 text-cyan-400" />
+              <Sliders className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Coast Stop Candidate Evaluation (16:00 – 18:00)
               </h3>
@@ -373,7 +373,7 @@ export default function OptimumStartStopPage() {
                       <span
                         className={`px-2 py-0.5 rounded-full text-[9px] font-semibold border ${
                           c.safety === 'PASS'
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                             : c.safety === 'WARNING'
                             ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
                             : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
@@ -409,7 +409,7 @@ export default function OptimumStartStopPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Cpu className="w-4 h-4 text-cyan-400" />
+              <Cpu className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O1 Start & Coast Supervisory Decisions
               </h3>
@@ -428,7 +428,7 @@ export default function OptimumStartStopPage() {
               </div>
               <div className="grid grid-cols-3 gap-2 text-center text-[11px] py-1 border-y border-slate-200">
                 <div><span className="text-[9px] text-slate-500 block">SCHEDULED</span><strong>{startDecision.scheduled_start || 'NO DATA'}</strong></div>
-                <div><span className="text-[9px] text-slate-500 block">OPTIMIZED</span><strong className="text-emerald-400">{startDecision.optimized_start || 'NO DATA'}</strong></div>
+                <div><span className="text-[9px] text-slate-500 block">OPTIMIZED</span><strong className="text-emerald-700">{startDecision.optimized_start || 'NO DATA'}</strong></div>
                 <div><span className="text-[9px] text-slate-500 block">TARGET REACH</span><strong className="text-cyan-800">{startDecision.predicted_target_reached || 'NO DATA'}</strong></div>
               </div>
               <p className="text-[11px] text-slate-600 font-sans leading-relaxed">
@@ -446,7 +446,7 @@ export default function OptimumStartStopPage() {
               </div>
               <div className="grid grid-cols-3 gap-2 text-center text-[11px] py-1 border-y border-slate-200">
                 <div><span className="text-[9px] text-slate-500 block">SCHEDULED</span><strong>{coastDecision.scheduled_stop || 'NO DATA'}</strong></div>
-                <div><span className="text-[9px] text-slate-500 block">OPTIMIZED</span><strong className="text-emerald-400">{coastDecision.optimized_stop || 'NO DATA'}</strong></div>
+                <div><span className="text-[9px] text-slate-500 block">OPTIMIZED</span><strong className="text-emerald-700">{coastDecision.optimized_stop || 'NO DATA'}</strong></div>
                 <div><span className="text-[9px] text-slate-500 block">TEMP @ 18:00</span><strong className="text-cyan-800">{coastDecision.predicted_temp_1800 || 'NO DATA'}</strong></div>
               </div>
               <p className="text-[11px] text-slate-600 font-sans leading-relaxed">
@@ -471,7 +471,7 @@ export default function OptimumStartStopPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Timer className="w-4 h-4 text-cyan-400" />
+              <Timer className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 O1 Supervisory Daily Schedule Timeline
               </h3>
@@ -494,7 +494,7 @@ export default function OptimumStartStopPage() {
                 <span
                   className={`px-2 py-0.5 rounded text-[9px] font-bold border ${
                     tl.status === 'COMPLETED'
-                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700'
                       : tl.status === 'PENDING'
                       ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-800'
                       : 'bg-slate-200 border-slate-200 text-slate-400'
@@ -516,7 +516,7 @@ export default function OptimumStartStopPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <ShieldCheck className="w-4 h-4 text-emerald-700" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Comfort & Safety Validation
               </h3>
@@ -558,12 +558,12 @@ export default function OptimumStartStopPage() {
         <div className="glass-card p-5 space-y-4">
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div className="flex items-center gap-2">
-              <Building className="w-4 h-4 text-cyan-400" />
+              <Building className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 BMS Command Action & Verification
               </h3>
             </div>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-400">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-sky-500/10 border border-sky-500/30 text-sky-700">
               {bmsActionData?.bms_status || 'NO DATA'}
             </span>
           </div>
@@ -615,7 +615,7 @@ export default function OptimumStartStopPage() {
       <div className="glass-card overflow-hidden">
         <div className="p-5 border-b border-slate-200 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-cyan-400" />
+            <History className="w-4 h-4 text-cyan-800" />
             <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Historical Pre-Cooling Calibration Log
             </h3>
@@ -659,7 +659,7 @@ export default function OptimumStartStopPage() {
                   <td className="text-slate-700">{h.pulldown_duration}</td>
                   <td className="text-slate-400">{h.prediction_error}</td>
                   <td className="text-cyan-800 font-bold">{h.optimized_stop}</td>
-                  <td className="text-emerald-400">{h.comfort}</td>
+                  <td className="text-emerald-700">{h.comfort}</td>
                   <td className="text-emerald-700 font-semibold">{h.energy_saved}</td>
                   <td>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold pill-live">
@@ -697,22 +697,22 @@ export default function OptimumStartStopPage() {
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
               <span className="text-[10px] text-slate-500 block font-sans">RUNTIME METRICS</span>
               <div className="flex justify-between"><span>Baseline Runtime:</span><strong className="text-slate-700">{energyData.baseline_runtime_hours} hrs</strong></div>
-              <div className="flex justify-between"><span>Optimized Runtime:</span><strong className="text-emerald-400">{energyData.optimized_runtime_hours} hrs</strong></div>
-              <div className="flex justify-between pt-1 border-t border-slate-200 font-bold"><span>Runtime Saved:</span><span className="text-emerald-400">{energyData.runtime_reduction_hours} hrs ({energyData.runtime_reduction_minutes} min)</span></div>
+              <div className="flex justify-between"><span>Optimized Runtime:</span><strong className="text-emerald-700">{energyData.optimized_runtime_hours} hrs</strong></div>
+              <div className="flex justify-between pt-1 border-t border-slate-200 font-bold"><span>Runtime Saved:</span><span className="text-emerald-700">{energyData.runtime_reduction_hours} hrs ({energyData.runtime_reduction_minutes} min)</span></div>
             </div>
 
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 space-y-1.5">
               <span className="text-[10px] text-slate-500 block font-sans">ENERGY METRICS</span>
               <div className="flex justify-between"><span>Baseline Energy:</span><strong className="text-slate-700">{energyData.baseline_energy_kwh} kWh</strong></div>
               <div className="flex justify-between"><span>Optimized Energy:</span><strong className="text-cyan-800">{energyData.optimized_energy_kwh} kWh</strong></div>
-              <div className="flex justify-between pt-1 border-t border-slate-200 font-bold"><span>Energy Saved:</span><span className="text-emerald-400">{energyData.daily_energy_savings_kwh} kWh / day</span></div>
+              <div className="flex justify-between pt-1 border-t border-slate-200 font-bold"><span>Energy Saved:</span><span className="text-emerald-700">{energyData.daily_energy_savings_kwh} kWh / day</span></div>
             </div>
           </div>
 
           <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-1 text-xs font-mono">
             <div className="flex justify-between text-[11px]"><span className="text-slate-600">Predicted Savings:</span><span className="text-slate-700">{energyData.tiers?.predicted_savings_kwh != null ? `${energyData.tiers.predicted_savings_kwh} kWh / day` : 'NO DATA'}</span></div>
             <div className="flex justify-between text-[11px]"><span className="text-slate-600">Applied Savings:</span><span className="text-slate-700">{energyData.tiers?.applied_savings_kwh != null ? `${energyData.tiers.applied_savings_kwh} kWh / day` : 'NO DATA'}</span></div>
-            <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200"><span className="text-slate-800">Verified Savings:</span><span className="text-emerald-400">{verifiedKwh != null ? `+${verifiedKwh} kWh / day ($${verifiedCost ?? '—'} / day)` : 'NOT VERIFIED'}</span></div>
+            <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200"><span className="text-slate-800">Verified Savings:</span><span className="text-emerald-700">{verifiedKwh != null ? `+${verifiedKwh} kWh / day ($${verifiedCost ?? '—'} / day)` : 'NOT VERIFIED'}</span></div>
           </div>
           </>
           )}
@@ -722,7 +722,7 @@ export default function OptimumStartStopPage() {
         <div className="glass-card overflow-hidden">
           <div className="p-5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-cyan-400" />
+              <Activity className="w-4 h-4 text-cyan-800" />
               <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
                 Live Agent Activity Stream
               </h3>

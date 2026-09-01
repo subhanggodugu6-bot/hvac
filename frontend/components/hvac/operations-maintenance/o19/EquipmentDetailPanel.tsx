@@ -68,7 +68,7 @@ export function EquipmentDetailPanel({ data, selectedId }: { data: OmOpportunity
         {findings.length === 0 ? (
           <p className="text-[11px] font-mono text-amber-300">NO DATA AVAILABLE</p>
         ) : (
-          <ul className="text-[11px] text-slate-400 space-y-1">
+          <ul className="text-[11px] text-slate-600 space-y-1">
             {findings.map((f) => (
               <li key={f.id || f.finding || f.maintenanceType}>
                 {formatDash(f.status)} · {formatDash(f.recommendation || f.finding)}

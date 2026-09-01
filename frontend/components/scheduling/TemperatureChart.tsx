@@ -22,7 +22,7 @@ export const TemperatureChart: React.FC<TemperatureChartProps> = ({ data }) => {
     <div className="glass-card p-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-200">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded border border-cyan-500/20 bg-cyan-500/10 text-cyan-400">
+          <div className="p-2 rounded border border-cyan-500/20 bg-cyan-500/10 text-cyan-800">
             <Zap className="w-4 h-4" />
           </div>
           <div>

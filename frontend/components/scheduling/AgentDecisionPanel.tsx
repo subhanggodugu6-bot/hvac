@@ -68,7 +68,7 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
                 return (
                   <tr key={act.id || i}>
                     <td>
-                      <span className="px-2 py-0.5 text-[11px] font-bold rounded border border-sky-500/30 bg-sky-500/10 text-sky-400">
+                      <span className="px-2 py-0.5 text-[11px] font-bold rounded border border-sky-500/30 bg-sky-500/10 text-sky-700">
                         {act.opportunity_code}
                       </span>
                     </td>
@@ -85,7 +85,7 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
                       </span>
                     </td>
                     <td>
-                      <span className="text-[10px] text-sky-400 font-semibold px-2 py-0.5 rounded border border-sky-500/30 bg-sky-500/10">
+                      <span className="text-[10px] text-sky-700 font-semibold px-2 py-0.5 rounded border border-sky-500/30 bg-sky-500/10">
                         {act.final_status || 'CANDIDATE'}
                       </span>
                     </td>
