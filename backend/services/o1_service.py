@@ -110,17 +110,33 @@ class O1Service:
                 else:
                     runtime_kpi = f"{int(sav.runtime_saved)} min / day ({sav.verification_status})"
             kpis = {
-                "optimized_start_delay": f"+{int(dec.start_delay_min)} min Delay" if dec else None,
-                "optimized_coast_stop": f"{int(dec.coast_advance_min)} min Early" if dec else None,
+                "optimized_start_delay": (
+                    f"+{int(dec.start_delay_min)} min Delay"
+                    if dec and dec.start_delay_min is not None
+                    else None
+                ),
+                "optimized_coast_stop": (
+                    f"{int(dec.coast_advance_min)} min Early"
+                    if dec and dec.coast_advance_min is not None
+                    else None
+                ),
                 "daily_runtime_saved": runtime_kpi,
                 "model_confidence": conf,
                 "scheduled_start": cfg.scheduled_start if cfg else None,
                 "optimized_start": dec.optimized_start if dec else None,
                 "scheduled_stop": cfg.scheduled_stop if cfg else None,
                 "optimized_stop": dec.optimized_stop if dec else None,
-                "occupancy_window": f"{cfg.occupancy_start} – {cfg.occupancy_end}" if cfg else None,
+                "occupancy_window": (
+                    f"{cfg.occupancy_start} – {cfg.occupancy_end}"
+                    if cfg and cfg.occupancy_start and cfg.occupancy_end
+                    else None
+                ),
                 "current_zone_temp": f"{zone:.1f}°C" if zone is not None else None,
-                "target_temp": f"{cfg.comfort_target_c:.1f}°C" if cfg else None,
+                "target_temp": (
+                    f"{cfg.comfort_target_c:.1f}°C"
+                    if cfg and cfg.comfort_target_c is not None
+                    else None
+                ),
                 "predicted_target_reached": None,
                 "thermal_model_status": (model or {}).get("status") or "MODEL_NOT_READY",
                 "comfort_compliance": comfort_pct,
