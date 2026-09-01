@@ -70,26 +70,43 @@ def _latest_run(db) -> Optional[O1DailyRunDB]:
 
 def _ensure_run() -> str:
     ensure_point_map_and_config()
+    import os
+
+    last_run_id: Optional[str] = None
     db = SessionLocal()
     try:
         run = _latest_run(db)
-        age = _age_seconds(run.started_at) if run and run.started_at else None
-        fresh = run and age is not None and age < 20
-        if fresh and run.status in ("READY", "FAILED", "DISPATCHED", "VERIFIED"):
-            return run.id
+        if run:
+            last_run_id = run.id
+            age = _age_seconds(run.started_at) if run.started_at else None
+            if run.status in ("READY", "FAILED", "DISPATCHED", "VERIFIED"):
+                # Reuse the latest completed run for the day; do not rebuild on every API poll.
+                if age is None or age < 86400:
+                    return run.id
     finally:
         db.close()
-    import os
-    sim_state = {}
+
+    sim_state: Dict[str, Any] = {}
     use_sim = os.getenv("HVAC_USE_SIMULATION", "0") in ("1", "true", "TRUE")
     if use_sim and sim_service and hasattr(sim_service, "get_latest_status"):
         try:
             sim_state = sim_service.get_latest_status() or {}
         except Exception:
             sim_state = {}
-    # Simulation: verify engine savings so Scheduling "Verified Savings" KPI can display.
-    result = run_daily(sim_state or None, persist_sim=bool(sim_state) and use_sim, verify=use_sim)
-    return result["run_id"]
+    if use_sim and not sim_state:
+        try:
+            from backend.services.o1_pipeline import ingest_from_dataset_catalog
+
+            ingest_from_dataset_catalog()
+        except Exception:
+            pass
+    try:
+        result = run_daily(sim_state or None, persist_sim=bool(sim_state) and use_sim, verify=use_sim)
+        return result["run_id"]
+    except Exception:
+        if last_run_id:
+            return last_run_id
+        raise
 
 
 class O1Service:

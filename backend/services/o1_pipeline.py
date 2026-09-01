@@ -41,9 +41,11 @@ def _cfg() -> O1ConfigurationDB:
         db.close()
 
 
-def _parse_hm(hhmm: str, base: Optional[datetime] = None) -> datetime:
+def _parse_hm(hhmm: Optional[str], base: Optional[datetime] = None) -> datetime:
     base = base or datetime.utcnow().replace(second=0, microsecond=0)
-    h, m = [int(x) for x in hhmm.split(":")[:2]]
+    if not hhmm:
+        hhmm = "08:00"
+    h, m = [int(x) for x in str(hhmm).split(":")[:2]]
     return base.replace(hour=h, minute=m)
 
 
@@ -352,8 +354,10 @@ def run_daily(sim_state: Optional[Dict[str, Any]] = None, persist_sim: bool = Tr
             return {"run_id": run_id, "status": "FAILED", "reason": run.failure_reason, "health": health, "safety_checks": safety_checks}
 
         opt_start = selected_start["candidate_time"]
-        opt_stop = selected_stop["candidate_time"] if selected_stop else cfg.scheduled_stop
-        start_delay = (datetime.strptime(opt_start, "%H:%M") - datetime.strptime(cfg.scheduled_start, "%H:%M")).seconds / 60.0
+        opt_stop = selected_stop["candidate_time"] if selected_stop else (cfg.scheduled_stop or "18:00")
+        sched_start_s = cfg.scheduled_start or "06:00"
+        sched_stop_s = cfg.scheduled_stop or "18:00"
+        start_delay = (datetime.strptime(opt_start, "%H:%M") - datetime.strptime(sched_start_s, "%H:%M")).seconds / 60.0
         coast_min = selected_stop["runtime_saved_min"] if selected_stop else 0
         baseline_min = (sched_stop - sched_start).total_seconds() / 60.0
         opt_runtime = max(0.0, baseline_min - start_delay - coast_min)
