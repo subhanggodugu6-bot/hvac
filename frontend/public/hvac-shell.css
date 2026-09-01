@@ -1,7 +1,7 @@
-/* Unhashed shell CSS. BuildingHub light canvas + dark sidebar. */
+/* Unhashed shell CSS. Premium light canvas + dark sidebar. */
 html,
 body {
-  background-color: #f0f0fa;
+  background-color: #ececf6;
   color: #334155;
   min-height: 100%;
   margin: 0;
@@ -30,7 +30,7 @@ select {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f0f0fa;
+  background-color: #ececf6;
   color: #334155;
 }
 
@@ -38,20 +38,23 @@ select {
   display: flex;
   flex: 1;
   min-height: 0;
+  gap: 0;
 }
 
 .hvac-sidebar {
   width: 17rem;
   flex-shrink: 0;
-  background: #1a1a1d;
+  background: linear-gradient(180deg, #1c1c21 0%, #121216 100%);
   border-right: none;
-  height: calc(100vh - 4.25rem);
   position: sticky;
   top: 4.25rem;
   overflow-y: auto;
   border-radius: 0 1.25rem 1.25rem 0;
   margin: 0.5rem 0 0.5rem 0.5rem;
   height: calc(100vh - 4.25rem - 1rem);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .hvac-main {
@@ -63,6 +66,6 @@ select {
 
 @media (min-width: 1024px) {
   .hvac-main {
-    padding: 1.75rem 2rem 3rem;
+    padding: 1.75rem 2.25rem 3rem;
   }
 }

@@ -21,13 +21,13 @@ export const KpiCard: React.FC<KpiCardProps> = ({
   return (
     <div className={`kpi-tile ${emphasize ? 'kpi-tile-accent' : ''}`}>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[10px] uppercase font-semibold text-slate-500 tracking-[0.14em]">{label}</span>
-        {Icon && <Icon className={`w-3.5 h-3.5 shrink-0 ${emphasize ? 'text-cyan-400' : 'text-slate-500'}`} />}
+        <span className="text-[10px] uppercase font-bold text-slate-600 tracking-[0.14em]">{label}</span>
+        {Icon && <Icon className={`w-3.5 h-3.5 shrink-0 ${emphasize ? 'text-violet-600' : 'text-slate-500'}`} />}
       </div>
-      <div className={`my-1.5 text-2xl font-semibold font-mono tracking-tight ${emphasize ? 'text-cyan-800' : 'text-slate-900'}`}>
+      <div className={`my-2 text-2xl font-bold font-mono tracking-tight ${emphasize ? 'text-violet-800' : 'text-slate-900'}`}>
         {value}
       </div>
-      {detail && <div className="text-[10px] text-slate-400 truncate">{detail}</div>}
+      {detail && <div className="text-[10px] text-slate-600 truncate">{detail}</div>}
     </div>
   );
 };

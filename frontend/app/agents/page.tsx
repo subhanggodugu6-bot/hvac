@@ -81,7 +81,7 @@ export default function AgentsPage() {
   );
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6">
       <PageHeader
         icon={Users}
         title="Systems Intelligence"
@@ -112,8 +112,8 @@ export default function AgentsPage() {
         </div>
       </div>
 
-      <details className="card-static p-4">
-        <summary className="cursor-pointer text-[13px] font-semibold text-slate-700">Compact opportunity list</summary>
+      <details className="card-static p-5">
+        <summary className="cursor-pointer text-[13px] font-bold text-slate-800">Compact opportunity list</summary>
         <div className="space-y-6 mt-4">
           {groups.map(
             (g: {
@@ -167,7 +167,7 @@ export default function AgentsPage() {
                         <Link
                           key={card.id}
                           href={href}
-                          className="card-interactive glass-card flex flex-col justify-between p-3.5 group"
+                          className="card-interactive glass-card flex flex-col justify-between p-4 group"
                           style={{ borderLeft: `3px solid ${RAIL[g.id] || 'var(--accent-purple)'}` }}
                         >
                           <div className="flex items-center justify-between gap-2">

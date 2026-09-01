@@ -12,13 +12,15 @@ body {
   body {
     background-color: var(--bg-primary);
     background-image:
-      radial-gradient(900px 420px at 92% -6%, rgba(139, 92, 246, 0.08), transparent 55%),
-      radial-gradient(700px 360px at -6% 100%, rgba(167, 139, 250, 0.06), transparent 50%);
+      radial-gradient(1000px 480px at 88% -8%, rgba(124, 58, 237, 0.09), transparent 58%),
+      radial-gradient(800px 400px at -4% 102%, rgba(167, 139, 250, 0.07), transparent 52%),
+      linear-gradient(180deg, #ececf6 0%, #f0f0fa 40%, #ececf6 100%);
     background-attachment: fixed;
     color: var(--text-secondary);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   input,
@@ -58,16 +60,20 @@ body {
   background: var(--accent-purple);
 }
 
-/* Soft white cards — static by default */
+/* Premium white cards */
 .glass-card,
 .panel-card,
 .glass-panel,
 .card-static {
-  background: var(--bg-card);
+  position: relative;
+  background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-card);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: var(--shadow-card), var(--card-highlight);
+  transition:
+    border-color 0.22s ease,
+    box-shadow 0.22s ease,
+    transform 0.22s ease;
 }
 
 .card-interactive,
@@ -80,25 +86,39 @@ button.glass-card {
 a.glass-card:hover,
 button.glass-card:hover {
   border-color: var(--border-hover);
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
+  box-shadow: var(--shadow-card-hover), var(--card-highlight);
+  transform: translateY(-2px);
 }
 
 .kpi-tile {
-  background: var(--bg-card);
+  position: relative;
+  background: linear-gradient(165deg, #ffffff 0%, #f9f9fd 100%);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-card);
-  padding: 1.15rem 1.25rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card), var(--card-highlight);
+  padding: 1.2rem 1.3rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 112px;
+  min-height: 116px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .kpi-tile-accent {
-  border-color: rgba(139, 92, 246, 0.28);
-  box-shadow: var(--shadow-card), 0 0 0 1px rgba(139, 92, 246, 0.06);
+  border-color: rgba(124, 58, 237, 0.22);
+  box-shadow: var(--shadow-card), var(--glow-purple);
+}
+
+.kpi-tile-accent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
+  opacity: 0.65;
 }
 
 .kpi-tile-flush {
@@ -124,15 +144,15 @@ button.glass-card:hover {
 }
 
 .btn-primary {
-  background: linear-gradient(180deg, #a78bfa 0%, #8b5cf6 100%);
+  background: linear-gradient(180deg, #a78bfa 0%, #7c3aed 100%);
   color: #fff;
-  border: 1px solid rgba(139, 92, 246, 0.5);
-  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.28);
+  border: 1px solid rgba(124, 58, 237, 0.45);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:hover {
-  background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
-  box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+  background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .btn-primary:disabled,
@@ -240,7 +260,60 @@ button.glass-card:hover {
 .page-rule {
   height: 1px;
   border: 0;
-  background: linear-gradient(90deg, rgba(139, 92, 246, 0.35), rgba(26, 26, 29, 0.06) 32%, transparent);
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.45), rgba(15, 23, 42, 0.06) 28%, transparent 72%);
+}
+
+.page-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-section);
+  padding-bottom: 3rem;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.section-heading h2,
+.section-heading .section-heading-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.section-heading h2::before,
+.section-heading .section-heading-label::before {
+  content: '';
+  width: 3px;
+  height: 14px;
+  border-radius: 99px;
+  background: linear-gradient(180deg, var(--accent-purple-light), var(--accent-purple));
+  flex-shrink: 0;
+}
+
+.hvac-main details.card-static > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.hvac-main details.card-static > summary::-webkit-details-marker {
+  display: none;
+}
+
+.hvac-main details.card-static[open] > summary {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-muted);
 }
 
 .studio-chrome {
@@ -263,13 +336,13 @@ button.glass-card:hover {
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: #f8f8fc;
-  color: #64748b;
-  font-size: 11px;
-  font-weight: 600;
+  background-color: var(--bg-table-header);
+  color: #475569;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 12px 14px;
+  letter-spacing: 0.12em;
+  padding: 13px 14px;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -282,15 +355,16 @@ button.glass-card:hover {
 }
 
 .bms-table td {
-  padding: 12px 14px;
+  padding: 13px 14px;
   border-bottom: 1px solid var(--border-muted);
   color: var(--text-secondary);
   font-size: 12px;
   background: var(--bg-card);
+  vertical-align: middle;
 }
 
 .bms-table tr:hover td {
-  background-color: rgba(139, 92, 246, 0.04);
+  background-color: rgba(124, 58, 237, 0.035);
 }
 
 .bms-table tr:last-child td {
@@ -313,28 +387,55 @@ button.glass-card:hover {
 }
 
 .bh-pill-dark {
-  background: #1a1a1d;
+  background: linear-gradient(180deg, #222228 0%, #16161a 100%);
   color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .bh-pill-search {
-  background: rgba(167, 139, 250, 0.18);
+  background: rgba(255, 255, 255, 0.72);
   color: #5b21b6;
-  border: 1px solid rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 .bh-nav-active {
-  background: var(--accent-purple);
+  background: linear-gradient(180deg, #8b5cf6 0%, #7c3aed 100%);
   color: #fff;
-  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.hvac-main .text-\[11px\].font-semibold.uppercase.tracking-\[0\.16em\].text-slate-500,
+.hvac-main .section-heading-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.hvac-main .text-\[11px\].font-semibold.uppercase.tracking-\[0\.16em\].text-slate-500::before,
+.hvac-main .section-heading-label::before {
+  content: '';
+  width: 3px;
+  height: 14px;
+  border-radius: 99px;
+  background: linear-gradient(180deg, var(--accent-purple-light), var(--accent-purple));
+  flex-shrink: 0;
 }
 
 /* Light main canvas — readable text on white cards (sidebar/header unchanged). */
 .hvac-main .glass-card .text-slate-100,
 .hvac-main .kpi-tile .text-slate-100,
 .hvac-main .panel-card .text-slate-100,
-.hvac-main .studio-chrome .text-slate-100 {
-  color: var(--text-primary);
+.hvac-main .studio-chrome .text-slate-100,
+.hvac-main .glass-card .text-slate-50,
+.hvac-main .kpi-tile .text-slate-50 {
+  color: var(--text-primary) !important;
 }
 
 .hvac-main .glass-card [class*="bg-slate-9"],
@@ -350,6 +451,46 @@ button.glass-card:hover {
 .hvac-main .glass-card [class*="border-white/"],
 .hvac-main .kpi-tile [class*="border-white/"] {
   border-color: rgba(15, 23, 42, 0.1) !important;
+}
+
+/* KPI tiles — labels, values, and accent colors on white backgrounds */
+.hvac-main .kpi-tile .text-slate-400,
+.hvac-main .glass-card.flex.flex-col.justify-between .text-slate-400 {
+  color: #475569 !important;
+}
+
+.hvac-main .kpi-tile .text-cyan-100,
+.hvac-main .kpi-tile .text-cyan-200,
+.hvac-main .glass-card .text-cyan-100,
+.hvac-main .glass-card .text-cyan-200 {
+  color: #0e7490 !important;
+}
+
+.hvac-main .kpi-tile .text-cyan-400,
+.hvac-main .glass-card.flex.flex-col.justify-between .text-cyan-400,
+.hvac-main .glass-card.flex.flex-col.justify-between .font-mono.text-cyan-400 {
+  color: #0e7490 !important;
+}
+
+.hvac-main .kpi-tile .text-emerald-400,
+.hvac-main .glass-card.flex.flex-col.justify-between .text-emerald-400,
+.hvac-main .glass-card.flex.flex-col.justify-between .font-mono.text-emerald-400,
+.hvac-main .glass-card.flex.flex-col.justify-between .font-bold.text-emerald-400 {
+  color: #047857 !important;
+}
+
+.hvac-main .kpi-tile .text-purple-400,
+.hvac-main .glass-card.flex.flex-col.justify-between .text-purple-400,
+.hvac-main .glass-card.flex.flex-col.justify-between .font-mono.text-purple-400 {
+  color: #6d28d9 !important;
+}
+
+.hvac-main .kpi-tile .text-amber-300,
+.hvac-main .kpi-tile .text-amber-300\/90,
+.hvac-main .glass-card .text-amber-300,
+.hvac-main .glass-card .text-amber-300\/90,
+.hvac-main .kpi-tile .text-amber-400 {
+  color: #b45309 !important;
 }
 
 .hvac-main .kpi-tile .text-rose-300,

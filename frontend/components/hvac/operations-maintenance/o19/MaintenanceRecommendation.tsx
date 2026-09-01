@@ -26,7 +26,7 @@ export function MaintenanceRecommendation({ data }: { data: OmOpportunity }) {
     <section className="col-span-12 space-y-3" aria-label="Maintenance recommendations">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Maintenance recommendation</h2>
       {cards.length === 0 ? (
-        <div className="kpi-tile text-[11px] font-mono text-amber-300">NO DATA AVAILABLE</div>
+        <div className="kpi-tile text-[11px] font-mono text-amber-700">NO DATA AVAILABLE</div>
       ) : (
         cards.map((c, i) => <Card key={`${c.finding}-${i}`} data={data} issue={c} />)
       )}

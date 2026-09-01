@@ -108,51 +108,51 @@ export default function SpaceTemperaturePage() {
       {/* ========================================================================= */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-3.5">
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Avg Occupied SP</span>
-          <div className="my-1.5 text-base font-bold font-mono text-cyan-400">{kpis.avg_occupied_setpoint || 'NO DATA'}</div>
-          <span className="text-[10px] text-slate-400">+1.0°C Float</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Avg Occupied SP</span>
+          <div className="my-1.5 text-base font-bold font-mono text-cyan-800">{kpis.avg_occupied_setpoint || 'NO DATA'}</div>
+          <span className="text-[10px] text-slate-600">+1.0°C Float</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Deadband Width</span>
-          <div className="my-1.5 text-base font-bold font-mono text-emerald-400">{kpis.deadband_width || 'NO DATA'}</div>
-          <span className="text-[10px] text-slate-400">Zero Overlap</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Deadband Width</span>
+          <div className="my-1.5 text-base font-bold font-mono text-emerald-700">{kpis.deadband_width || 'NO DATA'}</div>
+          <span className="text-[10px] text-slate-600">Zero Overlap</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Unoccupied Setback</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Unoccupied Setback</span>
           <div className="my-1.5 text-base font-bold font-mono text-amber-400">{kpis.unoccupied_setback || 'NO DATA'}</div>
-          <span className="text-[10px] text-slate-400">±4.0°C Band</span>
+          <span className="text-[10px] text-slate-600">±4.0°C Band</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Terminal Shed</span>
-          <div className="my-1.5 text-base font-bold font-mono text-emerald-400">{kpis.terminal_power_shed_kw || 'NO DATA'}</div>
-          <span className="text-[10px] text-slate-400">Reheat Cut</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Terminal Shed</span>
+          <div className="my-1.5 text-base font-bold font-mono text-emerald-700">{kpis.terminal_power_shed_kw || 'NO DATA'}</div>
+          <span className="text-[10px] text-slate-600">Reheat Cut</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Comfort Compliance</span>
-          <div className="my-1.5 text-base font-bold font-mono text-emerald-400">{kpis.comfort_compliance_pct || 'NO DATA'}</div>
-          <span className="text-[10px] text-slate-400">ASHRAE 55</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Comfort Compliance</span>
+          <div className="my-1.5 text-base font-bold font-mono text-emerald-700">{kpis.comfort_compliance_pct || 'NO DATA'}</div>
+          <span className="text-[10px] text-slate-600">ASHRAE 55</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Zones Optimized</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Zones Optimized</span>
           <div className="my-1.5 text-base font-bold font-mono text-sky-400">{kpis.zones_optimized || 'NO DATA'}</div>
-          <span className="text-[10px] text-slate-400">Active Float</span>
+          <span className="text-[10px] text-slate-600">Active Float</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Avg Temp Error</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Avg Temp Error</span>
           <div className="my-1.5 text-base font-bold font-mono text-slate-800">{kpis.avg_temp_error || 'NO DATA'}</div>
-          <span className="text-[10px] text-slate-400">±0.2°C Target</span>
+          <span className="text-[10px] text-slate-600">±0.2°C Target</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Status</span>
-          <div className="my-1.5 text-base font-bold font-mono text-emerald-400">{kpis.optimization_status || 'NO DATA'}</div>
-          <span className="text-[10px] text-slate-400">Closed-Loop</span>
+          <span className="text-[10px] uppercase font-bold text-slate-600 tracking-wider">Status</span>
+          <div className="my-1.5 text-base font-bold font-mono text-emerald-700">{kpis.optimization_status || 'NO DATA'}</div>
+          <span className="text-[10px] text-slate-600">Closed-Loop</span>
         </div>
       </div>
 

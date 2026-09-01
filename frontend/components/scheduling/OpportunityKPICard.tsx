@@ -93,16 +93,17 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
     secondaries.some((m) => m.value !== null && m.value !== undefined && m.value !== '');
 
   return (
-    <Link href={href} className="glass-card flex h-full min-h-[280px] flex-col p-4 group">
+    <Link href={href} className="card-interactive glass-card relative flex h-full min-h-[280px] flex-col p-5 group overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-transparent via-violet-400/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
       <div className="flex items-start justify-between gap-2">
-        <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-md border border-cyan-400/25 bg-cyan-500/10 text-cyan-800 tracking-wide">
+        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md border border-violet-200 bg-violet-50 text-violet-800 tracking-wide">
           {id || code}
         </span>
         <StatusBadge tone={toneForStatus(statusText)} pulse={false}>
           {statusText}
         </StatusBadge>
       </div>
-      <h3 className="mt-2 text-sm font-semibold tracking-tight text-slate-50 line-clamp-2 group-hover:text-cyan-100">
+      <h3 className="mt-3 text-[15px] font-semibold tracking-tight text-slate-900 line-clamp-2 group-hover:text-violet-800 transition-colors">
         {opportunity.name}
       </h3>
 
@@ -112,7 +113,7 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
         </div>
         <div
           className={`mt-1 font-mono text-2xl font-semibold leading-none ${
-            primary.missing ? 'text-slate-500' : 'text-slate-50'
+            primary.missing ? 'text-slate-500' : 'text-slate-900'
           }`}
         >
           {primary.text}
@@ -133,7 +134,7 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
               </div>
               <div
                 className={`mt-0.5 truncate font-mono text-xs font-semibold ${
-                  v.missing ? 'text-slate-500' : energy ? 'text-cyan-200' : 'text-slate-900'
+                  v.missing ? 'text-slate-500' : energy ? 'text-cyan-800' : 'text-slate-900'
                 }`}
                 title={v.reason || String(v.text)}
               >
@@ -145,13 +146,13 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
       </div>
 
       {!hasAny ? (
-        <p className="mt-3 text-[11px] text-amber-300/90">{stateExplain(opportunity, backendOffline)}</p>
+        <p className="mt-3 text-[11px] text-amber-800">{stateExplain(opportunity, backendOffline)}</p>
       ) : (
         <p className="mt-3 text-[10px] text-slate-500">{stateExplain(opportunity, backendOffline)}</p>
       )}
 
       <div className="mt-auto flex items-center justify-between pt-3">
-        <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-slate-400">
+        <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-slate-600">
           <span
             className={`h-1.5 w-1.5 rounded-full ${
               opportunity.dataState === 'LIVE' ? 'bg-emerald-400' : 'bg-amber-400'
@@ -159,7 +160,7 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
           />
           {tel || opportunity.dataState || 'TELEMETRY'}
         </span>
-        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-cyan-800">
+        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-violet-700 group-hover:text-violet-900 transition-colors">
           Open
           <ArrowRight className="h-3 w-3" />
         </span>

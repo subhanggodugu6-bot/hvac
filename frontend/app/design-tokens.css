@@ -1,75 +1,80 @@
 /**
- * HVAC Control Center — BuildingHub-inspired light shell tokens.
- * Light canvas + purple accent + dark sidebar. Category rails unchanged for OEH hubs.
+ * HVAC Control Center — premium light shell tokens.
+ * Light canvas + purple accent + dark sidebar. Category rails for OEH hubs.
  */
 :root {
-  /* Surfaces — light canvas */
-  --bg-primary: #f0f0fa;
+  /* Surfaces — refined light canvas */
+  --bg-primary: #ececf6;
   --bg-elevated: #ffffff;
-  --bg-surface: #f8f8fc;
-  --bg-surface-hover: #efeff8;
+  --bg-surface: #f6f6fb;
+  --bg-surface-hover: #eeeef8;
   --bg-card: #ffffff;
   --bg-card-top: #ffffff;
-  --bg-sidebar: #1a1a1d;
-  --bg-header: rgba(240, 240, 250, 0.92);
-  --bg-table-header: #1a1a1d;
+  --bg-sidebar: #16161a;
+  --bg-header: rgba(236, 236, 246, 0.88);
+  --bg-table-header: #f4f4f9;
 
   /* Borders */
-  --border-subtle: rgba(26, 26, 29, 0.08);
-  --border-muted: rgba(26, 26, 29, 0.06);
-  --border-hover: rgba(139, 92, 246, 0.35);
-  --border-strong: rgba(139, 92, 246, 0.45);
+  --border-subtle: rgba(15, 23, 42, 0.07);
+  --border-muted: rgba(15, 23, 42, 0.05);
+  --border-hover: rgba(124, 58, 237, 0.32);
+  --border-strong: rgba(124, 58, 237, 0.42);
 
-  /* Accent — BuildingHub purple (cyan alias kept for legacy class names) */
-  --accent-purple: #8b5cf6;
-  --accent-purple-soft: rgba(139, 92, 246, 0.12);
-  --accent-purple-mid: rgba(139, 92, 246, 0.22);
+  /* Accent — BuildingHub purple */
+  --accent-purple: #7c3aed;
+  --accent-purple-soft: rgba(124, 58, 237, 0.1);
+  --accent-purple-mid: rgba(124, 58, 237, 0.18);
   --accent-purple-light: #a78bfa;
-  --accent-cyan: #8b5cf6;
-  --accent-cyan-soft: rgba(139, 92, 246, 0.12);
-  --accent-cyan-mid: rgba(139, 92, 246, 0.22);
+  --accent-cyan: #7c3aed;
+  --accent-cyan-soft: rgba(124, 58, 237, 0.1);
+  --accent-cyan-mid: rgba(124, 58, 237, 0.18);
 
   /* Category rails (OEH chapters) */
-  --cat-scheduling: #f0a93a;
-  --cat-plant: #4fd1c5;
-  --cat-ventilation: #5b9bd5;
-  --cat-variablespeed: #9c7bdb;
-  --cat-om: #6fcf97;
+  --cat-scheduling: #e09a2e;
+  --cat-plant: #0d9488;
+  --cat-ventilation: #2563eb;
+  --cat-variablespeed: #7c3aed;
+  --cat-om: #059669;
 
   /* Status */
-  --status-success: #10b981;
-  --status-warning: #f59e0b;
-  --status-danger: #ef4444;
-  --status-critical: #ec4899;
-  --status-info: #3b82f6;
+  --status-success: #059669;
+  --status-warning: #d97706;
+  --status-danger: #dc2626;
+  --status-critical: #db2777;
+  --status-info: #2563eb;
 
   /* Type — dark on light */
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-muted: #64748b;
   --text-faint: #94a3b8;
-  --text-accent: #7c3aed;
+  --text-accent: #6d28d9;
   --text-on-dark: #f8fafc;
   --text-on-dark-muted: #94a3b8;
 
-  /* Radius — BuildingHub soft cards */
+  /* Radius */
   --radius-sm: 10px;
   --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-xl: 20px;
   --radius-pill: 999px;
 
   /* Spacing rhythm */
-  --space-page-y: 1.5rem;
-  --space-page-x: 1.75rem;
-  --space-section: 1.5rem;
+  --space-page-y: 1.75rem;
+  --space-page-x: 2rem;
+  --space-section: 1.75rem;
   --header-h: 4.25rem;
   --sidebar-w: 17rem;
 
-  /* Elevation — soft float */
-  --card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  --shadow-card: 0 8px 28px rgba(26, 26, 29, 0.06), 0 2px 8px rgba(26, 26, 29, 0.04);
-  --shadow-card-hover: 0 14px 36px rgba(26, 26, 29, 0.1), 0 4px 12px rgba(26, 26, 29, 0.05);
-  --glow-cyan: 0 0 24px rgba(139, 92, 246, 0.12);
-  --glow-purple: 0 0 24px rgba(139, 92, 246, 0.12);
+  /* Elevation — layered premium float */
+  --card-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  --shadow-card:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px rgba(15, 23, 42, 0.06);
+  --shadow-card-hover:
+    0 2px 4px rgba(15, 23, 42, 0.05),
+    0 16px 40px rgba(124, 58, 237, 0.1);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --glow-cyan: 0 0 0 1px rgba(124, 58, 237, 0.08), 0 8px 24px rgba(124, 58, 237, 0.08);
+  --glow-purple: var(--glow-cyan);
 }

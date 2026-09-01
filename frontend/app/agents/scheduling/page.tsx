@@ -61,7 +61,7 @@ export default function SchedulingAgentPage() {
       <TopKPIs data={data} backendOffline={offline} />
 
       <div>
-        <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 mb-3">Opportunities</h2>
+        <h2 className="section-heading-label mb-3">Opportunities</h2>
         <OpportunityCard opportunities={data?.opportunities} backendOffline={offline} />
       </div>
 

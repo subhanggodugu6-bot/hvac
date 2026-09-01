@@ -113,7 +113,7 @@ export default function O9ElectronicExpansionValveStudio() {
         <div className="flex items-center gap-4 shrink-0 bg-slate-100 px-4 py-3 rounded-xl border border-slate-200">
           <div className="text-center">
             <div className="text-xs text-slate-400">Simple Payback</div>
-            <div className="text-xl font-bold text-emerald-400 font-mono">{data?.payback_years != null ? data.payback_years : 'NO DATA'} {data?.payback_years != null && <span className="text-xs font-normal">Yrs</span>}</div>
+            <div className="text-xl font-bold text-emerald-700 font-mono">{data?.payback_years != null ? data.payback_years : 'NO DATA'} {data?.payback_years != null && <span className="text-xs font-normal">Yrs</span>}</div>
           </div>
           <div className="h-8 w-px bg-white/[0.08]" />
           <div className="text-center">
@@ -127,7 +127,7 @@ export default function O9ElectronicExpansionValveStudio() {
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
         <div className="kpi-tile">
           <div className="text-slate-400 text-xs">1. Current Technology</div>
-          <div className="text-sm font-bold text-amber-300">{data?.current_technology ?? 'NO DATA'}</div>
+          <div className="text-sm font-bold text-amber-700">{data?.current_technology ?? 'NO DATA'}</div>
         </div>
         <div className="p-3.5 rounded-xl bg-indigo-950/20 border border-indigo-500/30 space-y-1">
           <div className="text-indigo-300 text-xs">2. Proposed Tech</div>
@@ -136,7 +136,7 @@ export default function O9ElectronicExpansionValveStudio() {
         <div className="kpi-tile">
           <div className="text-slate-400 text-xs">3. Superheat Hunting</div>
           <div className="text-base font-bold text-rose-400 font-mono">{data?.current_hunting_c != null ? `±${data.current_hunting_c}°C TXV` : 'NO DATA'}</div>
-          <div className="text-[10px] text-emerald-400">{data?.exv_stability_c != null ? `Projected: ±${data.exv_stability_c}°C EXV` : ''}</div>
+          <div className="text-[10px] text-emerald-700">{data?.exv_stability_c != null ? `Projected: ±${data.exv_stability_c}°C EXV` : ''}</div>
         </div>
         <div className="kpi-tile">
           <div className="text-slate-400 text-xs">4. Superheat Target</div>
@@ -158,7 +158,7 @@ export default function O9ElectronicExpansionValveStudio() {
             {data?.current_cop != null ? data.current_cop : 'NO DATA'}
             {data?.projected_cop != null && <> → {data.projected_cop}</>}
           </div>
-          <div className="text-[10px] text-emerald-400">{data?.cop_improvement_pct != null ? `+${data.cop_improvement_pct}% COP (model)` : ''}</div>
+          <div className="text-[10px] text-emerald-700">{data?.cop_improvement_pct != null ? `+${data.cop_improvement_pct}% COP (model)` : ''}</div>
         </div>
       </div>
 
@@ -322,7 +322,7 @@ export default function O9ElectronicExpansionValveStudio() {
           <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">Annual Energy Savings</div>
             <div className="text-lg font-bold text-emerald-400 font-mono">{data?.annual_kwh_savings != null ? `${Number(data.annual_kwh_savings).toLocaleString()} kWh` : 'NO DATA'}</div>
-            <div className="text-[10px] text-emerald-400">{data?.annual_cost_savings_usd != null ? `$${Number(data.annual_cost_savings_usd).toLocaleString()} / yr` : ''}</div>
+            <div className="text-[10px] text-emerald-700">{data?.annual_cost_savings_usd != null ? `$${Number(data.annual_cost_savings_usd).toLocaleString()} / yr` : ''}</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
@@ -334,19 +334,19 @@ export default function O9ElectronicExpansionValveStudio() {
           <div className="kpi-tile kpi-tile-accent">
             <div className="text-emerald-800">Total Annual Benefit</div>
             <div className="text-lg font-bold text-emerald-800 font-mono">{data?.total_annual_savings_usd != null ? `$${Number(data.total_annual_savings_usd).toLocaleString()} / yr` : 'NO DATA'}</div>
-            <div className="text-[10px] text-emerald-400">Net Operating Inflow</div>
+            <div className="text-[10px] text-emerald-700">Net Operating Inflow</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">Simple Payback Period</div>
-            <div className="text-lg font-bold text-amber-300 font-mono">{data?.payback_years != null ? `${data.payback_years} Years` : 'NO DATA'}</div>
-            <div className="text-[10px] text-emerald-400">&lt; 2.5 Yr Benchmark</div>
+            <div className="text-lg font-bold text-amber-700 font-mono">{data?.payback_years != null ? `${data.payback_years} Years` : 'NO DATA'}</div>
+            <div className="text-[10px] text-emerald-700">&lt; 2.5 Yr Benchmark</div>
           </div>
 
           <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">5-Year Cumulative ROI</div>
             <div className="text-lg font-bold text-emerald-400 font-mono">{data?.five_year_net_roi_pct != null ? `+${data.five_year_net_roi_pct}%` : 'NO DATA'}</div>
-            <div className="text-[10px] text-emerald-400">{data?.five_year_net_benefit_usd != null ? `$${Number(data.five_year_net_benefit_usd).toLocaleString()} net` : ''}</div>
+            <div className="text-[10px] text-emerald-700">{data?.five_year_net_benefit_usd != null ? `$${Number(data.five_year_net_benefit_usd).toLocaleString()} net` : ''}</div>
           </div>
         </div>
       </div>

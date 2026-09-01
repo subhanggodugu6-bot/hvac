@@ -103,10 +103,10 @@ export const Sidebar: React.FC = () => {
   const om = opportunitiesForSection('operations');
 
   return (
-    <aside className="hvac-sidebar w-[17rem] flex flex-col select-none overflow-hidden bg-[#1a1a1d] text-slate-200 min-h-0">
-      <div className="px-4 py-4 shrink-0">
-        <div className="text-[13px] font-semibold text-white tracking-tight leading-none">HVAC Control</div>
-        <div className="text-[10px] text-slate-500 mt-1">OEH · O1–O20</div>
+    <aside className="hvac-sidebar w-[17rem] flex flex-col select-none overflow-hidden bg-[#16161a] text-slate-200 min-h-0">
+      <div className="px-4 py-5 shrink-0 border-b border-white/[0.05]">
+        <div className="text-[13px] font-bold text-white tracking-tight leading-none">HVAC Control</div>
+        <div className="text-[10px] text-slate-500 mt-1.5 font-medium tracking-wide">OEH · O1–O20</div>
       </div>
       <nav className="px-2.5 pb-3 space-y-0.5 flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <div className="px-3 pt-2 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-600 uppercase">Platform</div>

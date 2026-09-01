@@ -30,7 +30,7 @@ function Card({
           {trend}
         </span>
       </div>
-      <div className={`mt-2 text-lg font-bold font-mono tracking-tight ${isMissing(current) ? 'text-amber-300/90 text-sm' : 'text-slate-900'}`}>
+      <div className={`mt-2 text-lg font-bold font-mono tracking-tight ${isMissing(current) ? 'text-amber-700 text-sm' : 'text-slate-900'}`}>
         {isMissing(current) ? 'NO DATA' : unit ? fmtUnit(current, unit) : fmtDash(current)}
       </div>
       <div className="text-[11px] text-slate-500 mt-1 font-mono">

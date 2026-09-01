@@ -23,12 +23,12 @@ export function SystemsHub({
           <Link
             key={ch.id}
             href={ch.href}
-            className="card-interactive glass-card p-4 transition-colors"
+            className="card-interactive glass-card p-5 transition-all"
             style={{ borderTopWidth: 3, borderTopColor: color }}
           >
-            <div className="text-[13px] font-semibold text-slate-900">{ch.title}</div>
-            <div className="text-[11px] text-slate-500 mt-1 line-clamp-2">{ch.section}</div>
-            <div className="mt-3 text-[10px] font-mono text-slate-500">
+            <div className="text-[14px] font-bold text-slate-900 tracking-tight">{ch.title}</div>
+            <div className="text-[11px] text-slate-600 mt-1.5 line-clamp-2 leading-relaxed">{ch.section}</div>
+            <div className="mt-3.5 text-[10px] font-mono font-semibold text-slate-500">
               {ch.counts.live} LIVE · {ch.counts.simulated} SIM · {ch.counts.awaiting} AWAITING
             </div>
             {variant === 'full' && practice ? (
@@ -36,7 +36,7 @@ export function SystemsHub({
             ) : null}
             <div className="mt-2 flex flex-wrap gap-1">
               {ch.opportunities.slice(0, variant === 'full' ? 5 : 4).map((o) => (
-                <span key={o.id} className="text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-slate-200 text-slate-500">
+                <span key={o.id} className="text-[9px] font-mono px-1.5 py-0.5 rounded-full border border-slate-200 bg-slate-50 text-slate-600">
                   {o.id}
                 </span>
               ))}

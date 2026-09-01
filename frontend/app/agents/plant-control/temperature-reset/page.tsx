@@ -237,7 +237,7 @@ function TemperatureResetContent() {
           <div className="text-lg font-bold text-emerald-800 mt-1.5 font-mono">
             {data?.power_impact || 'NO DATA'}
           </div>
-          <div className="text-[10px] text-emerald-400/80 mt-1 font-mono truncate">
+          <div className="text-[10px] text-emerald-700/80 mt-1 font-mono truncate">
             {data?.efficiency_impact || 'NO DATA'}
           </div>
         </div>
@@ -377,7 +377,7 @@ function TemperatureResetContent() {
               </div>
               <div className="flex justify-between p-2 rounded bg-cyan-50 border border-cyan-500/20">
                 <span className="text-cyan-800 font-semibold">Recommended SP:</span>
-                <span className="text-cyan-200 font-bold">{data?.optimized_setpoint != null ? `${data.optimized_setpoint} °C` : 'NO DATA'}</span>
+                <span className="text-cyan-800 font-bold">{data?.optimized_setpoint != null ? `${data.optimized_setpoint} °C` : 'NO DATA'}</span>
               </div>
               <div className="flex justify-between p-2 rounded bg-slate-100">
                 <span className="text-slate-400">Safety Guardrail:</span>

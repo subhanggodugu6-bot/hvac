@@ -35,7 +35,7 @@ export function TrainingRecommendationCard({ data }: { data: OmOpportunity }) {
     <section id="o18-recommendations" className="space-y-3" aria-label="Training recommendations">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Training recommendations</h2>
       {items.length === 0 ? (
-        <div className="kpi-tile text-[11px] font-mono text-amber-300">NO DATA AVAILABLE</div>
+        <div className="kpi-tile text-[11px] font-mono text-amber-700">NO DATA AVAILABLE</div>
       ) : (
         items.map((item, i) => <Card key={`${item.title}-${i}`} data={data} item={item} />)
       )}

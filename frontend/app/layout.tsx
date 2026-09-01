@@ -53,7 +53,7 @@ export default function RootLayout({
               <Sidebar />
             </Suspense>
             <main className="hvac-main flex-1 overflow-y-auto w-full">
-              <div className="max-w-[1600px] mx-auto w-full space-y-0">
+              <div className="max-w-[1600px] mx-auto w-full">
                 <ErrorBoundary>{children}</ErrorBoundary>
               </div>
             </main>

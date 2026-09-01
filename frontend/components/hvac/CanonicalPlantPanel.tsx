@@ -13,7 +13,7 @@ function prettyName(name: string) {
 function qualityClass(q?: string) {
   const v = String(q || '').toUpperCase();
   if (v === 'GOOD') return 'text-emerald-800';
-  if (v === 'STALE') return 'text-amber-300';
+  if (v === 'STALE') return 'text-amber-700';
   if (v === 'BAD') return 'text-rose-800';
   return 'text-slate-500';
 }
@@ -68,7 +68,7 @@ export function CanonicalPlantPanel({ opportunityId }: { opportunityId: string }
               return (
                 <div key={name} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5">
                   <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">{prettyName(name)}</div>
-                  <div className="mt-1 text-[15px] font-semibold tabular-nums text-slate-50">
+                  <div className="mt-1 text-[15px] font-semibold tabular-nums text-slate-900">
                     {empty ? '—' : displayValue(f.value)}
                     {!empty && f.unit ? <span className="text-[11px] font-normal text-slate-500 ml-1">{f.unit}</span> : null}
                   </div>
@@ -101,22 +101,22 @@ export function CanonicalPlantPanel({ opportunityId }: { opportunityId: string }
         <div className="grid grid-cols-2 gap-3">
           <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-3">
             <div className="text-[10px] uppercase tracking-[0.12em] text-slate-500">Current</div>
-            <div className="mt-1 text-xl font-semibold tabular-nums text-slate-50">
+            <div className="mt-1 text-xl font-semibold tabular-nums text-slate-900">
               {r.current?.value == null ? '—' : r.current.value}
               {r.current?.unit ? <span className="text-[12px] font-normal text-slate-500 ml-1">{r.current.unit}</span> : null}
             </div>
             <div className="text-[10px] font-mono text-slate-600 mt-1">{r.current?.point || '—'}</div>
           </div>
           <div className="rounded-lg border border-cyan-400/20 bg-cyan-500/[0.06] px-3 py-3">
-            <div className="text-[10px] uppercase tracking-[0.12em] text-cyan-400/80">Recommended</div>
-            <div className="mt-1 text-xl font-semibold tabular-nums text-cyan-100">
+            <div className="text-[10px] uppercase tracking-[0.12em] text-cyan-800">Recommended</div>
+            <div className="mt-1 text-xl font-semibold tabular-nums text-cyan-900">
               {r.recommended?.value == null ? '—' : r.recommended.value}
-              {r.recommended?.unit ? <span className="text-[12px] font-normal text-cyan-400/70 ml-1">{r.recommended.unit}</span> : null}
+              {r.recommended?.unit ? <span className="text-[12px] font-normal text-cyan-700 ml-1">{r.recommended.unit}</span> : null}
             </div>
-            <div className="text-[10px] font-mono text-cyan-700/80 mt-1">{r.recommended?.point || '—'}</div>
+            <div className="text-[10px] font-mono text-cyan-800 mt-1">{r.recommended?.point || '—'}</div>
           </div>
         </div>
-        <p className="text-[12px] text-slate-400 leading-relaxed">{r.rationale || 'No recommendation until required plant points are present.'}</p>
+        <p className="text-[12px] text-slate-600 leading-relaxed">{r.rationale || 'No recommendation until required plant points are present.'}</p>
         <div className="flex flex-wrap gap-x-4 gap-y-1 text-[11px] font-mono text-slate-500">
           <span>Confidence {r.confidence == null ? '—' : r.confidence}</span>
           <span>Energy {r.energy_impact == null ? 'NO DATA' : r.energy_impact}</span>

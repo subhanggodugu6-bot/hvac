@@ -113,62 +113,62 @@ export default function ChillerStagingPage() {
       {/* ========================================================================= */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Cooling Load</span>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Cooling Load</span>
           <div className="my-1 text-base font-bold font-mono text-slate-900">{kpis.thermal_cooling_load || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">Real Tonnage</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Optimal Stage</span>
-          <div className="my-1 text-xs font-bold font-mono text-cyan-400 truncate">{kpis.optimal_stage_count || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Optimal Stage</span>
+          <div className="my-1 text-xs font-bold font-mono text-cyan-800 truncate">{kpis.optimal_stage_count || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">{kpis.lead_chiller || 'From plant evaluation'}</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">CHWS Reset</span>
-          <div className="my-1 text-sm font-bold font-mono text-cyan-400 truncate">{kpis.chws_reset_setpoint || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">CHWS Reset</span>
+          <div className="my-1 text-sm font-bold font-mono text-cyan-800 truncate">{kpis.chws_reset_setpoint || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">{kpis.chws_float || 'CHWS reset'}</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Power Shed</span>
-          <div className="my-1 text-base font-bold font-mono text-emerald-400">{kpis.plant_power_reduction_kw || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Power Shed</span>
+          <div className="my-1 text-base font-bold font-mono text-emerald-700">{kpis.plant_power_reduction_kw || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">Chiller Lift</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Efficiency</span>
-          <div className="my-1 text-base font-bold font-mono text-emerald-400">{kpis.plant_efficiency || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Efficiency</span>
+          <div className="my-1 text-base font-bold font-mono text-emerald-700">{kpis.plant_efficiency || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">Centrifugal</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Plant PLR</span>
-          <div className="my-1 text-base font-bold font-mono text-purple-400">{kpis.current_plr || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Plant PLR</span>
+          <div className="my-1 text-base font-bold font-mono text-purple-700">{kpis.current_plr || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">Optimal Band</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Capacity</span>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Capacity</span>
           <div className="my-1 text-base font-bold font-mono text-sky-400">{kpis.available_capacity || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">{kpis.capacity_headroom || 'Available capacity'}</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Stage Status</span>
-          <div className="my-1 text-xs font-bold font-mono text-emerald-400 truncate">{kpis.stage_status || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Stage Status</span>
+          <div className="my-1 text-xs font-bold font-mono text-emerald-700 truncate">{kpis.stage_status || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">Anti-Cycling</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Comfort</span>
-          <div className="my-1 text-base font-bold font-mono text-emerald-400">{kpis.comfort_compliance_pct || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Comfort</span>
+          <div className="my-1 text-base font-bold font-mono text-emerald-700">{kpis.comfort_compliance_pct || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">ASHRAE 55</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Telemetry</span>
-          <div className="my-1 text-xs font-bold font-mono text-emerald-400 truncate">{kpis.telemetry_freshness || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Telemetry</span>
+          <div className="my-1 text-xs font-bold font-mono text-emerald-700 truncate">{kpis.telemetry_freshness || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">&lt; 30s Limit</span>
         </div>
       </div>
@@ -246,7 +246,7 @@ export default function ChillerStagingPage() {
             <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
                 <span className="text-slate-800 font-bold block">CH-01 Min Runtime</span>
-                <span className="text-[10px] text-slate-400 font-sans">{load.ch01_runtime || 'NO DATA'}</span>
+                <span className="text-[10px] text-slate-600 font-sans">{load.ch01_runtime || 'NO DATA'}</span>
               </div>
               <span className="text-emerald-400 font-bold">{load.ch01_runtime_status || 'NO DATA'}</span>
             </div>
@@ -254,7 +254,7 @@ export default function ChillerStagingPage() {
             <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
                 <span className="text-slate-800 font-bold block">CH-02 Min Off-Time</span>
-                <span className="text-[10px] text-slate-400 font-sans">{load.ch02_off_time || 'NO DATA'}</span>
+                <span className="text-[10px] text-slate-600 font-sans">{load.ch02_off_time || 'NO DATA'}</span>
               </div>
               <span className="text-emerald-400 font-bold">{load.ch02_off_status || 'NO DATA'}</span>
             </div>
@@ -262,7 +262,7 @@ export default function ChillerStagingPage() {
             <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
               <div>
                 <span className="text-slate-800 font-bold block">Stage Hysteresis Band</span>
-                <span className="text-[10px] text-slate-400 font-sans">{load.stage_hysteresis || 'NO DATA'}</span>
+                <span className="text-[10px] text-slate-600 font-sans">{load.stage_hysteresis || 'NO DATA'}</span>
               </div>
               <span className="text-emerald-400 font-bold">{load.stage_hysteresis_status || 'NO DATA'}</span>
             </div>

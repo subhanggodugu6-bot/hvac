@@ -25,7 +25,7 @@ export const KPIGrid: React.FC<{ items: KpiItem[]; emptyText?: string; className
       return (
         <div key={kpi.label} className="kpi-tile">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[11px] font-semibold text-slate-500 tracking-wide">{kpi.label}</span>
+            <span className="text-[11px] font-semibold text-slate-600 tracking-wide">{kpi.label}</span>
           </div>
           <div
             className={`mt-3 min-h-[1.7rem] text-[1.65rem] font-bold tracking-tight leading-none ${
@@ -34,9 +34,9 @@ export const KPIGrid: React.FC<{ items: KpiItem[]; emptyText?: string; className
           >
             {missing ? emptyText : kpi.value}
           </div>
-          <div className="text-[11px] text-slate-500 mt-2 truncate">{missing ? '' : kpi.detail || kpi.unit || ''}</div>
+          <div className="text-[11px] text-slate-600 mt-2 truncate">{missing ? '' : kpi.detail || kpi.unit || ''}</div>
           {!missing && (kpi.status || kpi.source || kpi.quality) ? (
-            <div className="text-[10px] font-mono text-slate-400 mt-1 truncate">
+            <div className="text-[10px] font-mono text-slate-600 mt-1 truncate">
               {[kpi.status, kpi.quality, kpi.source].filter(Boolean).join(' · ')}
             </div>
           ) : null}

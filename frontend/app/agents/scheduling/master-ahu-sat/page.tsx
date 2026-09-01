@@ -119,56 +119,56 @@ export default function MasterAHUSATPage() {
       {/* ========================================================================= */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Current SAT</span>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Current SAT</span>
           <div className="my-1 text-base font-bold font-mono text-slate-900">{kpis.current_sat || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">AHU-01 Sensor</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Optimized SAT</span>
-          <div className="my-1 text-base font-bold font-mono text-cyan-400">{kpis.optimized_sat_setpoint || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Optimized SAT</span>
+          <div className="my-1 text-base font-bold font-mono text-cyan-800">{kpis.optimized_sat_setpoint || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">{kpis.sat_trim || 'From evaluation'}</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Master Demand</span>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Master Demand</span>
           <div className="my-1 text-sm font-bold font-mono text-amber-400 truncate">{kpis.master_demand_basis || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">3rd Highest</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Net HVAC Shed</span>
-          <div className="my-1 text-base font-bold font-mono text-emerald-400">{kpis.net_hvac_power_shed_kw || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Net HVAC Shed</span>
+          <div className="my-1 text-base font-bold font-mono text-emerald-700">{kpis.net_hvac_power_shed_kw || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">Total Plant</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Reset Status</span>
-          <div className="my-1 text-sm font-bold font-mono text-emerald-400 truncate">{kpis.sat_reset_status || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Reset Status</span>
+          <div className="my-1 text-sm font-bold font-mono text-emerald-700 truncate">{kpis.sat_reset_status || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">Trim Loop</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Confidence</span>
-          <div className="my-1 text-base font-bold font-mono text-purple-400">{kpis.master_demand_confidence || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Confidence</span>
+          <div className="my-1 text-base font-bold font-mono text-purple-700">{kpis.master_demand_confidence || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">Calibrated</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Comfort</span>
-          <div className="my-1 text-base font-bold font-mono text-emerald-400">{kpis.comfort_compliance_pct || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Comfort</span>
+          <div className="my-1 text-base font-bold font-mono text-emerald-700">{kpis.comfort_compliance_pct || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">ASHRAE 55</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Zones Included</span>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Zones Included</span>
           <div className="my-1 text-base font-bold font-mono text-sky-400">{kpis.zones_included_ratio || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">{kpis.zones_excluded || 'Evaluated zones'}</span>
         </div>
 
         <div className="glass-card p-4 flex flex-col justify-between">
-          <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Telemetry</span>
-          <div className="my-1 text-xs font-bold font-mono text-emerald-400 truncate">{kpis.telemetry_freshness || 'NO DATA'}</div>
+          <span className="text-[9px] uppercase font-bold text-slate-600 tracking-wider">Telemetry</span>
+          <div className="my-1 text-xs font-bold font-mono text-emerald-700 truncate">{kpis.telemetry_freshness || 'NO DATA'}</div>
           <span className="text-[9px] text-slate-500">&lt; 30s Limit</span>
         </div>
       </div>

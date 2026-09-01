@@ -182,7 +182,7 @@ export const Header: React.FC = () => {
   }, [search]);
 
   return (
-    <header className="sticky top-0 z-40 min-h-[4.25rem] py-2 bg-[color:var(--bg-header)] backdrop-blur-xl px-4 lg:px-6 flex items-center select-none">
+    <header className="sticky top-0 z-40 min-h-[4.25rem] py-2 bg-[color:var(--bg-header)] backdrop-blur-xl border-b border-slate-200/70 shadow-[0_1px_0_rgba(255,255,255,0.8)] px-4 lg:px-6 flex items-center select-none">
       <div className="flex flex-wrap items-center justify-between w-full gap-2">
         <div className="flex items-center gap-3 shrink-0 min-w-0">
           <div className="min-w-0 hidden sm:block">
@@ -219,7 +219,7 @@ export const Header: React.FC = () => {
               />
             </div>
             {searchHits.length > 0 ? (
-              <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 rounded-2xl border border-slate-200 bg-white shadow-lg overflow-hidden">
+              <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 rounded-2xl border border-slate-200/90 bg-white/98 backdrop-blur-md shadow-xl overflow-hidden">
                 {searchHits.map((o) => (
                   <button
                     key={o.id}
