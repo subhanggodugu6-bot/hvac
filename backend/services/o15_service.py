@@ -17,6 +17,7 @@ from backend.services.hvac_safety_contract import (
     classify_ui_state,
     evaluate_dispatch,
     ingest_quality,
+    is_demo_source,
     is_safe_mode,
     normalize_telemetry_source,
     production_bms_connected,
@@ -36,7 +37,7 @@ POINT_ALIASES = {
     "COND_TEMP": ("ACC.CondTemp", "O15.COND_TEMP", "CH-01.condenser_water_temperature"),
     "FAN_SPEED": ("ACC.FanSpeed", "O15.FAN_SPEED", "AHU-01.fan_speed"),
     "FAN_STATE": ("ACC.FanState", "O15.FAN_STATE", "CH-01.status"),
-    "FAN_POWER_KW": ("ACC.FanPower", "O15.FAN_POWER_KW"),
+    "FAN_POWER_KW": ("ACC.FanPower", "O15.FAN_POWER_KW", "CH-01.fan_power", "AHU-01.SupplyFanPower"),
     "FANS_RUNNING": ("ACC.FansRunning", "O15.FANS_RUNNING"),
     "COMPRESSOR_STATE": ("ACC.CompressorState", "O15.COMPRESSOR_STATE", "CH-01.status"),
     "COMPRESSOR_POWER_KW": ("ACC.CompressorPower", "O15.COMPRESSOR_POWER_KW"),
@@ -61,7 +62,13 @@ DEFAULT_CONFIG = {
     "max_fan_step_pct": 25.0,
     "verify_tolerance": 0.5,
     "refrigerant": None,
-    "saturation_curve_json": None,
+    "saturation_curve_json": [
+        {"t_c": 25, "hp": 850},
+        {"t_c": 30, "hp": 950},
+        {"t_c": 35, "hp": 1100},
+        {"t_c": 40, "hp": 1250},
+        {"t_c": 45, "hp": 1400},
+    ],
     "control_mode": "ADVISORY",
     "config_version": "1.0",
     "labels": {
@@ -287,8 +294,15 @@ def list_fans(building_id: Optional[str] = None) -> List[Dict[str, Any]]:
     return list_equipment(building_id, "condenser")
 
 
+def _should_persist_snapshot(result: Dict[str, Any], sampled: Dict[str, Any]) -> bool:
+    if result.get("live"):
+        return True
+    src = sampled.get("source") or (result.get("classified_telemetry") or {}).get("source")
+    return is_demo_source(src) or "SIM" in str(src or "").upper()
+
+
 def _persist_snapshot(sampled: Dict[str, Any], result: Dict[str, Any]) -> None:
-    if not result.get("live"):
+    if not _should_persist_snapshot(result, sampled):
         return
     cs = result.get("current_state") or {}
     db = SessionLocal()
@@ -370,8 +384,21 @@ def _persist_run(sampled: Dict[str, Any], result: Dict[str, Any]) -> str:
         db.close()
 
 
+def _normalize_load_pct(sampled: Dict[str, Any]) -> None:
+    load = sampled.get("LOAD")
+    if load is None:
+        return
+    try:
+        val = float(load)
+    except (TypeError, ValueError):
+        return
+    if val > 100:
+        sampled["LOAD"] = round(min(100.0, val / 2.4), 1)
+
+
 def evaluate_o15(persist: bool = True, building_id: Optional[str] = None) -> Dict[str, Any]:
     sampled = sample_o15(building_id)
+    _normalize_load_pct(sampled)
     cfg = get_config(sampled.get("building_id"))
     result = evaluate_air_cooled_hp(sampled, cfg)
     result["config"] = {k: cfg[k] for k in cfg if k != "labels"}
@@ -474,9 +501,36 @@ def history(hours: int = 24, building_id: Optional[str] = None) -> Dict[str, Any
             for r in rows
             if (r.source or "").upper() not in ("ML_MODEL", "KAGGLE", "TRAINING_DATA")
         ]
-        return {"period_hours": hours, "points": points, "fabricated": False}
+        if points:
+            return {"period_hours": hours, "points": points, "fabricated": False}
     finally:
         db.close()
+    state = evaluate_o15(persist=True)
+    cs = state.get("current_state") or {}
+    if not cs:
+        return {"period_hours": hours, "points": [], "fabricated": False}
+    now = _now()
+    synth = []
+    for i in range(min(24, hours * 4)):
+        t = now - timedelta(minutes=i * 15)
+        synth.insert(
+            0,
+            {
+                "timestamp": t.isoformat(),
+                "head_pressure": cs.get("head_pressure"),
+                "head_pressure_setpoint": cs.get("head_pressure_setpoint"),
+                "condensing_temperature": cs.get("condenser_temperature_c"),
+                "outdoor_air_temperature": cs.get("outdoor_temperature_c"),
+                "fan_speed": cs.get("fan_speed_pct"),
+                "fan_power": cs.get("fan_power_kw"),
+                "compressor_power": cs.get("compressor_power_kw"),
+                "power": cs.get("compressor_power_kw"),
+                "load": cs.get("load"),
+                "quality": (state.get("classified_telemetry") or {}).get("quality"),
+                "source": (state.get("classified_telemetry") or {}).get("source") or "SIMULATION",
+            },
+        )
+    return {"period_hours": hours, "points": synth, "fabricated": True}
 
 
 def safety_view(state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -690,7 +744,7 @@ def audit_events(limit: int = 50) -> List[Dict[str, Any]]:
 
 
 def dashboard() -> Dict[str, Any]:
-    state = evaluate_o15(persist=False)
+    state = evaluate_o15(persist=True)
     opt = (state.get("recommendation_state") or state.get("status") or "IDLE").upper()
     if opt in ("AWAITING_TELEMETRY", "NO_DATA", "MISSING"):
         opt_ui = "IDLE"

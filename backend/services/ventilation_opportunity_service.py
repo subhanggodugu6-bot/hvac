@@ -426,6 +426,8 @@ def _normalize(oid: str, ev: Dict[str, Any], tel_meta: Dict[str, Any], tel: Dict
         }
         body.update(extras)
         body["current_state"].update(extras)
+        body["historian"] = ventilation_historian("O10", hours=24)
+        body["diagnostics"] = _o10_diagnostics(ev, tel, tel_meta)
     if oid == "O11":
         body["current_state"] = {
             "night_purge_status": ev.get("night_purge_status"),
@@ -683,3 +685,122 @@ def get_dashboard() -> Dict[str, Any]:
         }
     finally:
         db.close()
+
+
+def _o10_diagnostics(ev: Dict[str, Any], tel: Dict[str, Any], tel_meta: Dict[str, Any]) -> Dict[str, str]:
+    def stat(ok: bool) -> str:
+        return "PASS" if ok else "FAIL"
+
+    quality = (tel.get("quality") or tel_meta.get("state") or "").upper()
+    return {
+        "Humidity Sensor": stat(tel.get("outdoor_rh_percent") is not None and tel.get("return_rh_percent") is not None),
+        "Temperature Sensor": stat(tel.get("outdoor_temp_c") is not None and tel.get("return_temp_c") is not None),
+        "Enthalpy Calculation": stat(ev.get("outdoor_enthalpy_kj_kg") is not None and ev.get("return_enthalpy_kj_kg") is not None),
+        "OA Damper": stat(tel.get("damper_percent") is not None),
+        "Return Damper": stat(ev.get("return_air_damper_pct") is not None or tel.get("return_air_damper_pct") is not None),
+        "Relief Damper": stat(ev.get("relief_damper_pct") is not None),
+        "Actuator": stat(tel.get("damper_percent") is not None),
+        "Fan": stat(tel.get("fan_power_kw") is not None),
+        "Pressurization": "UNKNOWN",
+        "Filter Condition": "UNKNOWN",
+        "BMS Communication": "OFFLINE" if tel_meta.get("state") == "UNAVAILABLE" else ("SIMULATED" if "SIM" in str(tel.get("source") or "").upper() else "PASS"),
+        "Telemetry Quality": quality if quality else "MISSING",
+    }
+
+
+def ventilation_historian(oid: str, hours: int = 24) -> List[Dict[str, Any]]:
+    since = _now() - timedelta(hours=hours)
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(HvacTelemetryDB)
+            .filter(HvacTelemetryDB.timestamp >= since)
+            .order_by(HvacTelemetryDB.timestamp.asc())
+            .limit(max(hours * 8, 48))
+            .all()
+        )
+        return [
+            {
+                "time": r.timestamp.strftime("%H:%M") if r.timestamp and hasattr(r.timestamp, "strftime") else str(r.timestamp),
+                "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+                "outdoor_temp_c": r.outdoor_temp_c,
+                "return_temp_c": r.return_temp_c,
+                "outdoor_enthalpy_kjkg": r.outdoor_enthalpy_kjkg,
+                "return_enthalpy_kjkg": r.return_enthalpy_kjkg,
+                "damper_percent": r.damper_percent,
+                "chiller_power_kw": r.chiller_power_kw,
+                "fan_power_kw": r.fan_power_kw,
+            }
+            for r in rows
+        ]
+    finally:
+        db.close()
+
+
+def ventilation_audit_events(oid: str, limit: int = 50) -> List[Dict[str, Any]]:
+    oid = oid.upper()
+    events: List[Dict[str, Any]] = []
+    db = SessionLocal()
+    try:
+        from database.models_platform import ControlAuditLogDB
+        from database.models_opportunities import OpportunityAuditEventDB
+
+        ctrl = (
+            db.query(ControlAuditLogDB)
+            .filter(ControlAuditLogDB.opportunity_id == oid)
+            .order_by(ControlAuditLogDB.timestamp.desc())
+            .limit(limit)
+            .all()
+        )
+        for r in ctrl:
+            events.append(
+                {
+                    "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+                    "opportunity_id": r.opportunity_id,
+                    "action": r.action,
+                    "decision": r.decision,
+                    "result": r.approval_status or r.action,
+                    "safety_status": r.safety_status,
+                    "reason": r.reason,
+                }
+            )
+        audit_rows = (
+            db.query(OpportunityAuditEventDB)
+            .filter_by(opportunity_id=oid)
+            .order_by(OpportunityAuditEventDB.timestamp.desc())
+            .limit(limit)
+            .all()
+        )
+        for r in audit_rows:
+            events.append(
+                {
+                    "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+                    "opportunity_id": r.opportunity_id,
+                    "action": r.action,
+                    "decision": r.result,
+                    "result": r.result,
+                    "reason": (r.details or {}).get("reason") if isinstance(r.details, dict) else None,
+                }
+            )
+        opt_rows = (
+            db.query(HvacOptimizationResultDB)
+            .filter_by(opportunity_id=oid)
+            .order_by(HvacOptimizationResultDB.id.desc())
+            .limit(min(limit, 20))
+            .all()
+        )
+        for r in opt_rows:
+            events.append(
+                {
+                    "timestamp": r.created_at.isoformat() if getattr(r, "created_at", None) else None,
+                    "opportunity_id": oid,
+                    "action": "OPTIMIZE",
+                    "decision": r.recommendation,
+                    "result": r.status,
+                    "reason": r.rationale,
+                }
+            )
+    finally:
+        db.close()
+    events.sort(key=lambda e: e.get("timestamp") or "", reverse=True)
+    return events[:limit]

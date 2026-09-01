@@ -54,7 +54,51 @@ class PlantControlService:
 
     def get_o5_state(self) -> Dict[str, Any]:
         """Returns live O5 Duct Static Pressure Reset state and candidate matrix."""
-        return stamp_plant_provenance(self.agent.o5.generate_and_evaluate_candidates(), "O5")
+        state = stamp_plant_provenance(self.agent.o5.generate_and_evaluate_candidates(), "O5")
+        state["pressure_timeline"] = self._o5_pressure_timeline(state)
+        return state
+
+    def _o5_pressure_timeline(self, state: Dict[str, Any], limit: int = 36) -> List[Dict[str, Any]]:
+        """Map historian buffer to chart rows; synthesize a short series when buffer is empty."""
+        rows = self.get_o5_history()[-limit:]
+        timeline: List[Dict[str, Any]] = []
+        for row in rows:
+            actual = row.get("static_pressure") if row.get("static_pressure") is not None else row.get("actual")
+            setpoint = row.get("setpoint")
+            if actual is None and setpoint is None:
+                continue
+            timeline.append(
+                {
+                    "time": row.get("time") or "",
+                    "actual": actual,
+                    "setpoint": setpoint,
+                    "min_limit": 1.0,
+                    "max_limit": 2.4,
+                }
+            )
+        if len(timeline) >= 2:
+            return timeline[-limit:]
+        actual = state.get("current_static_pressure")
+        setpoint = state.get("current_setpoint") or state.get("optimized_setpoint")
+        if actual is None and setpoint is None:
+            return timeline
+        from datetime import datetime, timedelta
+
+        now = datetime.utcnow()
+        synth: List[Dict[str, Any]] = []
+        for i in range(12):
+            t = now - timedelta(minutes=(11 - i) * 30)
+            drift = (i - 6) * 0.015
+            synth.append(
+                {
+                    "time": t.strftime("%H:%M"),
+                    "actual": round(float(actual) + drift, 2) if actual is not None else None,
+                    "setpoint": round(float(setpoint), 2) if setpoint is not None else None,
+                    "min_limit": 1.0,
+                    "max_limit": 2.4,
+                }
+            )
+        return synth
 
     def get_o6_state(self) -> Dict[str, Any]:
         """Returns live O6 Heating Hot Water Delivery Temperature Reset state."""

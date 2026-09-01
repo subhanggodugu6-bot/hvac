@@ -14,6 +14,7 @@ from backend.services.official_catalog import OFFICIAL_OM_IDS
 from backend.services.operations_maintenance_opportunity_service import (
     evaluate_opportunity,
     list_audit,
+    refresh_om_sim_telemetry,
 )
 
 MODULE_IDS = OFFICIAL_OM_IDS
@@ -263,7 +264,7 @@ def get_opportunity(oid: str) -> Dict[str, Any]:
     code = canonical_oid(oid)
     if not code:
         raise ValueError("UNKNOWN_OPPORTUNITY")
-    return _as_module_opportunity(evaluate_opportunity(code, persist=False))
+    return _as_module_opportunity(evaluate_opportunity(code, persist=True))
 
 
 def _priority_rank(p: Any) -> int:
@@ -275,6 +276,12 @@ def get_opportunities() -> Dict[str, Any]:
     opps = [get_opportunity(oid) for oid in MODULE_IDS]
     states = [o["telemetry"]["raw"] for o in opps]
     live_n = sum(1 for o in opps if o.get("live"))
+    sim_active = sum(
+        1
+        for o in opps
+        if o.get("status") not in (None, "UNAVAILABLE", "NO DATA", "NO LIVE DATA", "ERROR")
+        and (o.get("metadata") or {}).get("agent") == "ACTIVE"
+    )
     src = opps[0]["source"] if opps else None
     demo = _is_demo(src) or any(o.get("telemetryStatus") == "SIMULATED" for o in opps)
     connected = bool(production_bms_connected()) and not demo
@@ -385,6 +392,7 @@ def get_opportunities() -> Dict[str, Any]:
                 "safety": safety_fleet,
                 "dataQuality": dq,
                 "liveCount": live_n,
+                "simActiveCount": sim_active,
             },
         },
         "opportunities": opps,
@@ -420,4 +428,5 @@ def get_opportunities() -> Dict[str, Any]:
 
 
 def get_dashboard() -> Dict[str, Any]:
+    refresh_om_sim_telemetry()
     return get_opportunities()

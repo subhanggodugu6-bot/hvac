@@ -122,6 +122,13 @@ async def lifespan(app: FastAPI):
     except Exception as exc:
         log_event("ERROR", "startup", "O1_ENSURE_FAILED", extra={"error": str(exc)})
     try:
+        from backend.services.operations_maintenance_opportunity_service import ensure_om_demo, refresh_om_sim_telemetry
+
+        ensure_om_demo(force=True)
+        refresh_om_sim_telemetry()
+    except Exception as exc:
+        log_event("ERROR", "startup", "OM_ENSURE_FAILED", extra={"error": str(exc)})
+    try:
         from backend.ai.pipeline.bootstrap import bootstrap_pipeline
 
         bootstrap_pipeline(delay_seconds=float(os.getenv("HVAC_PIPELINE_BOOTSTRAP_DELAY", "25")))

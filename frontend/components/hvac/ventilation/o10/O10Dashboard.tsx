@@ -74,9 +74,9 @@ export function O10Dashboard() {
           <O10Lockouts data={data} safeMode={platform.data?.safeMode} />
           <O10Energy data={data} />
           <O10Iaq data={data} />
-          <O10Equipment />
-          <O10Diagnostics />
-          <O10Historian />
+          <O10Equipment data={data} />
+          <O10Diagnostics data={data} />
+          <O10Historian data={data} />
           <O10Audit events={((audit.data?.events || []) as Array<Record<string, unknown>>)} />
           <O10DataQuality data={data} />
           <O10GuideReference />

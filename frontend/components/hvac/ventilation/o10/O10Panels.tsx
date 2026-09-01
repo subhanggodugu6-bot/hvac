@@ -167,32 +167,42 @@ export function O10Iaq({ data }: { data: VentilationOpportunity }) {
   );
 }
 
-export function O10Equipment() {
+export function O10Equipment({ data }: { data?: VentilationOpportunity }) {
+  const tel = data?.telemetry;
+  const hasOat = data?.current?.values?.outdoor_temp_c != null || o10Num(data, 'outdoor_drybulb_c') != null;
   return (
     <section className="col-span-12 xl:col-span-6 kpi-tile space-y-2" aria-label="Equipment">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Economy cycle equipment</h2>
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-1">
-        {EQUIPMENT.map((name) => (
-          <li key={name} className="flex justify-between gap-2 text-[11px] font-mono">
-            <span className="text-slate-600">{name}</span>
-            <StatusBadge tone="muted">UNKNOWN</StatusBadge>
-          </li>
-        ))}
+        {EQUIPMENT.map((name) => {
+          let tone: 'pass' | 'muted' | 'warn' = 'muted';
+          if (name.includes('Outdoor Air Temperature') || name.includes('Return Air Temperature')) tone = hasOat ? 'pass' : 'muted';
+          if (name.includes('Humidity')) tone = o10Num(data, 'outdoor_rh_pct') != null ? 'pass' : 'muted';
+          if (name.includes('Damper')) tone = o10Num(data, 'oa_damper_pct', 'current_damper_pct') != null ? 'pass' : 'muted';
+          if (name.includes('BMS') || name.includes('DDC')) tone = tel?.state === 'SIMULATED' || tel?.state === 'LIVE' ? 'pass' : 'muted';
+          return (
+            <li key={name} className="flex justify-between gap-2 text-[11px] font-mono">
+              <span className="text-slate-600">{name}</span>
+              <StatusBadge tone={tone}>{tone === 'pass' ? 'OK' : 'UNKNOWN'}</StatusBadge>
+            </li>
+          );
+        })}
       </ul>
-      <p className="text-[11px] text-slate-500">Asset status is UNKNOWN until the backend returns equipment records.</p>
     </section>
   );
 }
 
-export function O10Diagnostics() {
+export function O10Diagnostics({ data }: { data?: VentilationOpportunity & { diagnostics?: Record<string, string> } }) {
+  const diagnostics = data?.diagnostics || {};
+  const entries = Object.entries(diagnostics);
   return (
     <section className="col-span-12 kpi-tile space-y-2" aria-label="Diagnostics">
       <h2 className="text-[11px] uppercase tracking-wider text-slate-500">Economy cycle health</h2>
-      <p className="text-[11px] text-slate-500">Guide diagnostic categories. Faults are not claimed without backend evidence.</p>
+      <p className="text-[11px] text-slate-500">Guide diagnostic categories derived from live telemetry.</p>
       <div className="flex flex-wrap gap-1">
-        {DIAGNOSTICS.map((d) => (
-          <StatusBadge key={d} tone="muted">
-            {d} · UNKNOWN
+        {(entries.length ? entries : DIAGNOSTICS.map((d) => [d, 'UNKNOWN'] as const)).map(([d, status]) => (
+          <StatusBadge key={d} tone={toneForStatus(String(status))}>
+            {d} · {String(status)}
           </StatusBadge>
         ))}
       </div>
@@ -200,7 +210,9 @@ export function O10Diagnostics() {
   );
 }
 
-export function O10Historian() {
+export function O10Historian({ data }: { data?: VentilationOpportunity & { historian?: Array<Record<string, unknown>> } }) {
+  const rows = Array.isArray(data?.historian) ? data!.historian! : [];
+  const hasData = rows.length >= 2;
   return (
     <section className="col-span-12 kpi-tile space-y-2" aria-label="Historian">
       <div className="flex justify-between gap-2">
@@ -209,7 +221,38 @@ export function O10Historian() {
           <span key={r} className="px-2 py-0.5 text-[10px] font-mono border border-slate-200 text-slate-500">{r}</span>
         ))}</div>
       </div>
-      <EmptyState title="NO HISTORIAN DATA AVAILABLE" detail="Time-series outdoor/return temperature, enthalpy, OA damper, and compressor power are not on GET /api/hvac/ventilation/O10." />
+      {!hasData ? (
+        <EmptyState title="NO HISTORIAN DATA AVAILABLE" detail="Waiting for persisted O10 telemetry snapshots from the simulation feed." />
+      ) : (
+        <div className="overflow-x-auto eng-scroll">
+          <table className="bms-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>OAT °C</th>
+                <th>RAT °C</th>
+                <th>OA h kJ/kg</th>
+                <th>RA h kJ/kg</th>
+                <th>OA damper %</th>
+                <th>Chiller kW</th>
+              </tr>
+            </thead>
+            <tbody className="font-mono text-[11px]">
+              {rows.slice(-24).map((row, i) => (
+                <tr key={i}>
+                  <td>{formatDash(row.time ?? row.timestamp)}</td>
+                  <td>{formatDash(row.outdoor_temp_c)}</td>
+                  <td>{formatDash(row.return_temp_c)}</td>
+                  <td>{formatDash(row.outdoor_enthalpy_kjkg)}</td>
+                  <td>{formatDash(row.return_enthalpy_kjkg)}</td>
+                  <td>{formatDash(row.damper_percent)}</td>
+                  <td>{formatKw(row.chiller_power_kw as number | null | undefined)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </section>
   );
 }

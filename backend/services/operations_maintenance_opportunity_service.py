@@ -66,9 +66,14 @@ def _age_s(ts: Optional[datetime]) -> Optional[float]:
     return max(0.0, (_now() - ts).total_seconds())
 
 
-def _tel_state(age: Optional[float], has_row: bool) -> str:
-    if not has_row or age is None:
+def _tel_state(age: Optional[float], has_row: bool, source: Optional[str] = None) -> str:
+    if not has_row:
         return "UNAVAILABLE"
+    if age is None:
+        return "UNAVAILABLE"
+    src = str(source or "").upper()
+    if src in ("DEMO", "SIMULATION", "TEST", "TEST TELEMETRY") or "SIMUL" in src or src.startswith("DEMO"):
+        return "LIVE"
     if age <= LIVE_SECONDS:
         return "LIVE"
     return "STALE"
@@ -175,6 +180,93 @@ def _patch_demo_payloads(db) -> None:
             db.rollback()
 
 
+def _om_payload_for(oid: str, hvac_kw: Optional[float], oat: Optional[float], occ: Optional[float]) -> Dict[str, Any]:
+    if oid == "O17":
+        return {"baseline_kw": 462.0, "peak_demand_kw": 540.0, "target_kw": 410.0}
+    if oid == "O18":
+        return {"manual_override_count": 3, "affected_users": 14, "energy_impact_kwh_day": 8.4}
+    if oid == "O19":
+        return {"filter_dp_rise_pct": 34.0, "fan_power_kw": 14.1, "equipment_health_pct": 87.0, "equipment_id": "AHU-02"}
+    return dict(O20_SIM_PAYLOAD)
+
+
+def refresh_om_sim_telemetry(db=None) -> int:
+    """Keep O17–O20 snapshots fresh in dataset/sim mode (Render + local demo)."""
+    if not ALLOW_DEMO and os.getenv("HVAC_USE_SIMULATION", "0") not in ("1", "true", "TRUE"):
+        return 0
+    close = False
+    if db is None:
+        db = SessionLocal()
+        close = True
+    try:
+        from backend.services.canonical_telemetry_service import latest_points
+
+        _ensure_om_catalog(db)
+        _ensure_om_side_tables(db)
+        pts = latest_points(limit=400)
+        by_id = {p.get("point_id"): p for p in pts}
+
+        def _v(*keys):
+            for k in keys:
+                row = by_id.get(k) or {}
+                val = row.get("value")
+                if val is not None:
+                    try:
+                        return float(val)
+                    except (TypeError, ValueError):
+                        pass
+            return None
+
+        hvac_kw = _v("CHILLER1.CompressorPower", "CH-01.energy", "AHU-01.SupplyFanPower") or 428.5
+        oat = _v("WEATHER.OutdoorDryBulb", "SITE.outdoor_air_temperature", "ACC.OAT") or 28.1
+        occ = _v("ZONE.OccupantCount", "ZONE-01.occupancy") or 68.0
+        ts = _now()
+        n = 0
+        for oid in OFFICIAL_OM_IDS:
+            payload = _om_payload_for(oid, hvac_kw, oat, occ)
+            row = (
+                db.query(OmTelemetryDB)
+                .filter(OmTelemetryDB.opportunity_id == oid)
+                .order_by(OmTelemetryDB.id.desc())
+                .first()
+            )
+            if row:
+                row.timestamp = ts
+                row.source = "SIMULATION"
+                row.quality = "GOOD"
+                if oid == "O17":
+                    row.electrical_power_kw = 512.0
+                    row.hvac_power_kw = hvac_kw
+                    row.daily_energy_kwh = 5120.0
+                    row.occupancy = occ
+                    row.outdoor_temp_c = oat
+                row.payload_json = json.dumps(payload)
+            else:
+                db.add(
+                    OmTelemetryDB(
+                        opportunity_id=oid,
+                        timestamp=ts,
+                        source="SIMULATION",
+                        quality="GOOD",
+                        electrical_power_kw=512.0 if oid == "O17" else None,
+                        hvac_power_kw=hvac_kw if oid == "O17" else None,
+                        daily_energy_kwh=5120.0 if oid == "O17" else None,
+                        occupancy=occ if oid == "O17" else None,
+                        outdoor_temp_c=oat if oid == "O17" else None,
+                        payload_json=json.dumps(payload),
+                    )
+                )
+            n += 1
+        db.commit()
+        return n
+    except Exception:
+        db.rollback()
+        return 0
+    finally:
+        if close:
+            db.close()
+
+
 def ensure_om_demo(db=None, force: bool = False) -> None:
     """Development snapshot. source=DEMO — never treat as live BMS."""
     close = False
@@ -186,10 +278,7 @@ def ensure_om_demo(db=None, force: bool = False) -> None:
         _ensure_om_side_tables(db)
         if not force and db.query(OmTelemetryDB).first():
             _patch_demo_payloads(db)
-            try:
-                db.commit()
-            except Exception:
-                db.rollback()
+            refresh_om_sim_telemetry(db)
             return
         ts = _now()
         for oid in OFFICIAL_OM_IDS:
@@ -406,6 +495,7 @@ def evaluate_opportunity(oid: str, persist: bool = True) -> Dict[str, Any]:
         _ensure_om_catalog(db)
         if ALLOW_DEMO:
             ensure_om_demo(db)
+            refresh_om_sim_telemetry(db)
         row = (
             db.query(OmTelemetryDB)
             .filter(OmTelemetryDB.opportunity_id == oid)
@@ -415,7 +505,7 @@ def evaluate_opportunity(oid: str, persist: bool = True) -> Dict[str, Any]:
         age = _age_s(row.timestamp if row else None)
         src = row.source if row else None
         tel_meta = {
-            "state": _tel_state(age, bool(row)),
+            "state": _tel_state(age, bool(row), src),
             "lastUpdated": row.timestamp.isoformat() if row and row.timestamp else None,
             "ageSeconds": round(age, 1) if age is not None else None,
             "source": src,

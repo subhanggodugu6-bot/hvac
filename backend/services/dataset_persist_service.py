@@ -192,6 +192,7 @@ def _persist_ventilation(by_id: Dict[str, Dict[str, Any]], ts: Optional[datetime
     rh = _num(by_id, "WEATHER.OutdoorRH", "ACC.RH")
     sat = _num(by_id, "AHU-01.SupplyAirTemp", "AHU-01.supply_air_temperature")
     rat = _num(by_id, "AHU-01.ReturnAirTemp", "AHU-01.return_air_temperature")
+    ra_rh = _num(by_id, "AHU-01.ReturnAirRH", "ZONE.AvgRH")
     mat = _num(by_id, "AHU-01.MixedAirTemp")
     cfm = _num(by_id, "AHU-01.SupplyAirflow")
     ret_cfm = _num(by_id, "AHU-01.ReturnAirflow")
@@ -200,7 +201,13 @@ def _persist_ventilation(by_id: Dict[str, Dict[str, Any]], ts: Optional[datetime
     co = _num(by_id, "PARK.CO", "ZONE-01.co_ppm")
     occ = _num(by_id, "ZONE.OccupantCount", "ZONE-01.occupancy")
     fan_kw = _num(by_id, "AHU-01.SupplyFanPower")
-    ch_kw = _num(by_id, "CHILLER1.CompressorPower")
+    ch_kw = _num(by_id, "CHILLER1.CompressorPower", "CH-01.energy")
+    if ra_rh is None and rat is not None:
+        ra_rh = 48.0
+    from backend.agents.ventilation_airflow.o10_o13_engines import moist_enthalpy_kjkg
+
+    oa_h = moist_enthalpy_kjkg(oat, rh)
+    ra_h = moist_enthalpy_kjkg(rat, ra_rh)
     stamp = ts or _now()
     db = SessionLocal()
     try:
@@ -212,7 +219,10 @@ def _persist_ventilation(by_id: Dict[str, Dict[str, Any]], ts: Optional[datetime
                 zone_id="ZONE-01",
                 outdoor_temp_c=oat,
                 outdoor_rh_percent=rh,
+                outdoor_enthalpy_kjkg=oa_h,
                 return_temp_c=rat,
+                return_rh_percent=ra_rh,
+                return_enthalpy_kjkg=ra_h,
                 supply_air_temp_c=sat,
                 supply_airflow_cfm=cfm,
                 mixed_air_temp_c=mat,

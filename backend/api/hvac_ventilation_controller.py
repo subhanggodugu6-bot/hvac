@@ -6,6 +6,7 @@ from typing import Optional, Dict, Any
 from backend.services.hvac_ventilation_module import canonical_oid, get_opportunity, get_opportunities, dispatch_gate
 from backend.services.ventilation_command_service import ventilation_command_service
 from backend.services.ventilation_verification_service import ventilation_verification_service
+from backend.services.ventilation_opportunity_service import ventilation_audit_events
 from backend.services.platform_ops_service import record_control_audit
 
 router = APIRouter(prefix="/api/hvac/ventilation", tags=["HVAC Ventilation O10–O13"])
@@ -39,6 +40,14 @@ async def get_one(oid: str):
         return get_opportunity(code)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc))
+
+
+@router.get("/{oid}/audit")
+async def audit_log(oid: str):
+    code = canonical_oid(oid)
+    if not code:
+        raise HTTPException(status_code=404, detail=f"Unknown ventilation opportunity. Supported: {SUPPORTED}")
+    return {"events": ventilation_audit_events(code)}
 
 
 @router.post("/{oid}/dispatch")

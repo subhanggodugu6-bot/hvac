@@ -12,6 +12,7 @@ import { PanelSectionHeader } from '@/components/ui/PanelSectionHeader';
 import { TableEmptyState } from '@/components/hvac/TableEmptyState';
 import { O4KpiGrid } from './O4KpiGrid';
 import { O4ChwsCandidates, O4StageCandidates } from './O4CandidatePanels';
+import { O4PowerTradeoff } from './O4PowerTradeoff';
 import {
   EngineeringChart,
   EngineeringTooltip,
@@ -58,6 +59,7 @@ export function O4Dashboard() {
   const plantTrend = studio?.plant_trend || [];
   const history = studio?.history || [];
   const activities = studio?.activities || [];
+  const power = studio?.power;
 
   return (
     <OpportunityWorkspace def={getOpportunity('O4')!} live={provenanceFromAgent(o4State)} model={o4State?.model_version}>
@@ -134,6 +136,8 @@ export function O4Dashboard() {
         <O4StageCandidates rows={studio?.stage_candidates} />
         <O4ChwsCandidates rows={studio?.chws_candidates} />
       </div>
+
+      <O4PowerTradeoff power={power} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="glass-card lg:col-span-2 overflow-hidden">

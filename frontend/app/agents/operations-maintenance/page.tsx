@@ -66,9 +66,17 @@ export default function OperationsMaintenanceDashboardPage() {
   const kpis = mod?.kpis;
   const tel = mod?.telemetry;
   const simulated = /SIMUL/i.test(String(tel?.state || tel?.source || ''));
+  const connectedCount =
+    data?.module?.kpis?.simActiveCount ??
+    (simulated
+      ? ['O17', 'O18', 'O19', 'O20'].filter((id) => {
+          const o = findOpp(data, id);
+          return o && !['UNAVAILABLE', 'NO DATA', 'NO LIVE DATA', 'ERROR'].includes(String(o.status || ''));
+        }).length
+      : null);
   const liveCount = data
     ? simulated
-      ? 0
+      ? connectedCount
       : kpis?.liveCount != null
         ? kpis.liveCount
         : ['O17', 'O18', 'O19', 'O20'].filter(
@@ -79,6 +87,14 @@ export default function OperationsMaintenanceDashboardPage() {
     ? 'OFFLINE'
     : String(mod?.bms?.status || (mod?.bmsConnected ? 'CONNECTED' : 'OFFLINE')).toUpperCase();
   const telLabel = simulated ? 'SIMULATED' : formatDash(tel?.state);
+
+  const cardStatus = (o?: OmOpportunity) => {
+    if (!o) return undefined;
+    const st = o.status;
+    if (st && !['UNAVAILABLE', 'NO DATA', 'NO LIVE DATA'].includes(st)) return st;
+    if (simulated || o.telemetryStatus === 'SIMULATED') return 'SIMULATED';
+    return st;
+  };
 
   const cardFields = (id: string) => {
     const o = findOpp(data, id);
@@ -130,7 +146,7 @@ export default function OperationsMaintenanceDashboardPage() {
                 ];
     return {
       def: getOpportunity(id)!,
-      status: loading && !data ? 'LOADING' : error === 'API ERROR' && !data ? 'API ERROR' : o?.status,
+      status: loading && !data ? 'LOADING' : error === 'API ERROR' && !data ? 'API ERROR' : cardStatus(o),
       telemetryLabel: o ? provenanceFromAgent(o as unknown as Record<string, unknown>) : undefined,
       fields,
       emptyTitle: error === 'API ERROR' && !data ? 'DATA SOURCE ERROR' : 'NO DATA',
@@ -160,7 +176,7 @@ export default function OperationsMaintenanceDashboardPage() {
         {
           label: 'LIVE opportunities',
           value: liveCount != null ? `${liveCount} / 4` : null,
-          status: data ? telLabel : null,
+          status: data ? (simulated ? 'SIMULATED' : telLabel) : null,
           source: tel?.source || null,
           quality: simulated ? 'SIMULATED' : kpis?.dataQuality || null,
         },

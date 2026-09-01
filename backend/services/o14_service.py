@@ -16,6 +16,7 @@ from backend.services.hvac_safety_contract import (
     classify_ui_state,
     evaluate_dispatch,
     ingest_quality,
+    is_demo_source,
     is_safe_mode,
     normalize_telemetry_source,
     production_bms_connected,
@@ -240,8 +241,15 @@ def list_pumps(building_id: Optional[str] = None) -> List[Dict[str, Any]]:
         db.close()
 
 
+def _should_persist_snapshot(result: Dict[str, Any], sampled: Dict[str, Any]) -> bool:
+    if result.get("live"):
+        return True
+    src = sampled.get("source") or (result.get("classified_telemetry") or {}).get("source")
+    return is_demo_source(src) or "SIM" in str(src or "").upper()
+
+
 def _persist_snapshot(sampled: Dict[str, Any], result: Dict[str, Any]) -> None:
-    if not result.get("live"):
+    if not _should_persist_snapshot(result, sampled):
         return
     cs = result.get("current_state") or {}
     db = SessionLocal()
@@ -393,7 +401,7 @@ def kpis(state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
             card("Number of Running Pumps", cs.get("pumps_running"), None),
             card("System Load", cs.get("load_pct"), "%"),
             card("Valve Position (most open)", cs.get("most_open_valve_pct"), "%"),
-            card("Current Efficiency", None, None),
+            card("Current Efficiency", round(float(cs["pump_power_kw"]) / max(float(cs["flow"]), 0.1), 2) if cs.get("pump_power_kw") and cs.get("flow") else None, "kW/L/s"),
             card("Optimization Potential", os_.get("recommended_dp_setpoint"), cs.get("dp_unit"), s.get("recommendation")),
         ]
     }
@@ -423,9 +431,34 @@ def history(hours: int = 24, building_id: Optional[str] = None) -> Dict[str, Any
             for r in rows
             if (r.source or "").upper() not in ("ML_MODEL", "KAGGLE", "TRAINING_DATA")
         ]
-        return {"period_hours": hours, "points": points, "fabricated": False}
+        if points:
+            return {"period_hours": hours, "points": points, "fabricated": False}
     finally:
         db.close()
+    state = evaluate_o14(persist=True)
+    cs = state.get("current_state") or {}
+    if not cs:
+        return {"period_hours": hours, "points": [], "fabricated": False}
+    now = _now()
+    synth = []
+    for i in range(min(24, hours * 4)):
+        t = now - timedelta(minutes=i * 15)
+        synth.insert(
+            0,
+            {
+                "timestamp": t.isoformat(),
+                "dp": cs.get("index_dp"),
+                "dp_setpoint": cs.get("dp_setpoint"),
+                "speed": cs.get("pump_speed_pct"),
+                "flow": cs.get("flow"),
+                "power": cs.get("pump_power_kw"),
+                "load": cs.get("load_pct"),
+                "valve_position": cs.get("most_open_valve_pct"),
+                "quality": (state.get("classified_telemetry") or {}).get("quality"),
+                "source": (state.get("classified_telemetry") or {}).get("source") or "SIMULATION",
+            },
+        )
+    return {"period_hours": hours, "points": synth, "fabricated": True}
 
 
 def safety_view(state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -641,7 +674,7 @@ def audit_events(limit: int = 50) -> List[Dict[str, Any]]:
 
 
 def dashboard() -> Dict[str, Any]:
-    state = evaluate_o14(persist=False)
+    state = evaluate_o14(persist=True)
     return {
         **state,
         "kpis": kpis(state)["items"],

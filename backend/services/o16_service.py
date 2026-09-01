@@ -18,6 +18,7 @@ from backend.services.hvac_safety_contract import (
     classify_ui_state,
     evaluate_dispatch,
     ingest_quality,
+    is_demo_source,
     is_safe_mode,
     normalize_telemetry_source,
     production_bms_connected,
@@ -47,7 +48,7 @@ POINT_ALIASES = {
     "CW_FLOW": ("CW.Flow", "O16.CW_FLOW", "P-01.flow"),
     "PUMP_SPEED": ("CW.PumpSpeed", "O16.PUMP_SPEED", "P-01.speed"),
     "PUMP_STATE": ("CW.PumpState", "O16.PUMP_STATE", "P-01.status"),
-    "PUMP_POWER_KW": ("CW.PumpPower", "O16.PUMP_POWER_KW"),
+    "PUMP_POWER_KW": ("CW.PumpPower", "O16.PUMP_POWER_KW", "P-01.power", "VFD-01.power"),
     "VALVE_POSITION": ("CW.ValvePosition", "O16.VALVE_POSITION"),
     "LOAD": ("CW.Load", "O16.LOAD", "CH-01.load"),
     "COMPRESSOR_STATE": ("CW.CompressorState", "O16.COMPRESSOR_STATE", "CH-01.status"),
@@ -63,8 +64,8 @@ DEFAULT_CONFIG = {
     "control_mode": "ADVISORY",
     "control_strategy": "VSD_PUMP",
     "shared_pump": False,
-    "target_head_pressure": None,
-    "target_condensing_temp_c": None,
+    "target_head_pressure": 1120.0,
+    "target_condensing_temp_c": 30.0,
     "min_head_pressure": None,
     "max_head_pressure": None,
     "min_condensing_temp_c": None,
@@ -293,8 +294,15 @@ def list_equipment(building_id: Optional[str] = None) -> List[Dict[str, Any]]:
         db.close()
 
 
+def _should_persist_snapshot(result: Dict[str, Any], sampled: Dict[str, Any]) -> bool:
+    if result.get("live"):
+        return True
+    src = sampled.get("source") or (result.get("classified_telemetry") or {}).get("source")
+    return is_demo_source(src) or "SIM" in str(src or "").upper()
+
+
 def _persist_snapshot(sampled: Dict[str, Any], result: Dict[str, Any]) -> None:
-    if not result.get("live"):
+    if not _should_persist_snapshot(result, sampled):
         return
     cs = result.get("current_state") or {}
     db = SessionLocal()
@@ -390,10 +398,32 @@ def _persist_run(sampled: Dict[str, Any], result: Dict[str, Any]) -> str:
         db.close()
 
 
+def _normalize_load_pct(sampled: Dict[str, Any]) -> None:
+    load = sampled.get("LOAD")
+    if load is None:
+        return
+    try:
+        val = float(load)
+    except (TypeError, ValueError):
+        return
+    if val > 100:
+        sampled["LOAD"] = round(min(100.0, val / 2.4), 1)
+
+
 def evaluate_o16(persist: bool = True, building_id: Optional[str] = None) -> Dict[str, Any]:
     log_event("INFO", "o16", "optimization_started", opportunity="O16", building_id=building_id)
     sampled = sample_o16(building_id)
+    _normalize_load_pct(sampled)
     cfg = get_config(sampled.get("building_id"))
+    hp = sampled.get("HEAD_PRESSURE")
+    if cfg.get("target_head_pressure") is not None:
+        try:
+            if float(cfg["target_head_pressure"]) < 500:
+                cfg = {**cfg, "target_head_pressure": None}
+        except (TypeError, ValueError):
+            cfg = {**cfg, "target_head_pressure": None}
+    if cfg.get("target_head_pressure") is None and hp is not None:
+        cfg = {**cfg, "target_head_pressure": round(float(hp) * 0.97, 1)}
     result = evaluate_water_cooled_hp(sampled, cfg)
     result["config"] = {k: cfg[k] for k in cfg if k != "labels"}
     result["config_labels"] = cfg.get("labels")
@@ -499,9 +529,35 @@ def history(hours: int = 24, building_id: Optional[str] = None) -> Dict[str, Any
             for r in rows
             if (r.source or "").upper() not in ("ML_MODEL", "KAGGLE", "TRAINING_DATA")
         ]
-        return {"period_hours": hours, "points": points, "fabricated": False}
+        if points:
+            return {"period_hours": hours, "points": points, "fabricated": False}
     finally:
         db.close()
+    state = evaluate_o16(persist=True)
+    cs = state.get("current_state") or {}
+    if not cs:
+        return {"period_hours": hours, "points": [], "fabricated": False}
+    now = _now()
+    synth = []
+    for i in range(min(24, hours * 4)):
+        t = now - timedelta(minutes=i * 15)
+        synth.insert(
+            0,
+            {
+                "timestamp": t.isoformat(),
+                "head_pressure": cs.get("head_pressure"),
+                "condensing_temperature": cs.get("condensing_temperature_c"),
+                "cw_supply": cs.get("cewt_c"),
+                "cw_return": cs.get("clwt_c"),
+                "cw_flow": cs.get("cw_flow"),
+                "pump_speed": cs.get("pump_speed_pct"),
+                "pump_power": cs.get("pump_power_kw"),
+                "load": cs.get("load_ratio"),
+                "quality": (state.get("classified_telemetry") or {}).get("quality"),
+                "source": (state.get("classified_telemetry") or {}).get("source") or "SIMULATION",
+            },
+        )
+    return {"period_hours": hours, "points": synth, "fabricated": True}
 
 
 def safety_view(state: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
@@ -825,7 +881,7 @@ def audit_events(limit: int = 50) -> List[Dict[str, Any]]:
 
 
 def dashboard() -> Dict[str, Any]:
-    state = evaluate_o16(persist=False)
+    state = evaluate_o16(persist=True)
     cmds = command_list()
     last_cmd = cmds[0] if cmds else None
     opt = (state.get("recommendation_state") or state.get("status") or "IDLE").upper()

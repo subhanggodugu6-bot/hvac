@@ -9,6 +9,7 @@ from backend.services.ventilation_opportunity_service import (
     _saving_kw,
     _tel_ui,
     evaluate_opportunity,
+    ventilation_historian,
 )
 from backend.services.hvac_safety_contract import evaluate_dispatch, classify_telemetry, production_bms_connected
 
@@ -266,6 +267,9 @@ def _as_module_opportunity(raw: Dict[str, Any]) -> Dict[str, Any]:
         "available": True,
         "policy": "SAFE_HOLD" if tel_raw == "STALE" else ("ROLLBACK" if safety == "FAIL" else "HOLD"),
     }
+    if oid == "O10":
+        body["historian"] = raw.get("historian") or ventilation_historian("O10")
+        body["diagnostics"] = raw.get("diagnostics") or {}
     return body
 
 
@@ -273,7 +277,7 @@ def get_opportunity(oid: str) -> Dict[str, Any]:
     code = canonical_oid(oid)
     if not code:
         raise ValueError("UNKNOWN_OPPORTUNITY")
-    raw = evaluate_opportunity(code, persist=False)
+    raw = evaluate_opportunity(code, persist=True)
     return _as_module_opportunity(raw)
 
 

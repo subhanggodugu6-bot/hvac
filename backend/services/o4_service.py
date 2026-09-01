@@ -13,13 +13,18 @@ import math
 from backend.agents.scheduling_supervisory.o4_engine import ChillerCompressorStagingEngine
 from backend.services.simulation_service import sim_service
 from backend.services.logging_service import log_event
-from backend.services.o1_telemetry_service import telemetry_health, live_value
 from database.session import SessionLocal
 from database.models import (
     O4DecisionDB,
     O4ActionDB,
     O4ActivityLogDB
 )
+
+
+def _sim_mode() -> bool:
+    if os.getenv("HVAC_USE_SIMULATION", "0").strip() in ("1", "true", "TRUE"):
+        return True
+    return os.getenv("HVAC_BMS_MODE", "").strip().lower() == "simulation"
 
 
 class O4Service:
@@ -47,7 +52,7 @@ class O4Service:
             db.close()
         load_info = self.get_cooling_load()
         missing = load_info.get("status") == "WAIT_FOR_TELEMETRY" and not latest_dec
-        sim = os.getenv("HVAC_USE_SIMULATION", "0").strip() in ("1", "true", "TRUE")
+        sim = _sim_mode()
         load = load_info.get("current_load_tons")
         return {
             "title": "Chiller & Compressor Staging (O4)",
@@ -102,7 +107,7 @@ class O4Service:
             finally:
                 db.close()
             if not latest_dec:
-                if os.getenv("HVAC_USE_SIMULATION", "0").strip() in ("1", "true", "TRUE"):
+                if _sim_mode():
                     load = self.current_load_tons
                     chws = self.current_chws
                     chwr = 12.2
