@@ -43,6 +43,6 @@ services:
       - key: HVAC_SAFE_MODE
         value: "0"
       - key: HVAC_CORS_ORIGINS
-        value: "http://localhost:3000,http://127.0.0.1:3000,https://hvac-seven-topaz.vercel.app"
+        value: "http://localhost:3000,http://127.0.0.1:3000,https://hvac-seven-topaz.vercel.app,https://hvac-verilumen1.vercel.app"
       - key: HVAC_CORS_ORIGIN_REGEX
         value: 'https://.*\.(vercel\.app|onrender\.com)'

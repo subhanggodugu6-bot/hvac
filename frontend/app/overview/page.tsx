@@ -8,7 +8,7 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { StatusBadge, toneForStatus } from '@/components/hvac/StatusBadge';
 import { EmptyState } from '@/components/hvac/EmptyState';
 import { TableEmptyState } from '@/components/hvac/TableEmptyState';
-import { AlertRail, AssetRail, AssetRailEmpty, KpiRow, PlantCanvas, SystemsHub } from '@/components/hvac/bms-home';
+import { AlertRail, AssetRailEmpty, KpiRow, PlantAssetPanel, SystemsHub } from '@/components/hvac/bms-home';
 import { hvacFetch } from '@/lib/api/client';
 import { PLATFORM_POLL_MS } from '@/lib/hvac/poll';
 import { getOpportunity } from '@/lib/hvac/opportunityConfig';
@@ -20,9 +20,13 @@ import {
   type PlantEquipment,
 } from '@/lib/hvac/dashboardHome';
 
-function EnergyChart({ points, unit }: { points: { t?: string; v?: number }[]; unit?: string }) {
+function EnergyChart({ points, unit, loading }: { points: { t?: string; v?: number }[]; unit?: string; loading?: boolean }) {
   if (!points.length) {
-    return <p className="text-[12px] text-slate-500 mt-4">AWAITING TELEMETRY — no energy series yet.</p>;
+    return (
+      <p className={`text-[12px] mt-4 ${loading ? 'text-slate-400 animate-pulse' : 'text-slate-500'}`}>
+        {loading ? 'Loading energy series…' : 'AWAITING TELEMETRY — no energy series yet.'}
+      </p>
+    );
   }
   const vals = points.map((p) => Number(p.v)).filter((n) => Number.isFinite(n));
   if (!vals.length) {
@@ -111,11 +115,12 @@ export default function FleetOverviewPage() {
       return res.json() as Promise<DashboardHome>;
     },
     refetchInterval: PLATFORM_POLL_MS,
-    retry: 3,
-    retryDelay: 4000,
+    retry: 8,
+    retryDelay: (attempt) => Math.min(4000 * (attempt + 1), 20000),
     staleTime: 15_000,
   });
   const data = home.data;
+  const booting = home.isLoading && !data;
   const layers = data?.layers;
   const chapters = useMemo(() => mergeDashboardChapters(data?.chapters), [data?.chapters]);
   const allOpps: DashboardOpportunity[] = useMemo(
@@ -186,12 +191,16 @@ export default function FleetOverviewPage() {
         }
       />
 
-      {home.isLoading && !data ? (
-        <EmptyState
-          title="LOADING PLANT DATA"
-          detail="Waking the API (free Render can take up to a minute). Keep this tab open."
-          onRetry={() => void home.refetch()}
-        />
+      {booting ? (
+        <div className="card-static px-4 py-3 flex flex-wrap items-center justify-between gap-3 border-violet-100 bg-violet-50/40">
+          <div>
+            <div className="text-[12px] font-semibold text-violet-900">Waking the API</div>
+            <p className="text-[11px] text-violet-800/80 mt-0.5">Free Render cold start can take up to a minute. KPIs will populate automatically.</p>
+          </div>
+          <button type="button" onClick={() => void home.refetch()} className="btn-ghost text-[11px] py-1.5 px-3 shrink-0">
+            Retry now
+          </button>
+        </div>
       ) : null}
 
       {home.isError && !data ? (
@@ -207,6 +216,7 @@ export default function FleetOverviewPage() {
       <AlertRail alerts={data?.alerts} compact />
 
       <KpiRow
+        loading={booting}
         items={[
           {
             label: 'Plant / HVAC load',
@@ -236,22 +246,26 @@ export default function FleetOverviewPage() {
       />
 
       <div className="space-y-4">
-        {home.isLoading && plantEmpty ? (
-          <div className="card-static p-8 text-[13px] text-slate-500">Loading plant canvas from simulated telemetry…</div>
+        {booting && plantEmpty ? (
+          <div className="card-static p-8 text-[13px] text-slate-400 animate-pulse">Loading plant canvas from simulated telemetry…</div>
         ) : plantEmpty ? (
           <AssetRailEmpty />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[220px]">
-            <PlantCanvas layers={layers} selectedId={active?.equipment_id} onSelect={setSelected} />
-            <AssetRail selected={active} opportunities={allOpps} telStatus={tel} />
-          </div>
+          <PlantAssetPanel
+            layers={layers}
+            selected={active}
+            selectedId={active?.equipment_id}
+            onSelect={setSelected}
+            opportunities={allOpps}
+            telStatus={tel}
+          />
         )}
         <section className="card-static p-5">
           <div className="flex items-center justify-between gap-2">
             <div className="text-[13px] font-semibold text-slate-800">Energy</div>
             <span className="text-[10px] font-mono text-slate-600">Measured plant power — not GUIDE_POTENTIAL</span>
           </div>
-          <EnergyChart points={energy} unit={data?.energy?.unit} />
+          <EnergyChart points={energy} unit={data?.energy?.unit} loading={booting} />
         </section>
       </div>
 

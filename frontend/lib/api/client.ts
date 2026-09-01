@@ -1,8 +1,33 @@
 function publicApiBase(): string | undefined {
+  // Browser HTTP always uses same-origin /api proxy (avoids Render CORS / cold-start preflight).
+  if (typeof window !== 'undefined') return undefined;
   const pub = process.env['NEXT_PUBLIC_API_URL'];
   if (pub && /^https?:/i.test(pub)) return pub.replace(/\/$/, '');
   return undefined;
 }
+
+/** Render (or other) host for WebSocket only — Vercel cannot proxy WS on the app route. */
+function backendWsOrigin(): string | undefined {
+  const ws = process.env['NEXT_PUBLIC_WS_ORIGIN'];
+  if (ws && /^https?:/i.test(ws)) {
+    try {
+      return new URL(ws.replace(/\/$/, '')).origin;
+    } catch {
+      /* fall through */
+    }
+  }
+  const pub = process.env['NEXT_PUBLIC_API_URL'];
+  if (pub && /^https?:/i.test(pub)) {
+    try {
+      return new URL(pub.replace(/\/$/, '')).origin;
+    } catch {
+      /* fall through */
+    }
+  }
+  return undefined;
+}
+
+export { backendWsOrigin };
 
 export const API_BASE =
   publicApiBase() ||
@@ -74,7 +99,7 @@ export async function hvacFetch(input: string, init: RequestInit = {}): Promise<
   throw lastErr instanceof Error ? lastErr : new Error("NETWORK ERROR");
 }
 
-/** Browser uses NEXT_PUBLIC_API_URL when set (Render); otherwise same-origin `/api`. */
+/** Browser uses same-origin `/api` proxy; server may call Render directly when configured. */
 export async function apiJson(path: string, init: RequestInit = {}) {
   const res = await hvacFetch(path, { ...init, cache: init.cache ?? "no-store" });
   if (!res.ok) {

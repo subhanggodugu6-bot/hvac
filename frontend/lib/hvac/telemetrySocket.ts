@@ -1,4 +1,5 @@
 /** Single FastAPI telemetry WebSocket. No credentials. No commands. */
+import { backendWsOrigin } from '@/lib/api/client';
 export type WsConnectionState = 'idle' | 'connecting' | 'open' | 'closed' | 'error';
 
 export type TelemetryEvent = {
@@ -37,17 +38,13 @@ type Listener = (frame: TelemetryFrame, state: WsConnectionState) => void;
 
 function websocketUrl(): string {
   if (typeof window !== 'undefined') {
-    const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const api = process.env['NEXT_PUBLIC_API_URL'];
-    if (api && /^https?:/i.test(api)) {
-      try {
-        const u = new URL(api, window.location.origin);
-        const p = u.protocol === 'https:' ? 'wss:' : 'ws:';
-        return `${p}//${u.host}/api/ws/telemetry`;
-      } catch {
-        /* fall through */
-      }
+    const backend = backendWsOrigin();
+    if (backend) {
+      const p = backend.startsWith('https') ? 'wss:' : 'ws:';
+      const host = backend.replace(/^https?:\/\//, '');
+      return `${p}//${host}/api/ws/telemetry`;
     }
+    const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     return `${proto}//${window.location.host}/api/ws/telemetry`;
   }
   return 'ws://127.0.0.1:8000/api/ws/telemetry';

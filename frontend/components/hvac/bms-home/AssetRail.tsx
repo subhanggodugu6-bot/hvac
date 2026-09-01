@@ -21,75 +21,97 @@ function applicableFor(equipmentId: string, opps: DashboardOpportunity[]) {
   });
 }
 
+function qualityTone(q: string) {
+  if (q === 'GOOD') return 'text-emerald-600';
+  if (q === 'STALE') return 'text-amber-600';
+  if (q === 'BAD') return 'text-pink-600';
+  return 'text-slate-500';
+}
+
 export function AssetRail({
   selected,
   opportunities,
   telStatus,
+  embedded,
 }: {
   selected: PlantEquipment | null;
   opportunities: DashboardOpportunity[];
   telStatus?: string;
+  embedded?: boolean;
 }) {
+  const shell = embedded ? 'flex flex-col min-w-0 h-full' : 'card-static p-0 flex flex-col min-w-0 h-full overflow-hidden';
+
   if (!selected) {
     return (
-      <div className="card-static p-4 h-full min-w-0">
+      <div className={embedded ? shell : 'card-static p-4 h-full min-w-0'}>
         <div className="text-[13px] font-semibold text-slate-800">Selected asset</div>
-        <p className="text-[12px] text-slate-500 mt-3">Select a plant layer to inspect canonical points and applicable opportunities.</p>
+        <p className="text-[12px] text-slate-500 mt-3">Select a row in Plant layers to inspect canonical points.</p>
       </div>
     );
   }
+
   const pts = Object.entries(selected.points || {});
   const firstPoint = pts[0]?.[0];
   const applicable = applicableFor(selected.equipment_id, opportunities);
 
   return (
-    <div className="card-static p-4 h-full flex flex-col min-w-0">
-      <div className="flex items-start justify-between gap-2 mb-3 shrink-0">
+    <div className={shell}>
+      <div className="flex items-start justify-between gap-2 border-b border-slate-100 px-4 py-3 shrink-0">
         <div>
-          <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Selected asset</div>
-          <div className="font-mono text-base text-slate-900 mt-0.5">{selected.equipment_id}</div>
+          <div className="text-[13px] font-semibold text-slate-800">Selected asset</div>
+          <div className="font-mono text-[13px] text-violet-700 font-semibold mt-0.5">{selected.equipment_id}</div>
         </div>
         <StatusBadge tone={toneForStatus(telStatus)} pulse={false}>
           {telStatus || 'NO DATA'}
         </StatusBadge>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-x-auto eng-scroll">
+      <div className="overflow-auto eng-scroll flex-1 min-h-0 max-h-[320px]">
         {pts.length === 0 ? (
-          <div className="text-amber-700 text-[12px]">NO DATA</div>
+          <p className="px-4 py-6 text-[12px] text-amber-700">NO DATA</p>
         ) : (
-          <div className="flex flex-wrap gap-2 min-w-max pb-1">
-            {pts.map(([name, p]) => {
-              const q = String(p.quality || '').toUpperCase();
-              const shown = p.value == null || q === 'BAD' ? 'NO DATA' : `${p.value}${p.unit ? ` ${p.unit}` : ''}`;
-              const color =
-                q === 'GOOD' ? 'text-emerald-600' : q === 'STALE' ? 'text-amber-600' : q === 'BAD' ? 'text-pink-600' : 'text-slate-500';
-              return (
-                <div
-                  key={name}
-                  className="rounded-xl border border-slate-100 bg-slate-50/60 px-2.5 py-2 min-w-[108px] max-w-[140px]"
-                >
-                  <div className="text-[9px] font-semibold text-slate-500 uppercase tracking-wide truncate">{name}</div>
-                  <div className={`text-[12px] font-mono font-semibold mt-0.5 truncate ${color}`}>{shown}</div>
-                </div>
-              );
-            })}
-          </div>
+          <table className="bms-table min-w-[22rem]">
+            <thead>
+              <tr>
+                <th>Point</th>
+                <th>Value</th>
+                <th>Unit</th>
+                <th>Quality</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pts.map(([name, p]) => {
+                const q = String(p.quality || '').toUpperCase() || '—';
+                const missing = p.value == null || q === 'BAD';
+                const shown = missing ? 'NO DATA' : String(p.value);
+                return (
+                  <tr key={name}>
+                    <td className="font-mono text-[11px] text-slate-700 whitespace-nowrap">{name}</td>
+                    <td className={`font-mono font-semibold tabular-nums whitespace-nowrap ${qualityTone(q)}`}>{shown}</td>
+                    <td className="font-mono text-slate-500 whitespace-nowrap">{p.unit || '—'}</td>
+                    <td className="whitespace-nowrap">
+                      <span className={`text-[10px] font-semibold uppercase tracking-wide ${qualityTone(q)}`}>{q || '—'}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         )}
       </div>
 
-      <div className="mt-3 pt-3 border-t border-slate-100 shrink-0">
+      <div className="border-t border-slate-100 px-4 py-3 shrink-0 bg-slate-50/40">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex flex-wrap gap-1.5 min-w-0">
-            <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-600 mr-1">O&apos;s</span>
+          <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+            <span className="text-[10px] font-semibold tracking-[0.12em] uppercase text-slate-600">Applicable O&apos;s</span>
             {applicable.length === 0 ? (
               <span className="text-[11px] text-slate-500">None</span>
             ) : (
-              applicable.slice(0, 6).map((o) => (
+              applicable.slice(0, 8).map((o) => (
                 <Link
                   key={o.id}
                   href={o.href || '/agents'}
-                  className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-slate-200 text-slate-600 hover:border-violet-300 hover:text-violet-700"
+                  className="text-[10px] font-mono px-2 py-0.5 rounded-full border border-slate-200 bg-white text-slate-600 hover:border-violet-300 hover:text-violet-700"
                 >
                   {o.id}
                 </Link>
@@ -99,11 +121,11 @@ export function AssetRail({
           <div className="flex gap-2 shrink-0">
             {applicable[0]?.href ? (
               <Link href={applicable[0].href} className="btn-primary text-[10px] py-1.5 px-3">
-                Studio
+                Open studio
               </Link>
             ) : null}
             <Link href={mappingHref(selected.equipment_id, firstPoint)} className="btn-ghost text-[10px] py-1.5 px-3">
-              Map
+              Map point
             </Link>
           </div>
         </div>
