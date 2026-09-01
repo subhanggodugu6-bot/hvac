@@ -83,7 +83,9 @@ export const OpportunityKPICard: React.FC<OpportunityKPICardProps> = ({
   const code = String(opportunity.opportunityId || '').padStart(2, '0').replace(/^0+(O)/, '$1');
   const id = opportunity.opportunityId || '';
   const primary = fmt(opportunity.primaryMetric);
-  const secondaries = opportunity.secondaryMetrics || [];
+  const secondaries = (opportunity.secondaryMetrics || []).filter(
+    (m) => !(m.value == null && /does not publish|not set on this engine/i.test(String(m.unavailableReason || '')))
+  );
   const tel = opportunity.telemetry?.compact || opportunity.telemetry?.label;
   const statusText = backendOffline
     ? 'ERROR'

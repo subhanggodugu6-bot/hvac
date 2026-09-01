@@ -116,6 +116,12 @@ async def lifespan(app: FastAPI):
     except Exception:
         pass
     try:
+        from backend.services.o1_telemetry_service import ensure_point_map_and_config
+
+        ensure_point_map_and_config()
+    except Exception as exc:
+        log_event("ERROR", "startup", "O1_ENSURE_FAILED", extra={"error": str(exc)})
+    try:
         from backend.ai.pipeline.bootstrap import bootstrap_pipeline
 
         bootstrap_pipeline(delay_seconds=float(os.getenv("HVAC_PIPELINE_BOOTSTRAP_DELAY", "25")))

@@ -36,7 +36,14 @@ def _cfg() -> O1ConfigurationDB:
     try:
         row = db.query(O1ConfigurationDB).filter_by(id="o1-default").first()
         if row is None:
-            raise RuntimeError("O1 default configuration is missing")
+            row = O1ConfigurationDB(
+                id="o1-default",
+                building_id="bldg-corp-hq-01",
+                equipment_id="AHU-1",
+            )
+            db.add(row)
+            db.commit()
+            db.refresh(row)
         db.expunge(row)
         return row
     finally:

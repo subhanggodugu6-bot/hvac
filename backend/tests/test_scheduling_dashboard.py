@@ -172,10 +172,10 @@ class TestDashboardKpiCards(unittest.TestCase):
     def test_o4_runtime_not_invented(self):
         o4 = self.dash["opportunities"][3]
         self.assertIsNone(o4.get("runtimeImpact"))
-        runtime = next((m for m in o4.get("secondaryMetrics") or [] if m["label"] == "Runtime Impact"), None)
-        self.assertIsNotNone(runtime)
-        self.assertIsNone(runtime["value"])
-        self.assertTrue(runtime.get("unavailableReason"))
+        plr = next((m for m in o4.get("secondaryMetrics") or [] if m["label"] == "Plant PLR"), None)
+        self.assertIsNotNone(plr)
+        if plr.get("value") is None:
+            self.assertTrue(plr.get("unavailableReason"))
 
     def test_header_kpis_not_hardcoded_verified(self):
         self.assertNotEqual(self.dash.get("verifiedSavingsKwh"), 17.8)

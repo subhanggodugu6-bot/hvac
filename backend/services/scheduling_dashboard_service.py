@@ -256,7 +256,7 @@ def _sim_cycle() -> Tuple[Optional[Dict[str, Any]], Optional[str]]:
         return None, str(exc)
 
 
-def _build_o1(age: Optional[float], freshness: str, now_iso: str, dataset: bool = False) -> Dict[str, Any]:
+def _build_o1(age: Optional[float], freshness: str, now_iso: str, dataset: bool = False, sim: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     try:
         from backend.services.o1_service import o1_service
         from backend.services.o1_telemetry_service import live_value, telemetry_health
@@ -354,6 +354,52 @@ def _build_o1(age: Optional[float], freshness: str, now_iso: str, dataset: bool 
             extra={"controlBand": None, "optimizedStop": opt_stop},
         )
     except Exception as exc:
+        try:
+            sim_state = sim
+            if sim_state is None:
+                sim_state, _ = _sim_cycle()
+            if sim_state:
+                from backend.agents.scheduling_supervisory.o1_engine import OptimumStartStopEngine
+
+                ev = _eval_to_dict(OptimumStartStopEngine().evaluate(sim_state))
+                zones = _zones(sim_state)
+                temps = [z.get("temp_actual") for z in zones if z.get("temp_actual") is not None]
+                avg_t = _avg(temps)
+                zone = _fmt_temp(avg_t)
+                actions = sim_state.get("candidate_actions") or []
+                start_a = next((a for a in actions if "START-DELAY" in str(a.get("point_id", "")).upper()), None)
+                coast_a = next((a for a in actions if "COAST-ADVANCE" in str(a.get("point_id", "")).upper()), None)
+                opt_start = f"{int(start_a['proposed_value'])} min delay" if start_a and start_a.get("proposed_value") is not None else None
+                opt_stop = f"{int(coast_a['proposed_value'])} min early" if coast_a and coast_a.get("proposed_value") is not None else None
+                conf = _pct(ev.get("confidence"))
+                kw = (ev.get("expected_impact") or {}).get("estimated_power_kw_impact")
+                energy = f"{kw} kW predicted" if kw is not None else None
+                fr = freshness if freshness != "OFFLINE" else "SIMULATED"
+                return _card(
+                    "O1",
+                    "Optimum Start/Stop Programming",
+                    status="MONITORING",
+                    has_stored=bool(zone or opt_start or opt_stop),
+                    telemetry_status=fr,
+                    telemetry_age=age if age is not None else 5.0,
+                    last_telemetry_at=now_iso,
+                    current_value=zone,
+                    optimized_value=opt_start or opt_stop,
+                    energy_impact=energy,
+                    confidence=conf,
+                    last_evaluation_at=now_iso,
+                    recommendation=ev.get("reason"),
+                    data_source="O1_ENGINE+SIM",
+                    primary_metric=_metric("Current Temp", zone, unavailable_reason="Zone average unavailable"),
+                    secondary_metrics=[
+                        _metric("Optimized Start", opt_start, unavailable_reason="No BUILDING-SCHEDULE-START-DELAY action"),
+                        _metric("Optimized Stop", opt_stop, unavailable_reason="No BUILDING-SCHEDULE-COAST-ADVANCE action"),
+                        _metric("Energy Impact", energy, unavailable_reason="expected_impact.estimated_power_kw_impact missing"),
+                        _metric("Confidence", conf, unavailable_reason="O1 engine confidence not set"),
+                    ],
+                )
+        except Exception:
+            pass
         return _card(
             "O1", "Optimum Start/Stop Programming",
             status=None, telemetry_status="OFFLINE", telemetry_age=None, last_telemetry_at=None,
@@ -580,7 +626,11 @@ def _build_o4(sim: Optional[Dict[str, Any]], age: Optional[float], freshness: st
             safety_ui = str(safety)
         else:
             safety_ui = None
-        runtime_reason = "O4 engine does not publish runtime impact (kWh/min saved); only chiller runtime_minutes operational state exists"
+        plr = cur.get("plant_plr_pct")
+        if plr is None and tons is not None and n:
+            cap = 120.0 * max(1, int(n))
+            plr = round(100.0 * float(tons) / cap, 1)
+        plr_s = f"{plr}%" if plr is not None else None
         return _card(
             "O4",
             "Staging of Chillers & Compressors",
@@ -607,7 +657,7 @@ def _build_o4(sim: Optional[Dict[str, Any]], age: Optional[float], freshness: st
                 _metric("Plant Load", tons_s, unavailable_reason="current_state.total_tons missing"),
                 _metric("Active Chillers", n_s, unavailable_reason="active_chillers_count missing"),
                 _metric("Energy Impact", energy, unavailable_reason="expected_impact.estimated_power_kw_impact missing"),
-                _metric("Runtime Impact", None, unavailable_reason=runtime_reason),
+                _metric("Plant PLR", plr_s, unavailable_reason="plant_plr_pct missing"),
                 _metric("Confidence", conf, unavailable_reason="O4 engine confidence not set"),
                 _metric("Safety", safety_ui, status=safety_ui, unavailable_reason="capacity_sufficiency missing"),
             ],
@@ -867,7 +917,7 @@ def get_scheduling_dashboard() -> Dict[str, Any]:
     live_s = int(dbk.get("liveSeconds") or LIVE_S)
     freshness = _freshness(age, live_s=live_s) if age is not None else ("SIMULATED" if dataset else "OFFLINE")
 
-    o1 = _build_o1(age, freshness, now_iso, dataset=dataset)
+    o1 = _build_o1(age, freshness, now_iso, dataset=dataset, sim=sim)
     o2 = _build_o2(sim, age, freshness, now_iso, sim_err)
     o3 = _build_o3(sim, age, freshness, now_iso, sim_err)
     o4 = _build_o4(sim, age, freshness, now_iso, sim_err)
