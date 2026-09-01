@@ -93,10 +93,36 @@ def forecast(
         model_key = MODEL_IDS[target]
         row = latest_ready_row(target)
         if row is None or not row.artifact_path:
+            from backend.ai.lstm.heuristic import heuristic_forecast_target
+
+            h_series = heuristic_forecast_target(target, zone_id, lookback_min=lookback_min, now=now)
+            if h_series:
+                series[target] = h_series
+                statuses[target] = {
+                    "status": "MODEL_READY",
+                    "model_id": f"heuristic-{target}",
+                    "model_key": model_key,
+                    "model_version": "heuristic-v1",
+                    "mode": "HEURISTIC",
+                }
+                continue
             statuses[target] = {"status": "MODEL_NOT_AVAILABLE", "model_id": model_key}
             series[target] = None
             continue
         if not torch_available():
+            from backend.ai.lstm.heuristic import heuristic_forecast_target
+
+            h_series = heuristic_forecast_target(target, zone_id, lookback_min=lookback_min, now=now)
+            if h_series:
+                series[target] = h_series
+                statuses[target] = {
+                    "status": "MODEL_READY",
+                    "model_id": row.id,
+                    "model_key": model_key,
+                    "model_version": row.model_version or "heuristic-v1",
+                    "mode": "HEURISTIC",
+                }
+                continue
             statuses[target] = {"status": "TORCH_REQUIRED", "model_id": row.id}
             series[target] = None
             continue

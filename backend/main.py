@@ -115,6 +115,12 @@ async def lifespan(app: FastAPI):
         prime_dashboard_home()
     except Exception:
         pass
+    try:
+        from backend.ai.pipeline.bootstrap import bootstrap_pipeline
+
+        bootstrap_pipeline(delay_seconds=float(os.getenv("HVAC_PIPELINE_BOOTSTRAP_DELAY", "25")))
+    except Exception:
+        pass
     yield
 
 

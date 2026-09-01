@@ -32,9 +32,60 @@ def _now() -> datetime:
 
 
 def _source_mode(source: Any) -> str:
-    if is_demo_source(source) or str(source or "").upper() in ("SIMULATION", "DEMO", "DATASET"):
+    s = str(source or "").upper().strip()
+    if is_demo_source(source) or s in ("SIMULATION", "DEMO", "DATASET"):
         return "SIMULATION"
+    if s in ("UNKNOWN", "NONE", "WEATHER", ""):
+        try:
+            from backend.bms.connection_manager import is_simulation_mode
+
+            if is_simulation_mode():
+                return "SIMULATION"
+        except Exception:
+            return "SIMULATION"
     return "LIVE_BMS"
+
+
+def consolidate_demo_rls_rows(zone_id: str = "ZONE-01") -> int:
+    """Merge stray LIVE_BMS RLS rows into SIMULATION when running in demo/sim."""
+    try:
+        from backend.bms.connection_manager import is_simulation_mode
+
+        if not is_simulation_mode():
+            return 0
+    except Exception:
+        return 0
+
+    from database.session import SessionLocal
+    from database.models_platform import RlsModelStateDB
+
+    db = SessionLocal()
+    changed = 0
+    try:
+        rows = db.query(RlsModelStateDB).filter(RlsModelStateDB.zone_id == zone_id).all()
+        by_key: Dict[str, List[Any]] = {}
+        for row in rows:
+            by_key.setdefault(row.model_key, []).append(row)
+        for _key, group in by_key.items():
+            sim = [r for r in group if r.source_mode == "SIMULATION"]
+            live = [r for r in group if r.source_mode == "LIVE_BMS"]
+            if not live:
+                continue
+            if sim:
+                for r in live:
+                    db.delete(r)
+                    changed += 1
+            else:
+                for r in live:
+                    r.source_mode = "SIMULATION"
+                    changed += 1
+        if changed:
+            db.commit()
+    except Exception:
+        db.rollback()
+    finally:
+        db.close()
+    return changed
 
 
 def _ring_key(model_key: str, zone_id: str, source_mode: str) -> str:

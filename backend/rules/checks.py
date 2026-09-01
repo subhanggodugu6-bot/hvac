@@ -282,6 +282,10 @@ def check_compressor_min_on_off(ctx: Dict[str, Any]) -> Dict[str, Any]:
 
 def _point_category(point_id: str) -> str:
     u = (point_id or "").upper()
+    if "PUMP" in u or "CW." in u or "SCHW" in u:
+        return "PUMP_SPEED"
+    if "DUCT" in u and "STATIC" in u:
+        return "DUCT_STATIC"
     if "SAT" in u:
         return "AHU_SAT_SP"
     if "CHWS" in u:

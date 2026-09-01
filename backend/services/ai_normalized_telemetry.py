@@ -33,7 +33,12 @@ def _worst_quality(qualities: List[str]) -> str:
 def _dominant_source(sources: List[str]) -> str:
     cleaned = [(s or "").upper() for s in sources if s and str(s).upper() not in ("UNKNOWN", "NONE", "WEATHER")]
     if not cleaned:
-        return "UNKNOWN"
+        try:
+            from backend.bms.connection_manager import is_simulation_mode
+
+            return "SIMULATION" if is_simulation_mode() else "UNKNOWN"
+        except Exception:
+            return "UNKNOWN"
     if any(is_demo_source(s) for s in cleaned):
         # Honest: if any demo/sim contributor, do not claim LIVE_BMS for the row.
         demo = next((s for s in cleaned if is_demo_source(s)), "SIMULATION")

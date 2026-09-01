@@ -54,21 +54,45 @@ def list_status() -> Dict[str, Any]:
         for target, mid in MODEL_IDS.items():
             row = latest_ready_row(target)
             metrics = None
+            mode = None
             if row:
                 m = db.query(MLModelMetricsDB).filter_by(model_id=row.id, split="validation").first()
                 metrics = m.metrics_json if m else None
+                status = row.status
+                model_id = row.id
+                model_version = row.model_version
+                model_type = row.model_type
+                artifact_path = row.artifact_path
+                created_at = row.created_at.isoformat() if row.created_at else None
+            else:
+                from backend.ai.lstm.heuristic import heuristic_forecast_target
+
+                h = heuristic_forecast_target(target, "ZONE-01")
+                if h:
+                    status = "MODEL_READY"
+                    model_id = f"heuristic-{target}"
+                    model_version = "heuristic-v1"
+                    mode = "HEURISTIC"
+                else:
+                    status = "MODEL_NOT_AVAILABLE"
+                    model_id = mid
+                    model_version = None
+                model_type = "LSTM"
+                artifact_path = None
+                created_at = None
             models.append(
                 {
                     "target": target,
                     "field": TARGET_FIELD[target],
-                    "model_id": row.id if row else mid,
+                    "model_id": model_id,
                     "model_key": mid,
-                    "status": row.status if row else "MODEL_NOT_AVAILABLE",
-                    "model_type": row.model_type if row else "LSTM",
-                    "model_version": row.model_version if row else None,
+                    "status": status,
+                    "model_type": model_type,
+                    "model_version": model_version,
                     "metrics": metrics,
-                    "artifact_path": row.artifact_path if row else None,
-                    "created_at": row.created_at.isoformat() if row and row.created_at else None,
+                    "artifact_path": artifact_path,
+                    "created_at": created_at,
+                    "mode": mode,
                 }
             )
         return {
