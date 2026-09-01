@@ -35,7 +35,9 @@ def _cfg() -> O1ConfigurationDB:
     db = SessionLocal()
     try:
         row = db.query(O1ConfigurationDB).filter_by(id="o1-default").first()
-        db.expunge_all()
+        if row is None:
+            raise RuntimeError("O1 default configuration is missing")
+        db.expunge(row)
         return row
     finally:
         db.close()

@@ -52,9 +52,37 @@ def load_point_map(db=None) -> List[Dict[str, Any]]:
         return json.load(f)
 
 
+def _ensure_o1_prerequisites(db) -> None:
+    from database.models import Building, Equipment
+
+    bid = "bldg-corp-hq-01"
+    if db.query(Building).filter_by(id=bid).first() is None:
+        db.add(
+            Building(
+                id=bid,
+                name="Senatria Corporation",
+                area_sqft=75000.0,
+                floors=3,
+                design_cooling_tonnage=240.0,
+                location="Bengaluru, Karnataka, India",
+            )
+        )
+    eid = "AHU-1"
+    if db.query(Equipment).filter_by(id=eid).first() is None:
+        db.add(
+            Equipment(
+                id=eid,
+                building_id=bid,
+                name="Floor 1-2 Air Handling Unit",
+                type="AHU",
+            )
+        )
+
+
 def ensure_point_map_and_config() -> None:
     db = SessionLocal()
     try:
+        _ensure_o1_prerequisites(db)
         if db.query(O1PointMapDB).count() == 0:
             with open(os.path.abspath(MAP_PATH), "r", encoding="utf-8") as f:
                 for row in json.load(f):
