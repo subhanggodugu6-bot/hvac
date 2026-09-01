@@ -876,6 +876,10 @@ def supervisory_activity(limit: int = 40) -> List[Dict[str, Any]]:
 
 
 def get_scheduling_dashboard() -> Dict[str, Any]:
+    cached = cache_get("scheduling_dashboard")
+    if cached is not None:
+        return cached
+
     now = datetime.utcnow()
     now_iso = now.isoformat()
     sim, sim_err = None, None
@@ -889,19 +893,7 @@ def get_scheduling_dashboard() -> Dict[str, Any]:
 
     if dataset or os.getenv("HVAC_USE_SIMULATION", "0") in ("1", "true", "TRUE"):
         sim, sim_err = _sim_cycle()
-        if dataset:
-            try:
-                from backend.bms.simulation_telemetry import publish_once
-                from backend.services.o1_pipeline import ingest_from_dataset_catalog
-
-                publish_once()
-                ingest_from_dataset_catalog()
-            except Exception:
-                pass
-            try:
-                ensure_sim_verified_savings()
-            except Exception:
-                pass
+        # Telemetry feed + bootstrap already publish/ingest — do not rerun on every UI poll.
 
     age = None
     if dataset or sim:
@@ -971,7 +963,7 @@ def get_scheduling_dashboard() -> Dict[str, Any]:
     else:
         health = "MONITORING"
 
-    return {
+    payload = {
         "agentHealth": health,
         "activeOpportunities": active,
         "activeOpportunitiesLabel": f"{active} / 4",
@@ -1004,3 +996,5 @@ def get_scheduling_dashboard() -> Dict[str, Any]:
         "source": "SCHEDULING_DASHBOARD",
         "simError": sim_err,
     }
+    cache_set("scheduling_dashboard", payload, float(os.getenv("HVAC_SCHED_DASH_CACHE_SECONDS", "8")))
+    return payload

@@ -65,7 +65,7 @@ class SimulationService:
         if not _simulation_enabled():
             return
         try:
-            for _ in range(12):
+            for _ in range(6):
                 self.step(elapsed_minutes=5)
         except Exception as exc:
             log_event("ERROR", "simulation", "INIT_HISTORY_FAILED", extra={"error": type(exc).__name__})
