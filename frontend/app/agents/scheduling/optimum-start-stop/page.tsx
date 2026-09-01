@@ -205,11 +205,11 @@ export default function OptimumStartStopPage() {
                 Calibrated Thermal Response Model
               </h3>
             </div>
-            <span className="text-xs font-mono font-bold text-emerald-400">{model.model_version || 'MODEL NOT READY'}</span>
+            <span className="text-xs font-mono font-bold text-emerald-700">{model.model_version || 'MODEL NOT READY'}</span>
           </div>
 
           {modelNotReady ? (
-            <div className="p-3 text-xs text-slate-400 font-mono">MODEL NOT READY — no evaluated metrics on held-out data.</div>
+            <div className="p-3 text-xs text-slate-600 font-mono font-medium">MODEL NOT READY — no evaluated metrics on held-out data.</div>
           ) : (
           <div className="space-y-2 text-xs font-mono">
             <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
@@ -217,7 +217,7 @@ export default function OptimumStartStopPage() {
               <div className="flex justify-between"><span>R² Score:</span><strong className="text-emerald-400">{model.r2_score ?? 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Mean Absolute Error:</span><strong className="text-cyan-800">{model.mae_minutes != null ? `${model.mae_minutes} min` : 'NO DATA'}</strong></div>
               <div className="flex justify-between"><span>Root Mean Sq Error:</span><strong className="text-slate-700">{model.rmse_minutes != null ? `${model.rmse_minutes} min` : 'NO DATA'}</strong></div>
-              <div className="flex justify-between"><span>Confidence:</span><strong className="text-purple-400">{model.prediction_confidence_pct != null ? `${model.prediction_confidence_pct}%` : 'NO DATA'}</strong></div>
+              <div className="flex justify-between"><span>Confidence:</span><strong className="text-purple-700">{model.prediction_confidence_pct != null ? `${model.prediction_confidence_pct}%` : 'NO DATA'}</strong></div>
             </div>
 
             <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
@@ -241,7 +241,7 @@ export default function OptimumStartStopPage() {
                 Pre-Cooling Thermal Response Trajectory
               </h3>
             </div>
-            <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+            <div className="flex items-center gap-2 text-xs font-mono text-slate-600">
               <span className="flex items-center gap-1"><span className="w-2.5 h-0.5 bg-sky-400"></span> Actual</span>
               <span className="flex items-center gap-1"><span className="w-2.5 h-0.5 bg-emerald-400"></span> Predicted</span>
               <span className="flex items-center gap-1"><span className="w-2.5 h-0.5 bg-amber-400"></span> Target</span>
@@ -281,7 +281,7 @@ export default function OptimumStartStopPage() {
                 Start Time Candidate Evaluation (06:00 – 07:45)
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">Target: 08:00 Occupancy</span>
+            <span className="text-xs font-mono text-slate-600">Target: 08:00 Occupancy</span>
           </div>
 
           <div className="overflow-x-auto">
@@ -345,7 +345,7 @@ export default function OptimumStartStopPage() {
                 Coast Stop Candidate Evaluation (16:00 – 18:00)
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">Limit: ≤ 24.0°C at 18:00</span>
+            <span className="text-xs font-mono text-slate-600">Limit: ≤ 24.0°C at 18:00</span>
           </div>
 
           <div className="overflow-x-auto">
@@ -367,7 +367,7 @@ export default function OptimumStartStopPage() {
                   <tr key={i} className={String(c.decision || '').includes('SELECTED') ? 'bg-cyan-50' : ''}>
                     <td className="font-bold text-slate-900 text-sm">{c.candidate_time}</td>
                     <td className="text-cyan-800 font-semibold">{c.expected_temp_1800 != null ? `${c.expected_temp_1800}°C` : 'NO DATA'}</td>
-                    <td className="text-emerald-400 font-bold">{c.runtime_saved_min != null ? `${c.runtime_saved_min} min` : 'NO DATA'}</td>
+                    <td className="text-emerald-700 font-bold">{c.runtime_saved_min != null ? `${c.runtime_saved_min} min` : 'NO DATA'}</td>
                     <td className="text-slate-800">{c.energy_kwh} kWh</td>
                     <td>
                       <span
@@ -414,7 +414,7 @@ export default function OptimumStartStopPage() {
                 O1 Start & Coast Supervisory Decisions
               </h3>
             </div>
-            <span className="text-xs font-mono font-bold text-emerald-400">DUAL OPTIMIZATION</span>
+            <span className="text-xs font-mono font-bold text-emerald-700">DUAL OPTIMIZATION</span>
           </div>
 
           <div className="space-y-3 font-mono text-xs">
@@ -431,7 +431,7 @@ export default function OptimumStartStopPage() {
                 <div><span className="text-[9px] text-slate-500 block">OPTIMIZED</span><strong className="text-emerald-400">{startDecision.optimized_start || 'NO DATA'}</strong></div>
                 <div><span className="text-[9px] text-slate-500 block">TARGET REACH</span><strong className="text-cyan-800">{startDecision.predicted_target_reached || 'NO DATA'}</strong></div>
               </div>
-              <p className="text-[11px] text-slate-400 font-sans leading-relaxed">
+              <p className="text-[11px] text-slate-600 font-sans leading-relaxed">
                 &ldquo;{decisionData?.start?.reason || 'NO DATA'}&rdquo;
               </p>
             </div>
@@ -449,7 +449,7 @@ export default function OptimumStartStopPage() {
                 <div><span className="text-[9px] text-slate-500 block">OPTIMIZED</span><strong className="text-emerald-400">{coastDecision.optimized_stop || 'NO DATA'}</strong></div>
                 <div><span className="text-[9px] text-slate-500 block">TEMP @ 18:00</span><strong className="text-cyan-800">{coastDecision.predicted_temp_1800 || 'NO DATA'}</strong></div>
               </div>
-              <p className="text-[11px] text-slate-400 font-sans leading-relaxed">
+              <p className="text-[11px] text-slate-600 font-sans leading-relaxed">
                 &ldquo;{decisionData?.coast?.reason || 'NO DATA'}&rdquo;
               </p>
             </div>
@@ -476,7 +476,7 @@ export default function OptimumStartStopPage() {
                 O1 Supervisory Daily Schedule Timeline
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">Active Sequence</span>
+            <span className="text-xs font-mono text-slate-600">Active Sequence</span>
           </div>
 
           <div className="space-y-2 font-mono text-xs max-h-72 overflow-y-auto pr-1">
@@ -485,7 +485,7 @@ export default function OptimumStartStopPage() {
             ) : (timelineData || []).map((tl: any, i: number) => (
               <div key={i} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="text-cyan-400 font-bold w-12">{tl.time}</span>
+                  <span className="text-cyan-800 font-bold w-12">{tl.time}</span>
                   <div>
                     <span className="text-slate-800 font-sans font-medium block">{tl.event}</span>
                     <span className="text-[10px] text-slate-600 font-sans">{tl.detail}</span>
@@ -521,7 +521,7 @@ export default function OptimumStartStopPage() {
                 Comfort & Safety Validation
               </h3>
             </div>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded pill-live">
               {safetyTotal ? `${safetyPassed}/${safetyTotal} PASSED` : 'NO DATA'}
             </span>
           </div>
@@ -543,7 +543,7 @@ export default function OptimumStartStopPage() {
                     <td className="text-slate-700">{chk.value}</td>
                     <td className="text-slate-500">{chk.limit}</td>
                     <td>
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold pill-live">
                         {chk.status}
                       </span>
                     </td>
@@ -579,7 +579,7 @@ export default function OptimumStartStopPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">APPLIED STATE</span>
-              <span className="text-cyan-400 font-bold truncate block">{bmsActionData?.applied_state || 'NO DATA'}</span>
+              <span className="text-cyan-800 font-bold truncate block">{bmsActionData?.applied_state || 'NO DATA'}</span>
             </div>
           </div>
 
@@ -587,11 +587,11 @@ export default function OptimumStartStopPage() {
           <div className="p-3.5 rounded-lg bg-slate-100 border border-slate-200 space-y-2 text-xs">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-slate-800">Continuous M&V Verification:</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold pill-live">
                 {bmsActionData?.verification?.status || 'PENDING'}
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 font-sans">
+            <div className="text-[11px] text-slate-600 font-sans">
               <strong>Window:</strong> 15 min · <strong>Expected:</strong> {startDecision.predicted_target_reached || 'NO DATA'} · <strong>Actual:</strong> {bmsActionData?.verification?.actual_response || 'NO DATA'}
             </div>
           </div>
@@ -620,7 +620,7 @@ export default function OptimumStartStopPage() {
               Historical Pre-Cooling Calibration Log
             </h3>
           </div>
-          <span className="text-xs font-mono text-slate-400">Database Records</span>
+          <span className="text-xs font-mono text-slate-600">Database Records</span>
         </div>
 
         <div className="overflow-x-auto">
@@ -653,16 +653,16 @@ export default function OptimumStartStopPage() {
                   <td className="text-slate-700">{h.initial_temp}</td>
                   <td className="text-cyan-800 font-bold">{h.target_temp}</td>
                   <td className="text-slate-500">{h.scheduled_start}</td>
-                  <td className="text-emerald-400 font-bold">{h.optimized_start}</td>
+                  <td className="text-emerald-700 font-bold">{h.optimized_start}</td>
                   <td className="text-slate-800">{h.actual_start}</td>
                   <td className="text-cyan-800 font-semibold">{h.target_reached}</td>
                   <td className="text-slate-700">{h.pulldown_duration}</td>
                   <td className="text-slate-400">{h.prediction_error}</td>
-                  <td className="text-cyan-400 font-bold">{h.optimized_stop}</td>
+                  <td className="text-cyan-800 font-bold">{h.optimized_stop}</td>
                   <td className="text-emerald-400">{h.comfort}</td>
-                  <td className="text-emerald-400 font-semibold">{h.energy_saved}</td>
+                  <td className="text-emerald-700 font-semibold">{h.energy_saved}</td>
                   <td>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold pill-live">
                       {h.verification}
                     </span>
                   </td>
@@ -686,11 +686,11 @@ export default function OptimumStartStopPage() {
                 O1 Energy & Runtime Savings Realization
               </h3>
             </div>
-            <span className="text-xs font-mono text-emerald-400 font-bold">{energyData?.verification_status || 'UNAVAILABLE'}</span>
+            <span className="text-xs font-mono text-emerald-700 font-bold">{energyData?.verification_status || 'UNAVAILABLE'}</span>
           </div>
 
           {energyUnavailable ? (
-            <div className="p-3 text-xs text-slate-400 font-mono">NO DATA</div>
+            <div className="p-3 text-xs text-slate-600 font-mono font-medium">NO DATA</div>
           ) : (
           <>
           <div className="grid grid-cols-2 gap-3 font-mono text-xs">
@@ -710,8 +710,8 @@ export default function OptimumStartStopPage() {
           </div>
 
           <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-1 text-xs font-mono">
-            <div className="flex justify-between text-[11px]"><span className="text-slate-400">Predicted Savings:</span><span className="text-slate-700">{energyData.tiers?.predicted_savings_kwh != null ? `${energyData.tiers.predicted_savings_kwh} kWh / day` : 'NO DATA'}</span></div>
-            <div className="flex justify-between text-[11px]"><span className="text-slate-400">Applied Savings:</span><span className="text-slate-700">{energyData.tiers?.applied_savings_kwh != null ? `${energyData.tiers.applied_savings_kwh} kWh / day` : 'NO DATA'}</span></div>
+            <div className="flex justify-between text-[11px]"><span className="text-slate-600">Predicted Savings:</span><span className="text-slate-700">{energyData.tiers?.predicted_savings_kwh != null ? `${energyData.tiers.predicted_savings_kwh} kWh / day` : 'NO DATA'}</span></div>
+            <div className="flex justify-between text-[11px]"><span className="text-slate-600">Applied Savings:</span><span className="text-slate-700">{energyData.tiers?.applied_savings_kwh != null ? `${energyData.tiers.applied_savings_kwh} kWh / day` : 'NO DATA'}</span></div>
             <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200"><span className="text-slate-800">Verified Savings:</span><span className="text-emerald-400">{verifiedKwh != null ? `+${verifiedKwh} kWh / day ($${verifiedCost ?? '—'} / day)` : 'NOT VERIFIED'}</span></div>
           </div>
           </>
@@ -727,7 +727,7 @@ export default function OptimumStartStopPage() {
                 Live Agent Activity Stream
               </h3>
             </div>
-            <span className="flex items-center gap-1 text-xs font-mono text-slate-400">
+            <span className="flex items-center gap-1 text-xs font-mono text-slate-600">
               {(activitiesData || []).length ? <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> : null}
               <span>{(activitiesData || []).length ? 'Real-time' : 'NO DATA'}</span>
             </span>

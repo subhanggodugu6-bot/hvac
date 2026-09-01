@@ -28,7 +28,7 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
             <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Supervisory Agent Decisions & Control Actions
             </h3>
-            <p className="text-xs text-slate-400 font-sans mt-0.5">
+            <p className="text-xs text-slate-600 font-sans mt-0.5">
               Candidate actions from the latest engine cycle
             </p>
           </div>
@@ -80,7 +80,7 @@ export const AgentDecisionPanel: React.FC<AgentDecisionPanelProps> = ({ data, ac
                       {conf == null ? '—' : `${Math.round(Number(conf) <= 1.5 ? Number(conf) * 100 : Number(conf))}%`}
                     </td>
                     <td>
-                      <span className="inline-block text-[10px] px-2 py-0.5 rounded-full font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                      <span className="inline-block text-[10px] px-2 py-0.5 rounded-full font-semibold pill-live">
                         {safety || '—'}
                       </span>
                     </td>

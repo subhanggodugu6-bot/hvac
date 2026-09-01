@@ -65,7 +65,7 @@ export const ModelStatusPanel: React.FC<{ opportunities?: any[] }> = ({ opportun
               WORKER {workerStatus?.worker_running ? 'RUNNING' : workerStatus ? 'STOPPED' : 'UNKNOWN'}
             </span>
           </div>
-          <p className="text-[11px] text-slate-400 font-mono mt-0.5">
+          <p className="text-[11px] text-slate-600 font-mono mt-0.5">
             {workerStatus?.worker_running
               ? `Cycle #${workerStatus?.cycle_count ?? '—'} · ${workerStatus?.interval_seconds ?? '—'}s interval`
               : 'Demo host — control worker is stopped.'}
@@ -85,8 +85,8 @@ export const ModelStatusPanel: React.FC<{ opportunities?: any[] }> = ({ opportun
         {models.map((m) => (
           <div key={m.code} className="kpi-tile min-h-0 font-mono text-xs space-y-1">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-cyan-400">{m.code}</span>
-              <span className="text-[10px] text-emerald-400 font-semibold">{m.live?.displayState || modelStatus?.[m.code]?.status || 'UNKNOWN'}</span>
+              <span className="font-bold text-cyan-800">{m.code}</span>
+              <span className="text-[10px] text-emerald-700 font-semibold">{m.live?.displayState || modelStatus?.[m.code]?.status || 'UNKNOWN'}</span>
             </div>
             <div className="font-sans text-slate-800 text-xs font-medium truncate">{m.name}</div>
             <div className="text-[11px] text-slate-400">Ver: <strong className="text-slate-700">{m.live?.modelVersion || modelStatus?.[m.code]?.version || '—'}</strong></div>

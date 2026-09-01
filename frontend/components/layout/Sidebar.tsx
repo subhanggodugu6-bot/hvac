@@ -58,7 +58,7 @@ export const Sidebar: React.FC = () => {
 
   const subItem = (active: boolean) =>
     `flex items-center gap-2 px-3 py-1.5 text-[12px] rounded-full transition-colors ${
-      active ? 'bg-violet-500/25 text-violet-100 font-semibold' : 'text-slate-500 hover:text-slate-200 hover:bg-white/[0.04]'
+      active ? 'bg-violet-500/25 text-violet-100 font-semibold' : 'text-slate-400 hover:text-white hover:bg-white/[0.06]'
     }`;
 
   const Group: React.FC<{
@@ -91,7 +91,7 @@ export const Sidebar: React.FC = () => {
     active,
   }) => (
     <Link href={href} className={subItem(active)} title={label}>
-      <span className={`font-mono w-8 shrink-0 ${active ? 'text-violet-200' : 'text-slate-600'}`}>{id}</span>
+      <span className={`font-mono w-8 shrink-0 ${active ? 'text-violet-200' : 'text-slate-500'}`}>{id}</span>
       <span className="leading-snug truncate">{label}</span>
     </Link>
   );
@@ -106,7 +106,7 @@ export const Sidebar: React.FC = () => {
     <aside className="hvac-sidebar w-[17rem] flex flex-col select-none overflow-hidden bg-[#16161a] text-slate-200 min-h-0">
       <div className="px-4 py-5 shrink-0 border-b border-white/[0.05]">
         <div className="text-[13px] font-bold text-white tracking-tight leading-none">HVAC Control</div>
-        <div className="text-[10px] text-slate-500 mt-1.5 font-medium tracking-wide">OEH · O1–O20</div>
+        <div className="text-[10px] text-slate-400 mt-1.5 font-medium tracking-wide">OEH · O1–O20</div>
       </div>
       <nav className="px-2.5 pb-3 space-y-0.5 flex-1 min-h-0 overflow-y-auto overscroll-contain">
         <div className="px-3 pt-2 pb-1.5 text-[10px] font-semibold tracking-[0.14em] text-slate-600 uppercase">Platform</div>

@@ -245,7 +245,7 @@ export const Header: React.FC = () => {
               type="button"
               onClick={() => setPlant('DATASET')}
               className={`px-2.5 sm:px-3 text-[10px] font-semibold tracking-wide rounded-full ${
-                plantMode === 'DATASET' ? 'bg-amber-100 text-amber-800' : 'text-slate-500 hover:text-slate-700'
+                plantMode === 'DATASET' ? 'bg-amber-500 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'
               }`}
             >
               DATASET
@@ -254,7 +254,7 @@ export const Header: React.FC = () => {
               type="button"
               onClick={() => setPlant('LIVE_BMS')}
               className={`px-2.5 sm:px-3 text-[10px] font-semibold tracking-wide rounded-full ${
-                plantMode === 'LIVE_BMS' ? 'bg-violet-100 text-violet-800' : 'text-slate-500 hover:text-slate-700'
+                plantMode === 'LIVE_BMS' ? 'bg-violet-600 text-white shadow-sm' : 'bg-white text-slate-700 border border-slate-200'
               }`}
             >
               LIVE BMS

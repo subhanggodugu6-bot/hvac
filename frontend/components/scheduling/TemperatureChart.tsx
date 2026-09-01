@@ -37,7 +37,7 @@ export const TemperatureChart: React.FC<TemperatureChartProps> = ({ data }) => {
         <div className="flex items-center gap-4 text-xs font-mono">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-1 rounded-full bg-slate-500"></span>
-            <span className="text-slate-400">Baseline kW</span>
+            <span className="text-slate-600">Baseline kW</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-1 rounded-full bg-cyan-400"></span>

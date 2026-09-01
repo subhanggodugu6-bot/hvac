@@ -112,12 +112,12 @@ export default function O9ElectronicExpansionValveStudio() {
 
         <div className="flex items-center gap-4 shrink-0 bg-slate-100 px-4 py-3 rounded-xl border border-slate-200">
           <div className="text-center">
-            <div className="text-xs text-slate-400">Simple Payback</div>
+            <div className="text-xs text-slate-600 font-semibold">Simple Payback</div>
             <div className="text-xl font-bold text-emerald-700 font-mono">{data?.payback_years != null ? data.payback_years : 'NO DATA'} {data?.payback_years != null && <span className="text-xs font-normal">Yrs</span>}</div>
           </div>
           <div className="h-8 w-px bg-white/[0.08]" />
           <div className="text-center">
-            <div className="text-xs text-slate-400">5-Yr Net ROI</div>
+            <div className="text-xs text-slate-600 font-semibold">5-Yr Net ROI</div>
             <div className="text-xl font-bold text-cyan-800 font-mono">{data?.five_year_net_roi_pct != null ? `+${data.five_year_net_roi_pct}%` : 'NO DATA'}</div>
           </div>
         </div>
@@ -126,12 +126,12 @@ export default function O9ElectronicExpansionValveStudio() {
       {/* Current Operational Telemetry vs Projected EXV Row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
         <div className="kpi-tile">
-          <div className="text-slate-400 text-xs">1. Current Technology</div>
+          <div className="text-slate-600 text-xs font-medium">1. Current Technology</div>
           <div className="text-sm font-bold text-amber-700">{data?.current_technology ?? 'NO DATA'}</div>
         </div>
-        <div className="p-3.5 rounded-xl bg-indigo-950/20 border border-indigo-500/30 space-y-1">
-          <div className="text-indigo-300 text-xs">2. Proposed Tech</div>
-          <div className="text-sm font-bold text-indigo-300">{data?.proposed_technology ?? 'NO DATA'}</div>
+        <div className="kpi-tile kpi-tile-accent">
+          <div className="text-violet-700 text-xs font-semibold uppercase tracking-wide">2. Proposed Tech</div>
+          <div className="text-sm font-bold text-slate-900">{data?.proposed_technology ?? 'NO DATA'}</div>
         </div>
         <div className="kpi-tile">
           <div className="text-slate-400 text-xs">3. Superheat Hunting</div>
@@ -171,7 +171,7 @@ export default function O9ElectronicExpansionValveStudio() {
               <Activity className="w-4 h-4 text-rose-400" />
               Superheat Stability: Mechanical TXV Hunting vs EXV Precision
             </h2>
-            <span className="text-[11px] text-slate-400 font-mono">24-Hour Cycle</span>
+            <span className="text-[11px] text-slate-600 font-mono">24-Hour Cycle</span>
           </div>
 
           <div className="h-56 w-full bg-slate-100 rounded-xl p-4 border border-slate-200 flex items-center justify-center">
@@ -309,7 +309,7 @@ export default function O9ElectronicExpansionValveStudio() {
             <DollarSign className="w-4 h-4 text-emerald-400" />
             Capital Investment & Lifecycle Economic Projections
           </h2>
-          <span className="text-xs text-slate-400 font-mono">Utility Rate: $0.12 / kWh</span>
+          <span className="text-xs text-slate-600 font-mono font-medium">Utility Rate: $0.12 / kWh</span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 text-xs">
@@ -321,7 +321,7 @@ export default function O9ElectronicExpansionValveStudio() {
 
           <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">Annual Energy Savings</div>
-            <div className="text-lg font-bold text-emerald-400 font-mono">{data?.annual_kwh_savings != null ? `${Number(data.annual_kwh_savings).toLocaleString()} kWh` : 'NO DATA'}</div>
+            <div className="text-lg font-bold text-emerald-700 font-mono">{data?.annual_kwh_savings != null ? `${Number(data.annual_kwh_savings).toLocaleString()} kWh` : 'NO DATA'}</div>
             <div className="text-[10px] text-emerald-700">{data?.annual_cost_savings_usd != null ? `$${Number(data.annual_cost_savings_usd).toLocaleString()} / yr` : ''}</div>
           </div>
 
@@ -345,7 +345,7 @@ export default function O9ElectronicExpansionValveStudio() {
 
           <div className="p-3.5 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
             <div className="text-slate-400">5-Year Cumulative ROI</div>
-            <div className="text-lg font-bold text-emerald-400 font-mono">{data?.five_year_net_roi_pct != null ? `+${data.five_year_net_roi_pct}%` : 'NO DATA'}</div>
+            <div className="text-lg font-bold text-emerald-700 font-mono">{data?.five_year_net_roi_pct != null ? `+${data.five_year_net_roi_pct}%` : 'NO DATA'}</div>
             <div className="text-[10px] text-emerald-700">{data?.five_year_net_benefit_usd != null ? `$${Number(data.five_year_net_benefit_usd).toLocaleString()} net` : ''}</div>
           </div>
         </div>

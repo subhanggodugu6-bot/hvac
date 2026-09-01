@@ -368,11 +368,11 @@ function TemperatureResetContent() {
 
             <div className="mt-4 space-y-3 font-mono text-xs">
               <div className="flex justify-between p-2 rounded bg-slate-100">
-                <span className="text-slate-400">Selected Reset:</span>
+                <span className="text-slate-600">Selected Reset:</span>
                 <span className="text-cyan-800 font-bold">{activeMode}</span>
               </div>
               <div className="flex justify-between p-2 rounded bg-slate-100">
-                <span className="text-slate-400">Current SP:</span>
+                <span className="text-slate-600">Current SP:</span>
                 <span className="text-slate-800">{data?.current_setpoint != null ? `${data.current_setpoint} °C` : 'NO DATA'}</span>
               </div>
               <div className="flex justify-between p-2 rounded bg-cyan-50 border border-cyan-500/20">
@@ -380,8 +380,8 @@ function TemperatureResetContent() {
                 <span className="text-cyan-800 font-bold">{data?.optimized_setpoint != null ? `${data.optimized_setpoint} °C` : 'NO DATA'}</span>
               </div>
               <div className="flex justify-between p-2 rounded bg-slate-100">
-                <span className="text-slate-400">Safety Guardrail:</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
+                <span className="text-slate-600">Safety Guardrail:</span>
+                <span className="text-emerald-700 font-semibold flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   {data?.status || data?.safety_status || 'NO DATA'}
                 </span>
@@ -451,7 +451,7 @@ function TemperatureResetContent() {
                     <td className="py-2.5 text-slate-400">{c.comfort_risk || 'NO DATA'}</td>
                     <td className="py-2.5 text-right">
                       {c.decision === 'SELECTED_OPTIMAL' ? (
-                        <span className="text-cyan-400 font-bold flex items-center justify-end gap-1">
+                        <span className="text-cyan-800 font-bold flex items-center justify-end gap-1">
                           <CheckCircle2 className="w-3 h-3" /> SELECTED
                         </span>
                       ) : (
@@ -477,7 +477,7 @@ function TemperatureResetContent() {
 
 export default function TemperatureResetStudio() {
   return (
-    <Suspense fallback={<div className="p-8 text-center text-slate-400 font-mono text-xs">Loading Temperature Reset Studio...</div>}>
+    <Suspense fallback={<div className="p-8 text-center text-slate-600 font-mono text-xs">Loading Temperature Reset Studio...</div>}>
       <TemperatureResetContent />
     </Suspense>
   );

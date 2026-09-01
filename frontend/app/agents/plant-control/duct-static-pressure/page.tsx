@@ -335,7 +335,7 @@ export default function O5DuctStaticPressureStudio() {
             <span>10. Mode & Status</span>
             <Radio className="w-3.5 h-3.5 text-emerald-400" />
           </div>
-          <div className="text-xs font-bold text-emerald-400 truncate">
+          <div className="text-xs font-bold text-emerald-700 truncate">
             {data?.optimization_status || data?.mode || 'NO DATA'}
           </div>
           <div className="text-[10px] text-slate-600">Confidence: {data?.confidence != null ? `${(data.confidence <= 1 ? data.confidence * 100 : data.confidence).toFixed(0)}%` : 'NO DATA'}</div>
@@ -427,7 +427,7 @@ export default function O5DuctStaticPressureStudio() {
           <div className="space-y-3 bg-slate-100 p-4 rounded-xl border border-slate-200">
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
-                <span className="text-slate-400">Baseline (2.00″ w.c.)</span>
+                <span className="text-slate-600">Baseline (2.00″ w.c.)</span>
                 <span className="text-slate-800 font-semibold">{data?.fan_power_current_kw != null ? `${Number(data.fan_power_current_kw).toFixed(1)} kW` : 'NO DATA'}</span>
               </div>
               <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -437,7 +437,7 @@ export default function O5DuctStaticPressureStudio() {
 
             <div className="space-y-1.5">
               <div className="flex justify-between text-xs">
-                <span className="text-cyan-400 font-medium">Optimized {data?.optimized_setpoint != null ? `(${Number(data.optimized_setpoint).toFixed(2)}″ w.c.)` : ''}</span>
+                <span className="text-cyan-800 font-medium">Optimized {data?.optimized_setpoint != null ? `(${Number(data.optimized_setpoint).toFixed(2)}″ w.c.)` : ''}</span>
                 <span className="text-cyan-800 font-bold">{data?.fan_power_optimized_kw != null ? `${Number(data.fan_power_optimized_kw).toFixed(1)} kW` : 'NO DATA'}</span>
               </div>
               <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -446,8 +446,8 @@ export default function O5DuctStaticPressureStudio() {
             </div>
 
             <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Net Continuous Shed</span>
-              <span className="text-emerald-400 font-bold">{data?.power_shed_kw != null ? `-${Number(data.power_shed_kw).toFixed(1)} kW` : 'NO DATA'}</span>
+              <span className="text-slate-600">Net Continuous Shed</span>
+              <span className="text-emerald-700 font-bold">{data?.power_shed_kw != null ? `-${Number(data.power_shed_kw).toFixed(1)} kW` : 'NO DATA'}</span>
             </div>
           </div>
 
@@ -577,7 +577,7 @@ export default function O5DuctStaticPressureStudio() {
               <Sliders className="w-4 h-4 text-cyan-400" />
               Candidate Evaluation Matrix & Recommendation
             </h2>
-            <span className="text-xs text-slate-400 font-mono">Algorithm: Trim & Respond (Cube-Law)</span>
+            <span className="text-xs text-slate-600 font-mono font-medium">Algorithm: Trim & Respond (Cube-Law)</span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-2.5">
@@ -620,7 +620,7 @@ export default function O5DuctStaticPressureStudio() {
                     </div>
                     <div className="flex justify-between">
                       <span>Shed:</span>
-                      <span className="text-emerald-400 font-semibold">-{c.power_shed_kw?.toFixed(1)} kW</span>
+                      <span className="text-emerald-700 font-semibold">-{c.power_shed_kw?.toFixed(1)} kW</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Max Damper:</span>
@@ -643,7 +643,7 @@ export default function O5DuctStaticPressureStudio() {
               <div className="text-slate-400">Recommended Setpoint: <strong className="text-cyan-800 font-mono">{data?.optimized_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</strong></div>
             </div>
             <div className="text-right space-y-0.5">
-              <div className="text-emerald-400 font-bold">Expected Net Shed: {data?.power_shed_kw != null ? `-${Number(data.power_shed_kw).toFixed(1)} kW` : 'NO DATA'}</div>
+              <div className="text-emerald-700 font-bold">Expected Net Shed: {data?.power_shed_kw != null ? `-${Number(data.power_shed_kw).toFixed(1)} kW` : 'NO DATA'}</div>
               <div className="text-slate-400 text-[11px]">Safety Assessment: <strong className="text-emerald-400">{data?.safety_status || 'NO DATA'}</strong></div>
             </div>
           </div>
@@ -656,45 +656,35 @@ export default function O5DuctStaticPressureStudio() {
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
               Safety & Deterministic Guardrails
             </h2>
-            <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-semibold">
-              {data?.safety_status || 'NO DATA'}
-            </span>
+            <span className="pill-live">{data?.safety_status || 'NO DATA'}</span>
           </div>
 
           <div className="space-y-2 text-xs">
-            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
-              <span className="text-slate-400">Telemetry Freshness</span>
-              <span className="text-emerald-400 font-semibold flex items-center gap-1">
+            <div className="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-3">
+              <span className="text-slate-600 font-medium shrink-0">Telemetry Freshness</span>
+              <span className="text-emerald-700 font-semibold text-right">
                 {data?.telemetry_age || (data?.telemetry?.ageSeconds != null ? `${data.telemetry.ageSeconds}s` : 'NO DATA')}
               </span>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
-              <span className="text-slate-400">Sensor Signal Quality</span>
-              <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                <Check className="w-3.5 h-3.5" /> 100% GOOD
-              </span>
+            <div className="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-3">
+              <span className="text-slate-600 font-medium shrink-0">Sensor Signal Quality</span>
+              <span className="text-emerald-700 font-semibold">100% GOOD</span>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
-              <span className="text-slate-400">Critical Zone Headroom</span>
-              <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                <Check className="w-3.5 h-3.5" /> 88.5% (&le;90%)
-              </span>
+            <div className="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-3">
+              <span className="text-slate-600 font-medium shrink-0">Critical Zone Headroom</span>
+              <span className="text-emerald-700 font-semibold text-right">88.5% (&le;90%)</span>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
-              <span className="text-slate-400">Engineering Min/Max Limits</span>
-              <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                <Check className="w-3.5 h-3.5" /> 1.00″ &le; 1.60″ &le; 2.40″
-              </span>
+            <div className="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-3">
+              <span className="text-slate-600 font-medium shrink-0">Engineering Min/Max Limits</span>
+              <span className="text-emerald-700 font-semibold text-right">1.00″ &le; 1.60″ &le; 2.40″</span>
             </div>
 
-            <div className="p-2.5 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-between">
-              <span className="text-slate-400">Rate of Change Clamping</span>
-              <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                <Check className="w-3.5 h-3.5" /> &le; 0.20″/10min
-              </span>
+            <div className="p-2.5 rounded-lg bg-white border border-slate-200 flex items-center justify-between gap-3">
+              <span className="text-slate-600 font-medium shrink-0">Rate of Change Clamping</span>
+              <span className="text-emerald-700 font-semibold text-right">&le; 0.20″/10min</span>
             </div>
           </div>
         </div>
@@ -707,31 +697,31 @@ export default function O5DuctStaticPressureStudio() {
             <CheckCircle2 className="w-4 h-4 text-cyan-400" />
             15-Minute M&V Verification & Fail-Safe Rollback Engine
           </h2>
-          <span className="text-xs text-slate-400 font-mono">BMS Protocol: BACnet/IP Priority 10</span>
+          <span className="text-xs text-slate-600 font-mono font-medium">BMS Protocol: BACnet/IP Priority 10</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
-            <div className="text-slate-400">Target BACnet Point</div>
+          <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
+            <div className="text-slate-600 font-medium">Target BACnet Point</div>
             <div className="text-sm font-bold text-slate-900 font-mono">{data?.target_point ?? 'NO DATA'}</div>
             <div className="text-[10px] text-slate-500">Instance: AV-2041</div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
-            <div className="text-slate-400">Dispatched Value</div>
+          <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
+            <div className="text-slate-600 font-medium">Dispatched Value</div>
             <div className="text-sm font-bold text-cyan-800 font-mono">{data?.optimized_setpoint?.toFixed(2) ?? 'NO DATA'} in.w.c.</div>
             <div className="text-[10px] text-emerald-700">BMS Acknowledged</div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
-            <div className="text-slate-400">Actual Response Window</div>
+          <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
+            <div className="text-slate-600 font-medium">Actual Response Window</div>
             <div className="text-sm font-bold text-slate-900 font-mono">{data?.verified_response || 'NO DATA'}</div>
             <div className="text-[10px] text-emerald-700">{data?.tracking_error || 'Verification window'}</div>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-100 border border-slate-200 space-y-1">
-            <div className="text-slate-400">Verification Outcome</div>
-            <div className="text-sm font-bold text-emerald-400 font-mono">{data?.verification_outcome || 'NO DATA'}</div>
+          <div className="p-3 rounded-xl bg-white border border-slate-200 space-y-1">
+            <div className="text-slate-600 font-medium">Verification Outcome</div>
+            <div className="text-sm font-bold text-emerald-700 font-mono">{data?.verification_outcome || 'NO DATA'}</div>
             <div className="text-[10px] text-slate-600">{data?.fail_safe_baseline != null ? `Fail-safe baseline: ${data.fail_safe_baseline}″ w.c.` : 'Fail-safe baseline unavailable'}</div>
           </div>
         </div>

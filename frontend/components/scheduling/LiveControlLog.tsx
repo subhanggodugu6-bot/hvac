@@ -21,7 +21,7 @@ export const LiveControlLog: React.FC<LiveControlLogProps> = ({ activities }) =>
             <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Recent Agent Activity & Control Log
             </h3>
-            <p className="text-xs text-slate-400 font-sans mt-0.5">
+            <p className="text-xs text-slate-600 font-sans mt-0.5">
               Persisted O1–O4 events only
             </p>
           </div>

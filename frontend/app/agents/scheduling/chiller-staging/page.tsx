@@ -186,7 +186,7 @@ export default function ChillerStagingPage() {
                 Central Plant Cooling Load & Hydraulic Balance
               </h3>
             </div>
-            <span className="text-xs font-mono font-bold text-cyan-400">{load.current_load_tons != null ? `${load.current_load_tons} Tons / ${load.available_capacity_tons ?? '—'} Tons` : 'NO DATA'}</span>
+            <span className="text-xs font-mono font-bold text-cyan-800">{load.current_load_tons != null ? `${load.current_load_tons} Tons / ${load.available_capacity_tons ?? '—'} Tons` : 'NO DATA'}</span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-center">
@@ -196,15 +196,15 @@ export default function ChillerStagingPage() {
             </div>
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">AVAILABLE CAPACITY</span>
-              <span className="text-base font-bold text-cyan-400">{load.available_capacity_tons != null ? `${load.available_capacity_tons} Tons` : 'NO DATA'}</span>
+              <span className="text-base font-bold text-cyan-800">{load.available_capacity_tons != null ? `${load.available_capacity_tons} Tons` : 'NO DATA'}</span>
             </div>
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">CAPACITY HEADROOM</span>
-              <span className="text-base font-bold text-emerald-400">{load.capacity_headroom_tons != null ? `${load.capacity_headroom_tons} Tons` : 'NO DATA'}</span>
+              <span className="text-base font-bold text-emerald-700">{load.capacity_headroom_tons != null ? `${load.capacity_headroom_tons} Tons` : 'NO DATA'}</span>
             </div>
             <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
               <span className="text-[10px] text-slate-500 block">PLANT UTILIZATION</span>
-              <span className="text-base font-bold text-purple-400">{load.plant_plr_pct != null ? `${load.plant_plr_pct}%` : 'NO DATA'}</span>
+              <span className="text-base font-bold text-purple-700">{load.plant_plr_pct != null ? `${load.plant_plr_pct}%` : 'NO DATA'}</span>
             </div>
           </div>
 
@@ -219,7 +219,7 @@ export default function ChillerStagingPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">LOOP DELTA-T</span>
-              <span className="text-emerald-400 font-bold">{load.delta_t_c != null ? `${load.delta_t_c}°C` : 'NO DATA'}</span>
+              <span className="text-emerald-700 font-bold">{load.delta_t_c != null ? `${load.delta_t_c}°C` : 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">CHW FLOW RATE</span>
@@ -237,7 +237,7 @@ export default function ChillerStagingPage() {
                 Anti-Short-Cycling Timers
               </h3>
             </div>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold pill-live font-mono">
               {load.anti_cycling_status || 'NO DATA'}
             </span>
           </div>
@@ -248,7 +248,7 @@ export default function ChillerStagingPage() {
                 <span className="text-slate-800 font-bold block">CH-01 Min Runtime</span>
                 <span className="text-[10px] text-slate-600 font-sans">{load.ch01_runtime || 'NO DATA'}</span>
               </div>
-              <span className="text-emerald-400 font-bold">{load.ch01_runtime_status || 'NO DATA'}</span>
+              <span className="text-emerald-700 font-bold">{load.ch01_runtime_status || 'NO DATA'}</span>
             </div>
 
             <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
@@ -256,7 +256,7 @@ export default function ChillerStagingPage() {
                 <span className="text-slate-800 font-bold block">CH-02 Min Off-Time</span>
                 <span className="text-[10px] text-slate-600 font-sans">{load.ch02_off_time || 'NO DATA'}</span>
               </div>
-              <span className="text-emerald-400 font-bold">{load.ch02_off_status || 'NO DATA'}</span>
+              <span className="text-emerald-700 font-bold">{load.ch02_off_status || 'NO DATA'}</span>
             </div>
 
             <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
@@ -264,7 +264,7 @@ export default function ChillerStagingPage() {
                 <span className="text-slate-800 font-bold block">Stage Hysteresis Band</span>
                 <span className="text-[10px] text-slate-600 font-sans">{load.stage_hysteresis || 'NO DATA'}</span>
               </div>
-              <span className="text-emerald-400 font-bold">{load.stage_hysteresis_status || 'NO DATA'}</span>
+              <span className="text-emerald-700 font-bold">{load.stage_hysteresis_status || 'NO DATA'}</span>
             </div>
           </div>
         </div>
@@ -283,7 +283,7 @@ export default function ChillerStagingPage() {
                 Central Plant Chiller Fleet Status
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">2 Centrifugal Chillers</span>
+            <span className="text-xs font-mono text-slate-600">2 Centrifugal Chillers</span>
           </div>
 
           <div className="overflow-x-auto">
@@ -320,14 +320,14 @@ export default function ChillerStagingPage() {
                     </td>
                     <td className="text-slate-700">{ch.capacity_tons} T</td>
                     <td className="text-slate-900 font-bold">{ch.current_load_tons} T</td>
-                    <td className="text-purple-400">{ch.plr_pct}%</td>
+                    <td className="text-purple-700">{ch.plr_pct}%</td>
                     <td className="text-slate-800">{ch.power_kw} kW</td>
-                    <td className="text-emerald-400 font-semibold">{ch.efficiency_kw_per_ton > 0 ? `${ch.efficiency_kw_per_ton}` : '—'}</td>
+                    <td className="text-emerald-700 font-semibold">{ch.efficiency_kw_per_ton > 0 ? `${ch.efficiency_kw_per_ton}` : '—'}</td>
                     <td>
                       <span className="text-cyan-800 font-semibold">{ch.role}</span>
                     </td>
                     <td>
-                      <span className="text-emerald-400 font-bold text-[10px]">{ch.stage_decision}</span>
+                      <span className="text-emerald-700 font-bold text-[10px]">{ch.stage_decision}</span>
                     </td>
                   </tr>
                 ))}
@@ -345,7 +345,7 @@ export default function ChillerStagingPage() {
                 Compressor Stages
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">4 Total Stages</span>
+            <span className="text-xs font-mono text-slate-600">4 Total Stages</span>
           </div>
 
           <div className="overflow-x-auto">
@@ -400,7 +400,7 @@ export default function ChillerStagingPage() {
                 Plant Staging Configuration Candidates
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">1 Chiller vs 2 Chillers</span>
+            <span className="text-xs font-mono text-slate-600">1 Chiller vs 2 Chillers</span>
           </div>
 
           <div className="space-y-3">
@@ -435,7 +435,7 @@ export default function ChillerStagingPage() {
                     </div>
                     <div>
                       <span className="text-[9px] text-slate-500 block">AVG PLR</span>
-                      <strong className="text-purple-400">{sc.average_plr_pct}%</strong>
+                      <strong className="text-purple-700">{sc.average_plr_pct}%</strong>
                     </div>
                     <div>
                       <span className="text-[9px] text-slate-500 block">POWER</span>
@@ -447,7 +447,7 @@ export default function ChillerStagingPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-slate-400 font-sans">
+                  <div className="flex items-center justify-between text-[11px] text-slate-600 font-sans">
                     <span>Power Impact: <strong className={isSelected ? 'text-emerald-400' : 'text-rose-400'}>{sc.power_impact}</strong></span>
                     <span>Anti-Cycling: <strong className="text-emerald-400">{sc.anti_cycling_safety}</strong></span>
                   </div>
@@ -466,7 +466,7 @@ export default function ChillerStagingPage() {
                 CHWS Reset Candidates (6.5°C – 7.5°C)
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">Lift vs Fan Trade-Off</span>
+            <span className="text-xs font-mono text-slate-600 font-medium">Lift vs Fan Trade-Off</span>
           </div>
 
           <div className="overflow-x-auto">
@@ -490,28 +490,26 @@ export default function ChillerStagingPage() {
                     <td className="text-slate-800">{cand.predicted_chiller_power_kw} kW</td>
                     <td className="text-slate-800">{cand.predicted_fan_power_kw} kW</td>
                     <td className="text-slate-900 font-bold">{cand.predicted_plant_power_kw} kW</td>
-                    <td className="text-emerald-400 font-semibold">{cand.efficiency_kw_per_ton}</td>
-                    <td className="text-emerald-400">{cand.power_impact}</td>
+                    <td className="text-emerald-700 font-semibold">{cand.efficiency_kw_per_ton}</td>
+                    <td className="text-slate-700">{cand.power_impact}</td>
                     <td>
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[9px] font-semibold border ${
-                          cand.safety_status?.startsWith('PASS')
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                            : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                        }`}
+                        className={
+                          cand.safety_status?.startsWith('PASS') ? 'pill-pass' : 'pill-fail'
+                        }
                       >
                         {cand.safety_status}
                       </span>
                     </td>
                     <td>
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
+                        className={
                           cand.decision === 'SELECTED'
-                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-800'
+                            ? 'pill-selected'
                             : String(cand.decision || '').startsWith('REJECTED')
-                            ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                            : 'bg-slate-200 border-slate-200 text-slate-400'
-                        }`}
+                              ? 'pill-fail'
+                              : 'pill-muted'
+                        }
                       >
                         {cand.decision}
                       </span>
@@ -537,7 +535,7 @@ export default function ChillerStagingPage() {
                 O4 Supervisory Central Plant Decision
               </h3>
             </div>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded pill-live">
               {decisionData?.decision || 'NO DATA'}
             </span>
           </div>
@@ -549,23 +547,23 @@ export default function ChillerStagingPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">OPTIMAL STAGE</span>
-              <span className="text-sm font-bold text-cyan-400">{decisionData?.optimal_stage || 'NO DATA'}</span>
+              <span className="text-sm font-bold text-cyan-800">{decisionData?.optimal_stage || 'NO DATA'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">OPTIMAL CHWS</span>
-              <span className="text-base font-bold text-emerald-400">{decisionData?.optimal_chws || 'NO DATA'}</span>
+              <span className="text-base font-bold text-emerald-700">{decisionData?.optimal_chws || 'NO DATA'}</span>
             </div>
           </div>
 
           <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-2 text-xs">
-            <div className="text-slate-400 font-sans">
+            <div className="text-slate-600 font-sans">
               <strong className="text-slate-700 block mb-1">Engineering Rationale:</strong>
               &ldquo;{decisionData?.reason || 'NO DATA'}&rdquo;
             </div>
             <div className="flex items-center justify-between pt-2 border-t border-slate-200 font-mono text-[11px]">
-              <span className="text-slate-400">Model: <strong className="text-slate-800">{decisionData?.model_version || 'NO DATA'}</strong></span>
-              <span className="text-slate-400">Confidence: <strong className="text-purple-400">{decisionData?.confidence != null ? `${decisionData.confidence}%` : 'NO DATA'}</strong></span>
-              <span className="text-slate-400">Safety: <strong className="text-emerald-400">{decisionData?.safety || 'NO DATA'}</strong></span>
+              <span className="text-slate-600">Model: <strong className="text-slate-800">{decisionData?.model_version || 'NO DATA'}</strong></span>
+              <span className="text-slate-600">Confidence: <strong className="text-purple-700">{decisionData?.confidence != null ? `${decisionData.confidence}%` : 'NO DATA'}</strong></span>
+              <span className="text-slate-600">Safety: <strong className="text-emerald-400">{decisionData?.safety || 'NO DATA'}</strong></span>
             </div>
           </div>
 
@@ -590,7 +588,7 @@ export default function ChillerStagingPage() {
                 Plant Efficiency & Power Trade-Off
               </h3>
             </div>
-            <span className="text-xs font-mono text-emerald-400 font-bold">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Net Shed` : 'NO DATA'}</span>
+            <span className="text-xs font-mono text-emerald-700 font-bold">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Net Shed` : 'NO DATA'}</span>
           </div>
 
           <div className="grid grid-cols-2 gap-3 font-mono text-xs">
@@ -612,8 +610,8 @@ export default function ChillerStagingPage() {
           </div>
 
           <div className="p-3 rounded-lg bg-slate-100 border border-slate-200 space-y-1 text-xs font-mono">
-            <div className="flex justify-between text-[11px]"><span className="text-slate-400">Chiller Lift Savings:</span><span className="text-emerald-400">{powerData?.delta?.chiller || 'NO DATA'}</span></div>
-            <div className="flex justify-between text-[11px]"><span className="text-slate-400">Fan Compensation:</span><span className="text-amber-400">{powerData?.delta?.fan || 'NO DATA'}</span></div>
+            <div className="flex justify-between text-[11px]"><span className="text-slate-600">Chiller Lift Savings:</span><span className="text-emerald-400">{powerData?.delta?.chiller || 'NO DATA'}</span></div>
+            <div className="flex justify-between text-[11px]"><span className="text-slate-600">Fan Compensation:</span><span className="text-amber-400">{powerData?.delta?.fan || 'NO DATA'}</span></div>
             <div className="flex justify-between text-xs font-bold pt-1 border-t border-slate-200"><span className="text-slate-800">Net Power Impact:</span><span className="text-emerald-400">{powerData?.net_shed_kw != null ? `+${powerData.net_shed_kw} kW Net Plant Shed` : 'NO DATA'}</span></div>
           </div>
         </div>
@@ -674,7 +672,7 @@ export default function ChillerStagingPage() {
                 Central Plant Load & Efficiency Trend
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">kW/Ton Tracking</span>
+            <span className="text-xs font-mono text-slate-600">kW/Ton Tracking</span>
           </div>
 
           <div className="pt-4 w-full">
@@ -706,7 +704,7 @@ export default function ChillerStagingPage() {
                 Central Plant Safety Validation
               </h3>
             </div>
-            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+            <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded pill-live">
               {safetyTotal ? `${safetyPassed}/${safetyTotal} PASSED` : 'NO DATA'}
             </span>
           </div>
@@ -728,7 +726,7 @@ export default function ChillerStagingPage() {
                     <td className="text-slate-700">{chk.value}</td>
                     <td className="text-slate-500">{chk.limit}</td>
                     <td>
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold pill-live">
                         {chk.status}
                       </span>
                     </td>
@@ -764,7 +762,7 @@ export default function ChillerStagingPage() {
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block">APPLIED STATE</span>
-              <span className="text-cyan-400 font-bold truncate block">{bmsActionData?.applied_state || 'NO DATA'}</span>
+              <span className="text-cyan-800 font-bold truncate block">{bmsActionData?.applied_state || 'NO DATA'}</span>
             </div>
           </div>
 
@@ -772,11 +770,11 @@ export default function ChillerStagingPage() {
           <div className="p-3.5 rounded-lg bg-slate-100 border border-slate-200 space-y-2 text-xs">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-slate-800">Continuous M&V Verification:</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold pill-live">
                 {bmsActionData?.verification?.status || 'NO DATA'}
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 font-sans">
+            <div className="text-[11px] text-slate-600 font-sans">
               <strong>Window:</strong> 15 min · <strong>Expected:</strong> Chiller power reduction · <strong>Actual:</strong> {bmsActionData?.verification?.actual_response || 'NO DATA'}
             </div>
           </div>
@@ -807,7 +805,7 @@ export default function ChillerStagingPage() {
                 O4 Optimization History
               </h3>
             </div>
-            <span className="text-xs font-mono text-slate-400">Database Records</span>
+            <span className="text-xs font-mono text-slate-600">Database Records</span>
           </div>
 
           <div className="overflow-x-auto">
@@ -831,11 +829,11 @@ export default function ChillerStagingPage() {
                     <td className="text-slate-900 font-bold">{h.cooling_load}</td>
                     <td className="text-slate-700">{h.new_stage}</td>
                     <td className="text-cyan-800 font-bold">{h.new_chws}</td>
-                    <td className="text-purple-400">{h.plr}</td>
+                    <td className="text-purple-700">{h.plr}</td>
                     <td className="text-emerald-400">{h.kw_per_ton}</td>
-                    <td className="text-emerald-400 font-semibold">{h.power_impact}</td>
+                    <td className="text-emerald-700 font-semibold">{h.power_impact}</td>
                     <td>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold pill-live">
                         {h.verification}
                       </span>
                     </td>
@@ -855,7 +853,7 @@ export default function ChillerStagingPage() {
                 Live Agent Activity Stream
               </h3>
             </div>
-            <span className="flex items-center gap-1 text-xs font-mono text-slate-400">
+            <span className="flex items-center gap-1 text-xs font-mono text-slate-600">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>Real-time</span>
             </span>

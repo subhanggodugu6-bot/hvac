@@ -502,3 +502,110 @@ button.glass-card:hover {
 .hvac-main .glass-card .text-emerald-300 {
   color: #047857 !important;
 }
+
+/* Panels, tables, and inset cards — readable labels and accent values */
+.hvac-main .glass-card .text-slate-400,
+.hvac-main .bms-table .text-slate-400,
+.hvac-main .card-static .text-slate-400,
+.hvac-main .bg-slate-50 .text-slate-400,
+.hvac-main .bg-slate-100 .text-slate-400 {
+  color: #475569 !important;
+}
+
+.hvac-main .glass-card .text-emerald-400,
+.hvac-main .bms-table .text-emerald-400,
+.hvac-main .bg-slate-50 .text-emerald-400,
+.hvac-main .bg-slate-100 .text-emerald-400,
+.hvac-main .rounded-2xl .text-emerald-400 {
+  color: #047857 !important;
+}
+
+.hvac-main .glass-card .text-cyan-400,
+.hvac-main .bms-table .text-cyan-400,
+.hvac-main .bg-slate-50 .text-cyan-400,
+.hvac-main .bg-slate-100 .text-cyan-400,
+.hvac-main .rounded-2xl .text-cyan-400 {
+  color: #0e7490 !important;
+}
+
+.hvac-main .bms-table .text-rose-400,
+.hvac-main .bg-slate-50 .text-rose-400,
+.hvac-main .bg-slate-100 .text-rose-400 {
+  color: #be123c !important;
+}
+
+.hvac-main .bg-slate-50 .text-purple-400,
+.hvac-main .bg-slate-100 .text-purple-400 {
+  color: #6d28d9 !important;
+}
+
+.pill-pass {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.pill-fail {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+}
+
+.pill-muted {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  white-space: nowrap;
+}
+
+.pill-selected {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: #ecfeff;
+  color: #0e7490;
+  border: 1px solid #67e8f9;
+  white-space: nowrap;
+}
+
+.pill-live {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.bms-table th:first-child,
+.bms-table td:first-child {
+  padding-left: 1rem;
+}
+
+.bms-table th:last-child,
+.bms-table td:last-child {
+  padding-right: 1rem;
+}

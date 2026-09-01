@@ -102,7 +102,7 @@ export const EngineeringLimitsModal: React.FC<EngineeringLimitsModalProps> = ({ 
 
         {/* AHU Supply Air Limits */}
         <div className="space-y-3 border-t border-slate-800 pt-3">
-          <h3 className="text-xs font-bold text-emerald-400 uppercase font-mono tracking-wider">
+          <h3 className="text-xs font-bold text-emerald-700 uppercase font-mono tracking-wider">
             AHU Supply Air Temperature Limits (Guideline 36)
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">

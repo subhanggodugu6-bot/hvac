@@ -56,7 +56,7 @@ export const SafetyValidationPanel: React.FC<SafetyValidationPanelProps> = ({ da
             <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
               Safety Validation Guardrails
             </h3>
-            <p className="text-xs text-slate-400 font-sans mt-0.5">
+            <p className="text-xs text-slate-600 font-sans mt-0.5">
               Deterministic pre-execution verification gates (Fail-safe auto-reversion active)
             </p>
           </div>
